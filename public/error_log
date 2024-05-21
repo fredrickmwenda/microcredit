@@ -1,0 +1,35 @@
+[21-Jul-2022 16:23:04 Africa/Accra] PHP Fatal error:  Declaration of Doctrine\DBAL\Driver\PDOConnection::query() must be compatible with PDO::query(string $query, ?int $fetchMode = null, mixed ...$fetchModeArgs) in /home1/msoftdemo/banking.msoftdemo.com/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php on line 91
+[25-May-2023 12:09:30 Africa/Accra] PHP Fatal error:  Allowed memory size of 541065216 bytes exhausted (tried to allocate 798720 bytes) in /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Cache/FileStore.php on line 74
+[25-May-2023 12:09:44 Africa/Accra] PHP Fatal error:  Allowed memory size of 541065216 bytes exhausted (tried to allocate 20480 bytes) in /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php on line 372
+[25-May-2023 12:10:10 Africa/Accra] PHP Fatal error:  Allowed memory size of 541065216 bytes exhausted (tried to allocate 20480 bytes) in /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php on line 372
+[03-Aug-2023 16:01:33 Africa/Accra] PHP Fatal error:  During inheritance of ArrayAccess: Uncaught ErrorException: Return type of Illuminate\Support\Collection::offsetExists($key) should either be compatible with ArrayAccess::offsetExists(mixed $offset): bool, or the #[\ReturnTypeWillChange] attribute should be used to temporarily suppress the notice in /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Collections/Collection.php:1354
+Stack trace:
+#0 /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Collections/Collection.php(11): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(8192, 'Return type of ...', '/home1/uniquesu...', 1354)
+#1 /home1/uniquesusulink/bank.uniquesusulink.com/vendor/composer/ClassLoader.php(478): include('/home1/uniquesu...')
+#2 /home1/uniquesusulink/bank.uniquesusulink.com/vendor/composer/ClassLoader.php(346): Composer\Autoload\includeFile('/home1/uniquesu...')
+#3 /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Collections/helpers.php(15): Composer\Autoload\ClassLoader->loadClass('Illuminate\\Supp...')
+#4 /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Foundation/PackageManifest.php(89): collect(Array)
+#5 /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Foundation/PackageManifest.php(78): Illuminate\Foundation\PackageManifest->config('aliases')
+#6 /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/RegisterFacades.php(26): Illuminate\Foundation\PackageManifest->aliases()
+#7 /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(230): Illuminate\Foundation\Bootstrap\RegisterFacades->bootstrap(Object(Illuminate\Foundation\Application))
+#8 /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(152): Illuminate\Foundation\Application->bootstrapWith(Array)
+#9 /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(136): Illuminate\Foundation\Http\Kernel->bootstrap()
+#10 /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(110): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#11 /home1/uniquesusulink/bank.uniquesusulink.com/public/index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#12 {main} in /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Collections/Collection.php on line 11
+[03-Aug-2023 16:01:35 Africa/Accra] PHP Fatal error:  During inheritance of ArrayAccess: Uncaught ErrorException: Return type of Illuminate\Support\Collection::offsetExists($key) should either be compatible with ArrayAccess::offsetExists(mixed $offset): bool, or the #[\ReturnTypeWillChange] attribute should be used to temporarily suppress the notice in /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Collections/Collection.php:1354
+Stack trace:
+#0 /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Collections/Collection.php(11): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(8192, 'Return type of ...', '/home1/uniquesu...', 1354)
+#1 /home1/uniquesusulink/bank.uniquesusulink.com/vendor/composer/ClassLoader.php(478): include('/home1/uniquesu...')
+#2 /home1/uniquesusulink/bank.uniquesusulink.com/vendor/composer/ClassLoader.php(346): Composer\Autoload\includeFile('/home1/uniquesu...')
+#3 /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Collections/helpers.php(15): Composer\Autoload\ClassLoader->loadClass('Illuminate\\Supp...')
+#4 /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Foundation/PackageManifest.php(89): collect(Array)
+#5 /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Foundation/PackageManifest.php(78): Illuminate\Foundation\PackageManifest->config('aliases')
+#6 /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/RegisterFacades.php(26): Illuminate\Foundation\PackageManifest->aliases()
+#7 /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(230): Illuminate\Foundation\Bootstrap\RegisterFacades->bootstrap(Object(Illuminate\Foundation\Application))
+#8 /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(152): Illuminate\Foundation\Application->bootstrapWith(Array)
+#9 /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(136): Illuminate\Foundation\Http\Kernel->bootstrap()
+#10 /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(110): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#11 /home1/uniquesusulink/bank.uniquesusulink.com/public/index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#12 {main} in /home1/uniquesusulink/bank.uniquesusulink.com/vendor/laravel/framework/src/Illuminate/Collections/Collection.php on line 11
+[03-Aug-2023 16:01:36 Africa/Accra] PHP Fatal error:  Declaration of Doctrine\DBAL\Driver\PDOConnection::query() must be compatible with PDO::query(string $query, ?int $fetchMode = null, mixed ...$fetchModeArgs) in /home1/uniquesusulink/bank.uniquesusulink.com/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php on line 91
