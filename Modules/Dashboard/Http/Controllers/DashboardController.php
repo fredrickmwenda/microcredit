@@ -20,7 +20,6 @@ class DashboardController extends Controller
         $this->middleware(['auth', '2fa']);
         $this->middleware(['permission:dashboard.edit'])->only(['create', 'store_widget', 'edit', 'update', 'update_widget_positions']);
         $this->middleware(['permission:dashboard.destroy'])->only(['destroy']);
-
     }
 
     /**
@@ -43,13 +42,13 @@ class DashboardController extends Controller
                     $formattedKey = ltrim($formattedKey, '_');
                     $formattedKey = strtolower($formattedKey);
 
-                
 
 
-                
+
+
                     $permission = 'widget.widget.' . $formattedKey;
                     // dd($permission);
-                    
+
                     if (Auth::user()->can($permission)) {
                         $available_widgets[$key] = $value;
                     }
@@ -59,32 +58,37 @@ class DashboardController extends Controller
         }
         // dd($available_widgets);
 
-        $user_widgets = Widget::where('user_id', Auth::id())->first();
-        $av_user_widgets= [];
+        $user_widgets = Widget::where('user_id', 1)->first();
+
+        $av_user_widgets = [];
+        $counter = 0; // Initialize a counter
         if (!empty($user_widgets)) {
-            
+
             $user_widgets = json_decode($user_widgets->widgets);
+            //dd($user_widgets);
             foreach ($user_widgets as $key => $widget) {
-                //dd($key);
+                // $counter++; //increment the couter
+                // if ($counter == 1 || $counter == 2 || $counter == 3) {
+                //     continue; // Skip the first iteration
+                // }
                 // Convert CamelCase to snake_case
                 $formattedKey = lcfirst(preg_replace('/([A-Z])/', '_$1', $key));
                 $formattedKey = ltrim($formattedKey, '_');
                 $formattedKey = strtolower($formattedKey);
-        
+
                 // Construct the permission string
                 $permission = 'widget.widget.' . $formattedKey;
-               // dd($permission);
-               if (Auth::user()->can($permission)) {
-                // The user has the permission, add the widget to the available widgets array
-                $av_user_widgets[$key] = $widget;
+             //   dd($permission);
+                if (Auth::user()->can($permission)) {
+                    // The user has the permission, add the widget to the available widgets array
+                    $av_user_widgets[$key] = $widget;
+                }
+                // else{
+                // dd($permission);
+                // }
             }
-    
-               
-            }
-        
-            
-        } 
-        // dd($av_user_widgets);
+        }
+        //dd($av_user_widgets, $user_widgets);
         \JavaScript::put([
             'user_widgets' => $av_user_widgets
         ]);
@@ -128,7 +132,6 @@ class DashboardController extends Controller
             }
             $user_widgets->widgets = json_encode($widgets);
             $user_widgets->save();
-
         } else {
             $widgets[$request->widget_id] = $available_widgets[$request->widget_id];
             $user_widgets = new Widget();
@@ -163,7 +166,7 @@ class DashboardController extends Controller
                     $available_widgets[$widget["id"]]["width"] = $widget["width"];
                     $available_widgets[$widget["id"]]["height"] = $widget["height"];
                     $widgets[$widget["id"]] = $available_widgets[$widget["id"]];
-                }else{
+                } else {
                     $widgets[$widget["id"]]["x"] = $widget["x"];
                     $widgets[$widget["id"]]["y"] = $widget["y"];
                     $widgets[$widget["id"]]["width"] = $widget["width"];
@@ -172,7 +175,6 @@ class DashboardController extends Controller
             }
             $user_widgets->widgets = json_encode($widgets);
             $user_widgets->save();
-
         }
         return response()->json(["success" => 1, "msg" => trans_choice("core::general.successfully_saved", 1)]);
     }
@@ -187,7 +189,6 @@ class DashboardController extends Controller
             unset($widgets[$request->id]);
             $user_widgets->widgets = json_encode($widgets);
             $user_widgets->save();
-
         }
         return response()->json(["success" => 1, "msg" => trans_choice("core::general.successfully_saved", 1)]);
     }
