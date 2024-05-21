@@ -42,6 +42,7 @@ class RoleController extends Controller
             ->when($search, function (Builder $query) use ($search) {
                 $query->where('name', 'like', "%$search%");
             })
+            ->where('name', '!=', 'admin')  // Exclude roles with name 'admin'
             ->paginate($perPage)
             ->appends($request->input());
         return theme_view('user::role.index', compact('data'));

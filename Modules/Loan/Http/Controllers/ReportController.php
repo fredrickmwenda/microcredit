@@ -218,6 +218,7 @@ class ReportController extends Controller
         $data = DB::table("loan_repayment_schedules")
             ->join("loans", "loan_repayment_schedules.loan_id", "loans.id")
             ->join("branches", "loans.branch_id", "branches.id")
+            ->join("clients", "loans.client_id", "clients.id")
             ->when($start_date, function ($query) use ($start_date) {
                 $query->where('loan_repayment_schedules.due_date', $start_date);
             })

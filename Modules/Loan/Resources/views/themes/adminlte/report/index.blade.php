@@ -42,6 +42,7 @@
                     </tr>
                     </thead>
                     <tbody>
+                    @can('loan.loans.reports.collection_sheet')
                     <tr>
                         <td>
                             <a href="{{url('report/loan/collection_sheet')}}">{{trans_choice('loan::general.collection_sheet',1)}}</a>
@@ -53,6 +54,9 @@
                                         class="fa fa-search"></i> </a>
                         </td>
                     </tr>
+                    @endcan
+
+                    @can('loan.loans.reports.repayments')
                     <tr>
                         <td>
                             <a href="{{url('report/loan/repayment')}}">{{trans_choice('loan::general.repayment',2)}}</a>
@@ -64,6 +68,9 @@
                                         class="fa fa-search"></i> </a>
                         </td>
                     </tr>
+                    @endcan
+
+                    @can('loan.loans.reports.expected_repayments')
                     <tr>
                         <td>
                             <a href="{{url('report/loan/expected_repayment')}}">{{trans_choice('loan::general.expected',2)}} {{trans_choice('loan::general.repayment',2)}}</a>
@@ -75,7 +82,9 @@
                                         class="fa fa-search"></i> </a>
                         </td>
                     </tr>
+                    @endcan
 
+                    @can('loan.loans.reports.today_expected_repayments')
                     <tr>
                         <td>
                             <a href="{{url('report/loan/specific_expected_repayment')}}">Today Expected Repayments</a>
@@ -87,6 +96,9 @@
                                         class="fa fa-search"></i> </a>
                         </td>
                     </tr>
+                    @endcan
+
+                    @can('loan.loans.reports.arrears')
                     <tr>
                         <td>
                             <a href="{{url('report/loan/arrears')}}">{{trans_choice('loan::general.arrears',1)}}</a>
@@ -98,7 +110,9 @@
                                         class="fa fa-search"></i> </a>
                         </td>
                     </tr>
+                    @endcan
 
+                    @can('loan.loans.reports.disbursements')
                     <tr class="">
                         <td>
                             <a href="{{url('report/loan/disbursement')}}">{{trans_choice('loan::general.disbursement',1)}} {{trans_choice('report::general.report',1)}}</a>
@@ -110,6 +124,7 @@
                                         class="fa fa-search"></i> </a>
                         </td>
                     </tr>
+                    @endcan
                     <tr class="d-none">
                         <td>
                             <a href="{{url('report/loan/portfolio_at_risk')}}">{{trans_choice('loan::general.portfolio_at_risk',2)}}</a>

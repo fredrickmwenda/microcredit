@@ -42,6 +42,7 @@
                     </tr>
                     </thead>
                     <tbody>
+                        @can('user.reports.performance')
                     <tr>
                         <td>
                             <a href="{{url('report/user/performance')}}">{{trans_choice('user::general.performance_report',1)}}</a>
@@ -53,6 +54,7 @@
                                         class="fa fa-search"></i> </a>
                         </td>
                     </tr>
+                    @endcan
 
                     </tbody>
                 </table>

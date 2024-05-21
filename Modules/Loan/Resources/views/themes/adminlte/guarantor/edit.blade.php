@@ -264,6 +264,43 @@
                             @enderror
                         </div>
 
+                                                <!-- Church -->
+                                                <div class="form-group">
+                            <label for="church"
+                                   class="control-label">Church</label>
+                            <input type="text" name="church" id="church" v-model="church"
+                                   class="form-control @error('church') is-invalid @enderror" required>
+                            @error('church')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pastor"
+                                   class="control-label">Pastor</label>
+                            <input type="text" name="pastor" id="pastor" v-model="pastor"
+                                   class="form-control @error('pastor') is-invalid @enderror" required>
+                            @error('pastor')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="church_location"
+                                   class="control-label">Church Location</label>
+                            <input type="text" name="church_location" id="church_location" v-model="church_location"
+                                   class="form-control @error('church_location') is-invalid @enderror" required>
+                            @error('church_location')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
+                        </div>
+
                         <div class="form-group">
                             <label for="photo"
                                    class="control-label">{{trans_choice('core::general.photo',1)}}</label>

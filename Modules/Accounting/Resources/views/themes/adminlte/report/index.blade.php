@@ -32,6 +32,7 @@
                     </tr>
                     </thead>
                     <tbody>
+                    @can('accounting.reports.balance_sheet')
                     <tr>
                         <td>
                             <a href="{{url('report/accounting/balance_sheet')}}">{{trans_choice('accounting::general.balance_sheet',1)}}</a>
@@ -43,6 +44,9 @@
                                         class="fas fa-search"></i> </a>
                         </td>
                     </tr>
+                    @endcan
+
+                    @can('accounting.reports.trial_balance')
                     <tr>
                         <td>
                             <a href="{{url('report/accounting/trial_balance')}}">{{trans_choice('accounting::general.trial_balance',1)}}</a>
@@ -54,6 +58,9 @@
                                         class="fas fa-search"></i> </a>
                         </td>
                     </tr>
+                    @endcan
+
+                    @can('accounting.reports.income_statement')
                     <tr>
                         <td>
                             <a href="{{url('report/accounting/income_statement')}}">{{trans_choice('accounting::general.income_statement',1)}}</a>
@@ -65,6 +72,7 @@
                                         class="fas fa-search"></i> </a>
                         </td>
                     </tr>
+                    @endcan
                     <tr class="d-none">
                         <td>
                             <a href="{{url('report/accounting/cash_flow')}}">{{trans_choice('accounting::general.cash_flow',1)}}</a>
@@ -76,6 +84,7 @@
                                         class="fas fa-search"></i> </a>
                         </td>
                     </tr>
+                    @can('accounting.reports.ledger')
                     <tr class="">
                         <td>
                             <a href="{{url('report/accounting/ledger')}}">{{trans_choice('accounting::general.ledger',1)}}</a>
@@ -87,6 +96,7 @@
                                         class="fas fa-search"></i> </a>
                         </td>
                     </tr>
+                    @endcan
                     <tr class="d-none">
                         <td>
                             <a href="{{url('report/accounting/journal')}}">{{trans_choice('accounting::general.journal',2)}}</a>

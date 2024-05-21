@@ -29,7 +29,7 @@
             <h6 class="card-title">
                 {{trans_choice('loan::general.expected',1)}} {{trans_choice('loan::general.repayment',2)}}
                 @if(!empty($start_date))
-                for period: <b>{{$start_date}} </b>
+                for : <b>{{$start_date}} </b>
                 @endif
             </h6>
 
@@ -103,6 +103,28 @@
                             @endif
                         </th>
                         <th colspan="2">
+                            @if(!empty($data->first()) && !empty($branch_id))
+                            {{trans_choice('core::general.branch',1)}}/ Team:
+
+                            {{$data->first()->branch}}
+                            @endif
+                        </th>
+                        <th colspan="2">
+                            @if(!empty($data->first()) && !empty($branch_id))
+                            {{trans_choice('core::general.branch',1)}}/ Team:
+
+                            {{$data->first()->branch}}
+                            @endif
+                        </th>
+                        
+                        <th colspan="2">
+                            @if(!empty($data->first()) && !empty($branch_id))
+                            {{trans_choice('core::general.branch',1)}}/ Team:
+
+                            {{$data->first()->branch}}
+                            @endif
+                        </th>
+                        <th colspan="2">
                             @if(!empty($data->first()) && !empty($loan_product_id))
                             {{trans_choice('loan::general.product',1)}}:
 
@@ -121,11 +143,15 @@
                     </tr>
                     <tr>
                         <th></th>
+                        <th></th>
+                        <th></th>
                         <th colspan="5">{{trans_choice('loan::general.expected',1)}}</th>
                         <th colspan="5">{{trans_choice('loan::general.actual',1)}}</th>
                         <th></th>
                     </tr>
                     <tr style="background-color: #D1F9FF">
+                        <th>Client</th>
+                        <th>Contact</th>
                         <th>{{trans_choice('core::general.branch',1)}}/ Team</th>
                         <th>{{trans_choice('loan::general.principal',1)}}</th>
                         <th>{{ trans_choice('loan::general.interest',1) }}</th>
@@ -166,6 +192,12 @@
                     $total_expected_fees += $item->fees;
                     $total_expected_penalties += $item->penalties;
                     ?>
+                    <td> {{$item->client->first_name}} {{$item->client->middle_name}} {{$item->client->last_name}}</td>
+                    <td>
+                        <a href="tel:{{$item->client->mobile}}">
+                            {{$item->client->mobile}}
+                        </a>
+                    </td>
                     <td>{{ $item->branch }}</td>
                     <td>{{ number_format( $item->principal,2) }}</td>
                     <td>{{ number_format( $item->interest,2) }}</td>
@@ -184,6 +216,8 @@
                 </tbody>
                 <tfoot>
                     <tr>
+                        <th></th>
+                        <th></th>
                         <th><b>{{trans_choice('core::general.total',1)}}</b></th>
                         <th>{{number_format($total_expected_principal,2)}}</th>
                         <th>{{number_format($total_expected_interest,2)}}</th>

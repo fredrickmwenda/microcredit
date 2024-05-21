@@ -32,7 +32,7 @@
                 <h6 class="card-title">
                     {{trans_choice('loan::general.repayment',2)}}
                     @if(!empty($start_date))
-                        for period: <b>{{$start_date}} to {{$end_date}}</b>
+                        for : <b>{{$start_date}} </b>
                     @endif
                 </h6>
 
@@ -43,10 +43,10 @@
                             {{trans_choice('core::general.action',2)}}
                         </a>
                         <div class="dropdown-menu dropdown-menu-xs dropdown-menu-right">
-                            <a href="{{url('report/loan/repayment?download=1&type=csv&start_date='.$start_date.'&end_date='.$end_date.'&branch_id='.$branch_id)}}" class="dropdown-item">{{trans_choice('core::general.download',1)}} {{trans_choice('core::general.csv_format',1)}}</a>
-                            <a href="{{url('report/loan/repayment?download=1&type=excel&start_date='.$start_date.'&end_date='.$end_date.'&branch_id='.$branch_id)}}" class="dropdown-item">{{trans_choice('core::general.download',1)}} {{trans_choice('core::general.excel_format',1)}}</a>
-                            <a href="{{url('report/loan/repayment?download=1&type=excel_2007&start_date='.$start_date.'&end_date='.$end_date.'&branch_id='.$branch_id)}}" class="dropdown-item">{{trans_choice('core::general.download',1)}} {{trans_choice('core::general.excel_2007_format',1)}}</a>
-                            <a href="{{url('report/loan/repayment?download=1&type=pdf&start_date='.$start_date.'&end_date='.$end_date.'&branch_id='.$branch_id)}}" class="dropdown-item">{{trans_choice('core::general.download',1)}} {{trans_choice('core::general.pdf_format',1)}}</a>
+                            <a href="{{url('report/loan/repayment?download=1&type=csv&start_date='.$start_date.'&branch_id='.$branch_id)}}" class="dropdown-item">{{trans_choice('core::general.download',1)}} {{trans_choice('core::general.csv_format',1)}}</a>
+                            <a href="{{url('report/loan/repayment?download=1&type=excel&start_date='.$start_date.'&branch_id='.$branch_id)}}" class="dropdown-item">{{trans_choice('core::general.download',1)}} {{trans_choice('core::general.excel_format',1)}}</a>
+                            <a href="{{url('report/loan/repayment?download=1&type=excel_2007&start_date='.$start_date.'&branch_id='.$branch_id)}}" class="dropdown-item">{{trans_choice('core::general.download',1)}} {{trans_choice('core::general.excel_2007_format',1)}}</a>
+                            <a href="{{url('report/loan/repayment?download=1&type=pdf&start_date='.$start_date.'&branch_id='.$branch_id)}}" class="dropdown-item">{{trans_choice('core::general.download',1)}} {{trans_choice('core::general.pdf_format',1)}}</a>
                         </div>
                     </div>
                 </div>
@@ -78,16 +78,7 @@
                                 </flat-pickr>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label class="control-label"
-                                       for="end_date">{{trans_choice('core::general.end_date',1)}}</label>
-                                <flat-pickr value="{{$end_date}}"
-                                            class="form-control  @error('end_date') is-invalid @enderror"
-                                            name="end_date" id="end_date" required>
-                                </flat-pickr>
-                            </div>
-                        </div>
+                     
 
                     </div>
                     <div class="row">
@@ -139,7 +130,7 @@
                                 @endif
                             </th>
                             <th colspan="2">{{trans_choice('core::general.start_date',1)}}: {{$start_date}}</th>
-                            <th colspan="3">{{trans_choice('core::general.end_date',1)}}: {{$end_date}}</th>
+                           
                         </tr>
                         <tr style="background-color: #D1F9FF">
                             <th>{{trans_choice('core::general.id',1)}}</th>

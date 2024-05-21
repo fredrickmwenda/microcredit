@@ -42,6 +42,7 @@
                     </tr>
                     </thead>
                     <tbody>
+                    @can('savings.savings.reports.transactions')
                     <tr>
                         <td>
                             <a href="{{url('report/savings/transaction')}}">{{trans_choice('savings::general.transaction',2)}}</a>
@@ -53,6 +54,9 @@
                                         class="fa fa-search"></i> </a>
                         </td>
                     </tr>
+                    @endcan
+
+                    @can('savings.savings.reports.balances')
                     <tr>
                         <td>
                             <a href="{{url('report/savings/balance')}}">{{trans_choice('savings::general.balance',2)}}</a>
@@ -64,6 +68,9 @@
                                         class="fa fa-search"></i> </a>
                         </td>
                     </tr>
+                    @endcan
+
+                    @can('savings.savings.reports.accounts')
                     <tr>
                         <td>
                             <a href="{{url('report/savings/account')}}">{{trans_choice('savings::general.savings',2)}} {{trans_choice('savings::general.account',2)}}</a>
@@ -75,6 +82,9 @@
                                         class="fa fa-search"></i> </a>
                         </td>
                     </tr>
+                    @endcan
+
+                    @can('savings.savings.reports.income_statement')
                     <tr>
                         <td>
                             <a href="{{url('report/savings/account_statement')}}">{{trans_choice('savings::general.savings',2)}} {{trans_choice('savings::general.account_statement',2)}}</a>
@@ -86,6 +96,7 @@
                                         class="fa fa-search"></i> </a>
                         </td>
                     </tr>
+                    @endcan
 
                     </tbody>
                 </table>

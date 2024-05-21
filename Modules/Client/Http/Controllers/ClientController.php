@@ -744,6 +744,9 @@ class ClientController extends Controller
         $client->client_type_id = $request->client_type_id;
         $client->profession_id = $request->profession_id;
         $client->mobile = $request->mobile;
+        $client->church = $request->church;
+        $client->pastor = $request->pastor;
+        $client->church_location = $request->church_location;
         $client->notes = $request->notes;
         $client->email = $request->email;
         $client->address = $request->address;
@@ -759,6 +762,10 @@ class ClientController extends Controller
         $client->business_name          = $request->business_name ;
         $client->business_location      = $request->business_location ;
         $client->business_address       = $request->business_address ;
+
+        $client->mobile = $request->mobile;
+        $client->church = $request->church;
+        $client->pastor = $request->pastor;
 
         $client->state = $request->state;
         $client->city = $request->city;

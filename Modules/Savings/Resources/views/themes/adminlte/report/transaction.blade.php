@@ -152,7 +152,7 @@
                             <tr>
                                 <td>{{ $key->id }}</td>
                                 <td>
-                                    {{$key->client}}
+                                    {{$key->client}} 
                                 </td>
                                 <td>{{ $key->savings_id }}</td>
                                 <td>{{ $key->branch }}</td>
