@@ -43,7 +43,7 @@ class StripeController extends Controller
         $sig_header = $request->header('STRIPE_SIGNATURE');
         $class = new Stripe();
         $endpoint_secret = $class->getSetting('stripe.webhook_signing_secret');
-        $cli_secret = 'whsec_aQpkqKhwAryZrGmM9Q814pNgfdQOnOJE';
+        $cli_secret = env('STRIPE_SECRET');
         $event = null;
         try {
             $event = \Stripe\Webhook::constructEvent($payload, $sig_header, $cli_secret);
