@@ -164,7 +164,7 @@ caption, th {
 
 :root {
     --w3k-grey: #888ea8;
-    --w3k-blue: #249df9;
+    --w3k-blue: #0fd2a4;
     --w3k-purple: #4a68dd;
     --w3k-font: "Manrope";
 }
@@ -378,7 +378,7 @@ input:focus + .svg-inline--fa {
 }
 
 .wrapper {
-    background-color: var(--w3k-blue);
+    /* background-color: var(--w3k-blue); */
     padding: 10px 10px 0 0;
 }
 .content-wrapper {

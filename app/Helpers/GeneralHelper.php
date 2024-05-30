@@ -1419,7 +1419,7 @@ class GeneralHelper
             $html .= "<td>" . count($t['products']) . '</td>';
             $html .= "<td> <div class='btn-group'>";
             $html .= '<button type="button" class="btn btn-info btn-xs dropdown-toggle"
-                                        data-toggle="dropdown" aria-expanded="false">' . trans('general.choose');
+                                        data-bs-toggle="dropdown" aria-expanded="false">' . trans('general.choose');
             $html .= '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>';
             $html .= '<ul class="dropdown-menu" role="menu">';
             if (Sentinel::hasAccess('stock.update')) {

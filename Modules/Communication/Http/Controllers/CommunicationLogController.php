@@ -76,7 +76,7 @@ class CommunicationLogController extends Controller
                 $query->whereBetween("communication_campaign_logs.created_at", [$start_date, $end_date]);
             });
         return DataTables::of($query)->editColumn('description', function ($data) {
-            return '<span data-toggle="tooltip" title="' . $data->description . '">' . Str::words($data->description, 10);
+            return '<span data-bs-toggle="tooltip" title="' . $data->description . '">' . Str::words($data->description, 10);
         })->editColumn('campaign_type', function ($data) {
             if ($data->campaign_type == 'sms') {
                 return trans_choice('communication::general.sms', 1);

@@ -43,12 +43,12 @@
                                 <div class="float-right btn-group">
                                     @if($wallet->status=='submitted' ||$wallet->status=='pending')
                                         @can('wallet.wallets.approve_wallet')
-                                            <a href="#" data-toggle="modal" data-target="#approve_wallet_modal"
+                                            <a href="#" data-bs-toggle="modal" data-target="#approve_wallet_modal"
                                                class="btn btn-primary"><i
                                                         class="fas fa-check"></i>
                                                 {{ trans_choice('wallet::general.approve',1) }}
                                             </a>
-                                            <a href="#" data-toggle="modal" data-target="#reject_wallet_modal"
+                                            <a href="#" data-bs-toggle="modal" data-target="#reject_wallet_modal"
                                                class="btn btn-primary"><i class="fas fa-times"></i>
                                                 {{ trans_choice('wallet::general.reject',1) }}
                                             </a>
@@ -157,7 +157,7 @@
                                             </a>
                                         @endcan
                                         @can('wallet.wallet.edit')
-                                            <a href="#" data-toggle="modal"
+                                            <a href="#" data-bs-toggle="modal"
                                                data-target="#change_wallet_officer_modal"
                                                class="btn btn-primary">
                                                 {{ trans_choice('wallet::general.change',1) }} {{ trans_choice('wallet::general.wallet',1) }} {{ trans_choice('wallet::general.officer',1) }}
@@ -171,7 +171,7 @@
                                             </a>
                                         @endcan
                                         @can('wallet.wallet.close_wallet')
-                                            <a href="#" data-toggle="modal" data-target="#close_wallet_modal"
+                                            <a href="#" data-bs-toggle="modal" data-target="#close_wallet_modal"
                                                class="btn btn-primary">
                                                 {{ trans_choice('core::general.close',1) }} {{ trans_choice('wallet::general.wallet',1) }}
                                             </a>
@@ -249,7 +249,7 @@
                                     @endif
                                     @if($wallet->status=='approved')
                                         @can('wallet.wallets.activate_wallet')
-                                            <a href="#" data-toggle="modal" data-target="#activate_wallet_modal"
+                                            <a href="#" data-bs-toggle="modal" data-target="#activate_wallet_modal"
                                                class="btn btn-primary"><i class="fas fa-flag"></i>
                                                 {{ trans_choice('wallet::general.activate',1) }}
                                             </a>
@@ -425,7 +425,7 @@
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
                                 <a href="#account_details" class="nav-link active"
-                                   data-toggle="tab">
+                                   data-bs-toggle="tab">
                                     {{ trans_choice('wallet::general.account',1) }} {{ trans_choice('core::general.detail',2) }}
                                 </a>
                             </li>
@@ -433,7 +433,7 @@
                                 @can('wallet.wallets.transactions.index')
                                     <li class="nav-item">
                                         <a href="#wallet_transactions" class="nav-link"
-                                           data-toggle="tab">
+                                           data-bs-toggle="tab">
                                             {{ trans_choice('wallet::general.transaction',2) }}
                                         </a>
                                     </li>
@@ -547,7 +547,7 @@
                                                     <td>
                                                         <div class="btn-group">
                                                             <button href="#" class="btn btn-default dropdown-toggle"
-                                                                    data-toggle="dropdown">
+                                                                    data-bs-toggle="dropdown">
                                                                 <i class="fas fa-ellipsis-h"></i>
                                                             </button>
                                                             <div class="dropdown-menu dropdown-menu-left">

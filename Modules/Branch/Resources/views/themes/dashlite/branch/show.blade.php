@@ -73,7 +73,7 @@
                                 </div>
                                 <div class="nk-block-head-content">
                                     @can('branch.branches.assign_user')
-                                        <a href="#" data-toggle="modal" data-target="#addUser"
+                                        <a href="#" data-bs-toggle="modal" data-target="#addUser"
                                            class="btn btn-info btn-sm">{{trans_choice('core::general.add',1)}} {{trans_choice('core::general.user',1)}}</a>
                                     @endcan
                                 </div>
@@ -100,7 +100,7 @@
                                         <td>
                                             <div class="btn-group">
                                                 <button type="button" class="btn btn-info btn-xs dropdown-toggle"
-                                                        data-toggle="dropdown"
+                                                        data-bs-toggle="dropdown"
                                                         aria-expanded="true"><i class="fa fa-navicon"></i></button>
                                                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                                     @can('branch.branches.assign_user')

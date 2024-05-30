@@ -38,14 +38,14 @@
                             </div>
                             <div class="user-action">
                                 <div class="dropdown">
-                                    <a class="btn btn-icon btn-trigger mr-n2" data-toggle="dropdown"
+                                    <a class="btn btn-icon btn-trigger mr-n2" data-bs-toggle="dropdown"
                                        href="#" aria-expanded="false"><em
                                                 class="icon ni ni-more-v"></em></a>
                                     <div class="dropdown-menu dropdown-menu-right" style="">
                                         <ul class="link-list-opt no-bdr">
                                             @can('client.clients.activate')
                                                 <li>
-                                                    <a href="#" data-toggle="modal"
+                                                    <a href="#" data-bs-toggle="modal"
                                                        data-target="#change_status_modal">
                                                         <em class="icon ni ni-check-circle"></em>
                                                         <span>{{trans_choice('client::general.change',1)}} {{trans_choice('core::general.status',1)}}</span>
@@ -60,7 +60,7 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="#" data-toggle="modal"
+                                                    <a href="#" data-bs-toggle="modal"
                                                        data-target="#transfer_client_modal"><em
                                                                 class="icon ni ni-forward"></em>
                                                         <span>{{trans_choice('client::general.transfer',1)}}</span>
@@ -94,7 +94,7 @@
                                         {{trans_choice('core::general.status',1)}}
                                     </div>
                                     <div class="data-value">
-                                        <a class="float-right" data-toggle="modal"
+                                        <a class="float-right" data-bs-toggle="modal"
                                            data-target="#change_status_modal" href="#">
                                             @if($client->status=='pending')
                                                 {{trans_choice('core::general.pending',1)}}
@@ -317,30 +317,30 @@
                     <div class="card-inner">
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
-                                <a class="nav-link active" href="#accounts" data-toggle="tab"
+                                <a class="nav-link active" href="#accounts" data-bs-toggle="tab"
                                    aria-expanded="false">{{trans_choice('client::general.account',2)}}
                                 </a>
                             </li>
                             @can('client.clients.identification.index')
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#client_identification" data-toggle="tab"
+                                    <a class="nav-link" href="#client_identification" data-bs-toggle="tab"
                                        aria-expanded="false">{{trans_choice('client::general.identification',1)}}</a>
                                 </li>
                             @endcan
                             @can('client.clients.next_of_kin.index')
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#client_next_of_kin" data-toggle="tab"
+                                    <a class="nav-link" href="#client_next_of_kin" data-bs-toggle="tab"
                                        aria-expanded="true">{{trans_choice('client::general.next_of_kin',1)}}</a></li>
                             @endcan
                             @can('client.clients.index')
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#login_details" data-toggle="tab"
+                                    <a class="nav-link" href="#login_details" data-bs-toggle="tab"
                                        aria-expanded="false">{{trans_choice('user::general.login',1)}} {{trans_choice('core::general.detail',2)}}</a>
                                 </li>
                             @endcan
                             @can('client.clients.files.index')
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#files" data-toggle="tab"
+                                    <a class="nav-link" href="#files" data-bs-toggle="tab"
                                        aria-expanded="false">{{trans_choice('client::general.file',2)}}</a>
                                 </li>
                             @endcan

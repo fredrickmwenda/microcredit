@@ -56,7 +56,7 @@
                 <div class="btn-group">
                     <div class="dropdown">
                         <a href="#" class="btn btn-trigger btn-icon dropdown-toggle"
-                           data-toggle="dropdown">
+                           data-bs-toggle="dropdown">
                             <i class="fas fa-wrench"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-xs">
@@ -213,7 +213,7 @@
                                 </a>
                                 <div class="btn-group mt-2">
                                     <button href="#" class="btn btn-default dropdown-toggle"
-                                            data-toggle="dropdown">
+                                            data-bs-toggle="dropdown">
                                         <i class="fas fa-ellipsis-h"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right">

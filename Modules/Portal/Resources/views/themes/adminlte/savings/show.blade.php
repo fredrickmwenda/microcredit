@@ -185,21 +185,21 @@
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
                                 <a href="#account_details" class="nav-link active"
-                                   data-toggle="tab">
+                                   data-bs-toggle="tab">
                                     {{ trans_choice('savings::general.account',1) }} {{ trans_choice('core::general.detail',2) }}
                                 </a>
                             </li>
                             @if($savings->status=='active' ||$savings->status=='closed'||$savings->status=='dormant'||$savings->status=='overpaid'||$savings->status=='rescheduled')
                                 <li class="nav-item">
                                     <a href="#savings_transactions" class="nav-link"
-                                       data-toggle="tab">
+                                       data-bs-toggle="tab">
                                         {{ trans_choice('savings::general.transaction',2) }}
                                     </a>
                                 </li>
                             @endif
                             <li class="nav-item">
                                 <a href="#savings_charges" class="nav-link"
-                                   data-toggle="tab">
+                                   data-bs-toggle="tab">
                                     {{ trans_choice('savings::general.charge',2) }}
                                 </a>
                             </li>
@@ -344,7 +344,7 @@
                                                 <td>
                                                     <div class="btn-group">
                                                         <button href="#" class="btn btn-default dropdown-toggle"
-                                                                data-toggle="dropdown">
+                                                                data-bs-toggle="dropdown">
                                                             <i class="fas fa-ellipsis-h"></i>
                                                         </button>
                                                         <div class="dropdown-menu dropdown-menu-right">

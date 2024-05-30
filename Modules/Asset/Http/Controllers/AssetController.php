@@ -78,7 +78,7 @@ class AssetController extends Controller
         })->editColumn('value', function ($data) {
             return number_format($data->value, 2);
         })->editColumn('action', function ($data) {
-            $action = '<div class="btn-group"><button type="button" class="btn btn-info btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="true"><i class="fa fa-navicon"></i></button> <ul class="dropdown-menu dropdown-menu-right" role="menu">';
+            $action = '<div class="btn-group"><button type="button" class="btn btn-info btn-xs dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa fa-navicon"></i></button> <ul class="dropdown-menu dropdown-menu-right" role="menu">';
             $action .= '<li><a href="' . url('asset/' . $data->id . '/show') . '" class="">' . trans_choice('core::general.detail', 2) . '</a></li>';
             $action .= '<li><a href="' . url('asset/' . $data->id . '/edit') . '" class="">' . trans_choice('core::general.edit', 2) . '</a></li>';
             $action .= '<li><a href="' . url('asset/' . $data->id . '/delete') . '" class="">' . trans_choice('core::general.delete', 2) . '</a></li>';

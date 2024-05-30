@@ -2,6 +2,7 @@
 
 namespace Modules\Loan\Http\Controllers;
 
+use App\Notifications\LoanApprovalNotification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -10,6 +11,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 use Laracasts\Flash\Flash;
 use Modules\Accounting\Entities\JournalEntry;
 use Modules\Client\Entities\Client;
@@ -52,7 +54,6 @@ class LoanController extends Controller
         $this->middleware(['permission:loan.loans.calculator'])->only(['calculator']);
         $this->middleware(['permission:loan.loans.transactions.create'])->only(['create_repayment', 'store_repayment', 'create_loan_linked_charge', 'store_loan_linked_charge']);
         $this->middleware(['permission:loan.loans.transactions.edit'])->only(['edit_repayment', 'reverse_repayment', 'update_repayment', 'waive_interest', 'waive_charge']);
-
     }
 
     /**
@@ -139,7 +140,7 @@ class LoanController extends Controller
             ->groupBy("loan_applications.id")
             ->paginate($perPage)
             ->appends($request->input());
-        return theme_view('loan::application.index',compact('data'));
+        return theme_view('loan::application.index', compact('data'));
     }
 
     public function get_loans(Request $request)
@@ -214,7 +215,6 @@ class LoanController extends Controller
             if ($data->status == 'rescheduled') {
                 return '<span class="label label-info">' . trans_choice('loan::general.rescheduled', 1) . '</span>';
             }
-
         })->editColumn('action', function ($data) {
 
             $action = '<a href="' . url('loan/' . $data->id . '/show') . '" class="btn btn-info">' . trans_choice('general.detail', 2) . '</a>';
@@ -222,7 +222,6 @@ class LoanController extends Controller
             return $action;
         })->editColumn('id', function ($data) {
             return '<a href="' . url('loan/' . $data->id . '/show') . '" class="">' . $data->id . '</a>';
-
         })->rawColumns(['id', 'client', 'action', 'status'])->make(true);
     }
 
@@ -240,12 +239,12 @@ class LoanController extends Controller
             ->leftJoin("users", "users.id", "loan_applications.created_by_id")
             ->selectRaw("concat(clients.first_name,' ',clients.last_name) client,concat(users.first_name,' ',users.last_name) created_by,loan_applications.id,loan_applications.client_id,loan_products.name loan_product,loan_applications.status,loan_applications.loan_id,branches.name branch,loan_applications.amount,loan_applications.created_at")
             ->when($status, function ($query) use ($status) {
-            $query->where("loan_applications.status", $status);
-        })->when($client_id, function ($query) use ($client_id) {
-            $query->where("loan_applications.client_id", $client_id);
-        })->when($branch_id, function ($query) use ($branch_id) {
-            $query->where("loan_applications.branch_id", $branch_id);
-        });
+                $query->where("loan_applications.status", $status);
+            })->when($client_id, function ($query) use ($client_id) {
+                $query->where("loan_applications.client_id", $client_id);
+            })->when($branch_id, function ($query) use ($branch_id) {
+                $query->where("loan_applications.branch_id", $branch_id);
+            });
         return DataTables::of($query)->editColumn('client', function ($data) {
             return '<a href="' . url('client/' . $data->client_id . '/show') . '">' . $data->client . '</a>';
         })->editColumn('amount', function ($data) {
@@ -272,7 +271,6 @@ class LoanController extends Controller
             if ($data->status == 'withdrawn') {
                 return '<span class="label label-danger">' . trans_choice('loan::general.withdrawn', 1) . '</span>';
             }
-
         })->editColumn('action', function ($data) {
 
             $action = '<a href="' . url('loan/application/' . $data->id . '/show') . '" class="btn btn-info">' . trans_choice('general.detail', 2) . '</a>';
@@ -280,7 +278,6 @@ class LoanController extends Controller
             return $action;
         })->editColumn('id', function ($data) {
             return '<a href="' . url('loan/application/' . $data->id . '/show') . '" class="">' . $data->id . '</a>';
-
         })->rawColumns(['id', 'client', 'action', 'status'])->make(true);
     }
 
@@ -503,7 +500,6 @@ class LoanController extends Controller
                     //determine next balance
                     $balance = ($balance - $principal);
                 }
-
             }
             $payment_from_date = Carbon::parse($next_payment_date)->add(1, 'day')->format("Y-m-d");
             $next_payment_date = Carbon::parse($next_payment_date)->add($loan->repayment_frequency, $loan->repayment_frequency_type)->format("Y-m-d");
@@ -621,6 +617,7 @@ class LoanController extends Controller
         $payment_types = PaymentType::where('active', 1)->get();
         $loan = Loan::with('repayment_schedules')->with('transactions')->with('charges')->with('client')->with('loan_product')->with('notes')->with('guarantors')->with('files')->with('collateral')->with('collateral.collateral_type')->with('notes.created_by')->find($id);
         $custom_fields = CustomField::where('category', 'add_loan')->where('active', 1)->get();
+        dd($users);
         return theme_view('loan::loan.show', compact('loan', 'users', 'payment_types', 'custom_fields'));
     }
 
@@ -769,32 +766,101 @@ class LoanController extends Controller
     }
 
     // Loan Approval
+    // public function approve_loan(Request $request, $id)
+    // {
+
+    //     $request->validate([
+    //         'approved_on_date' => ['required', 'date'],
+    //         'approved_amount' => ['required', 'numeric'],
+    //     ]);
+    //     $loan = Loan::find($id);
+    //     $previous_status = $loan->status;
+    //     $loan->approved_by_user_id = Auth::id();
+    //     $loan->approved_amount = $request->approved_amount;
+    //     $loan->approved_on_date = $request->approved_on_date;
+    //     $loan->status = 'approved';
+    //     $loan->approved_notes = $request->approved_notes;
+    //     $loan->save();
+    //     $loan_history = new LoanHistory();
+    //     $loan_history->loan_id = $loan->id;
+    //     $loan_history->created_by_id = Auth::id();
+    //     $loan_history->user = Auth::user()->first_name . ' ' . Auth::user()->last_name;
+    //     $loan_history->action = 'Loan Approved';
+    //     $loan_history->save();
+    //     activity()->on($loan)
+    //         ->withProperties(['id' => $loan->id])
+    //         ->log('Approve Loan');
+    //     //fire loan status changed event
+    //     event(new LoanStatusChanged($loan, $previous_status,0));
+    //     \flash(trans_choice("core::general.successfully_saved", 1))->success()->important();
+    //     return redirect('loan/' . $loan->id . '/show');
+    // }
     public function approve_loan(Request $request, $id)
     {
-
         $request->validate([
             'approved_on_date' => ['required', 'date'],
             'approved_amount' => ['required', 'numeric'],
         ]);
+
         $loan = Loan::find($id);
         $previous_status = $loan->status;
-        $loan->approved_by_user_id = Auth::id();
-        $loan->approved_amount = $request->approved_amount;
-        $loan->approved_on_date = $request->approved_on_date;
-        $loan->status = 'approved';
-        $loan->approved_notes = $request->approved_notes;
-        $loan->save();
-        $loan_history = new LoanHistory();
-        $loan_history->loan_id = $loan->id;
-        $loan_history->created_by_id = Auth::id();
-        $loan_history->user = Auth::user()->first_name . ' ' . Auth::user()->last_name;
-        $loan_history->action = 'Loan Approved';
-        $loan_history->save();
-        activity()->on($loan)
-            ->withProperties(['id' => $loan->id])
-            ->log('Approve Loan');
-        //fire loan status changed event
-        event(new LoanStatusChanged($loan, $previous_status,0));
+
+
+
+        if (Auth::user()->roles()->where('name', 'CEO')->exists()) {
+            if ($loan->status != Loan::STATUS_PENDING_CEO_APPROVAL) {
+
+                $loan->approved_by_user_id = Auth::id();
+                $loan->status = Loan::STATUS_APPROVED;
+                $loan->approved_amount = $request->approved_amount;
+                $loan->approved_on_date = $request->approved_on_date;
+                $loan->approved_notes = $request->approved_notes;
+                $loan->save();
+            } else {
+
+                $loan->status = Loan::STATUS_APPROVED;
+                $loan->approved_amount = $request->approved_amount;
+                $loan->approved_on_date = $request->approved_on_date;
+                $loan->approved_notes = $request->approved_notes;
+                $loan->save();
+                Notification::send($loan->approved_by_user, new LoanApprovalNotification($loan, 'approved'));
+            }
+            $loan_history = new LoanHistory();
+            $loan_history->loan_id = $loan->id;
+            $loan_history->created_by_id = Auth::id();
+            $loan_history->user = Auth::user()->first_name . ' ' . Auth::user()->last_name;
+            $loan_history->action = 'Loan Approved by CEO';
+            $loan_history->save();
+            activity()->on($loan)
+                ->withProperties(['id' => $loan->id])
+                ->log('Loan Approved by CE0');
+        } else {
+            if ($loan->status != Loan::STATUS_PENDING && $loan->status != Loan::STATUS_SUBMITTED) {
+                \flash(trans_choice("core::general.already_approved", 1))->warning()->important();
+                return redirect()->back();
+            }
+
+            Notification::send(User::whereHas('roles', function ($query) {
+                $query->where('name', 'CEO');
+            })->first(), new LoanApprovalNotification($loan, 'pending_ceo_approval'));
+            
+
+            $loan->status = Loan::STATUS_PENDING_CEO_APPROVAL;
+            $loan->approved_by_user_id = Auth::id();
+            $loan->save();
+            $loan_history = new LoanHistory();
+            $loan_history->loan_id = $loan->id;
+            $loan_history->created_by_id = Auth::id();
+            $loan_history->user = Auth::user()->first_name . ' ' . Auth::user()->last_name;
+            $loan_history->action = 'Loan Approved by LOAN OFFICER and passed to CEO';
+            $loan_history->save();
+            
+        }
+
+
+
+        event(new LoanStatusChanged($loan, $previous_status, 0));
+
         \flash(trans_choice("core::general.successfully_saved", 1))->success()->important();
         return redirect('loan/' . $loan->id . '/show');
     }
@@ -822,7 +888,7 @@ class LoanController extends Controller
             ->withProperties(['id' => $loan->id])
             ->log('Undo Loan Approval');
         //fire loan status changed event
-        event(new LoanStatusChanged($loan, $previous_status,0));
+        event(new LoanStatusChanged($loan, $previous_status, 0));
         \flash(trans_choice("core::general.successfully_saved", 1))->success()->important();
         return redirect('loan/' . $loan->id . '/show');
     }
@@ -851,7 +917,7 @@ class LoanController extends Controller
             ->withProperties(['id' => $loan->id])
             ->log('Reject Loan');
         //fire loan status changed event
-        event(new LoanStatusChanged($loan, $previous_status,0));
+        event(new LoanStatusChanged($loan, $previous_status, 0));
         \flash(trans_choice("core::general.successfully_saved", 1))->success()->important();
         return redirect('loan/' . $loan->id . '/show');
     }
@@ -877,7 +943,7 @@ class LoanController extends Controller
             ->withProperties(['id' => $loan->id])
             ->log('Undo Loan Rejection');
         //fire loan status changed event
-        event(new LoanStatusChanged($loan, $previous_status,0));
+        event(new LoanStatusChanged($loan, $previous_status, 0));
         \flash(trans_choice("core::general.successfully_saved", 1))->success()->important();
         return redirect('loan/' . $loan->id . '/show');
     }
@@ -905,7 +971,7 @@ class LoanController extends Controller
             ->withProperties(['id' => $loan->id])
             ->log('Withdraw Loan');
         //fire loan status changed event
-        event(new LoanStatusChanged($loan, $previous_status,0));
+        event(new LoanStatusChanged($loan, $previous_status, 0));
         \flash(trans_choice("core::general.successfully_saved", 1))->success()->important();
         return redirect('loan/' . $loan->id . '/show');
     }
@@ -930,7 +996,7 @@ class LoanController extends Controller
             ->withProperties(['id' => $loan->id])
             ->log('Undo Loan Withdrawal');
         //fire loan status changed event
-        event(new LoanStatusChanged($loan, $previous_status,0));
+        event(new LoanStatusChanged($loan, $previous_status, 0));
         \flash(trans_choice("core::general.successfully_saved", 1))->success()->important();
         return redirect('loan/' . $loan->id . '/show');
     }
@@ -996,7 +1062,6 @@ class LoanController extends Controller
             $journal_entry->debit = $balance;
             $journal_entry->reference = $loan->id;
             $journal_entry->save();
-
         }
         $loan_history = new LoanHistory();
         $loan_history->loan_id = $loan->id;
@@ -1009,7 +1074,7 @@ class LoanController extends Controller
             ->log('Writeoff Loan');
         event(new TransactionUpdated($loan));
         //fire loan status changed event
-        event(new LoanStatusChanged($loan, $previous_status,0));
+        event(new LoanStatusChanged($loan, $previous_status, 0));
         \flash(trans_choice("core::general.successfully_saved", 1))->success()->important();
         return redirect('loan/' . $loan->id . '/show');
     }
@@ -1041,7 +1106,7 @@ class LoanController extends Controller
             ->log('Undo Loan writeoff');
         event(new TransactionUpdated($loan));
         //fire loan status changed event
-        event(new LoanStatusChanged($loan, $previous_status,0));
+        event(new LoanStatusChanged($loan, $previous_status, 0));
         \flash(trans_choice("core::general.successfully_saved", 1))->success()->important();
         return redirect('loan/' . $loan->id . '/show');
     }
@@ -1111,7 +1176,7 @@ class LoanController extends Controller
 
         //prepare loan schedule
         //determine interest rate
-        $interest_rate = determine_period_interest_rate($loan->interest_rate, $loan->repayment_frequency_type, $loan->interest_rate_type,$loan->repayment_frequency);
+        $interest_rate = determine_period_interest_rate($loan->interest_rate, $loan->repayment_frequency_type, $loan->interest_rate_type, $loan->repayment_frequency);
         $balance = round($loan->principal, $loan->decimals);
         $period = ($loan->loan_term / $loan->repayment_frequency);
         $payment_from_date = $request->disbursed_on_date;
@@ -1187,12 +1252,11 @@ class LoanController extends Controller
                     //determine next balance
                     $balance = ($balance - $principal);
                 }
-
             }
             $payment_from_date = Carbon::parse($next_payment_date)->add(1, 'day')->format("Y-m-d");
-            if($loan->repayment_frequency_type=='months'){
+            if ($loan->repayment_frequency_type == 'months') {
                 $next_payment_date = Carbon::parse($next_payment_date)->addMonthsNoOverflow($loan->repayment_frequency)->format("Y-m-d");
-            }else{
+            } else {
                 $next_payment_date = Carbon::parse($next_payment_date)->add($loan->repayment_frequency, $loan->repayment_frequency_type)->format("Y-m-d");
             }
             $total_principal = $total_principal + $loan_repayment_schedule->principal;
@@ -1344,7 +1408,6 @@ class LoanController extends Controller
                     $loan_repayment_schedule->save();
                 }
             }
-
         }
         if ($disbursement_fees > 0) {
             $loan_transaction = new LoanTransaction();
@@ -1438,7 +1501,7 @@ class LoanController extends Controller
             ->withProperties(['id' => $loan->id])
             ->log('Disburse Loan');
         //fire loan status changed event
-        event(new LoanStatusChanged($loan, $previous_status,0));
+        event(new LoanStatusChanged($loan, $previous_status, 0));
         \flash(trans_choice("core::general.successfully_saved", 1))->success()->important();
         return redirect('loan/' . $loan->id . '/show');
     }
@@ -1469,7 +1532,7 @@ class LoanController extends Controller
             ->withProperties(['id' => $loan->id])
             ->log('Undo Loan Disbursement');
         //fire loan status changed event
-        event(new LoanStatusChanged($loan, $previous_status,0));
+        event(new LoanStatusChanged($loan, $previous_status, 0));
         \flash(trans_choice("core::general.successfully_saved", 1))->success()->important();
         return redirect('loan/' . $loan->id . '/show');
     }
@@ -1727,7 +1790,6 @@ class LoanController extends Controller
             } else {
                 $repayment_schedule = $loan->repayment_schedules->last();
             }
-
         }
         //calculate the amount
         if ($loan_linked_charge->loan_charge_option_id == 1) {
@@ -1795,7 +1857,6 @@ class LoanController extends Controller
             } else {
                 $repayment_schedule = $loan->repayment_schedules->last();
             }
-
         }
         $amount = $request->interest_waived_amount;
         foreach ($loan->repayment_schedules->where('due_date', '>=', $repayment_schedule->due_date) as $repayment_schedule) {
@@ -1947,7 +2008,6 @@ class LoanController extends Controller
                     //determine next balance
                     $balance = ($balance - $principal);
                 }
-
             }
             $payment_from_date = Carbon::parse($next_payment_date)->add(1, 'day')->format("Y-m-d");
             $next_payment_date = Carbon::parse($next_payment_date)->add($loan_product->repayment_frequency, $loan_product->repayment_frequency_type)->format("Y-m-d");
@@ -1965,30 +2025,24 @@ class LoanController extends Controller
                 $amount = 0;
                 if ($key->charge->loan_charge_option_id == 1) {
                     $amount = $key->charge->amount;
-
                 }
                 if ($key->charge->loan_charge_option_id == 2) {
                     $amount = round(($key->charge->amount * $total_principal / 100), $loan_product->decimals);
                 }
                 if ($key->charge->loan_charge_option_id == 3) {
                     $amount = round(($key->charge->amount * ($total_interest + $total_principal) / 100), $loan_product->decimals);
-
                 }
                 if ($key->charge->loan_charge_option_id == 4) {
                     $amount = round(($key->charge->amount * $total_interest / 100), $loan_product->decimals);
-
                 }
                 if ($key->charge->loan_charge_option_id == 5) {
                     $amount = round(($key->charge->amount * $total_principal / 100), $loan_product->decimals);
-
                 }
                 if ($key->charge->loan_charge_option_id == 6) {
                     $amount = round(($key->charge->amount * $total_principal / 100), $loan_product->decimals);
-
                 }
                 if ($key->charge->loan_charge_option_id == 7) {
                     $amount = round(($key->charge->amount * $loan_principal / 100), $loan_product->decimals);
-
                 }
                 $disbursement_fees = $disbursement_fees + $amount;
             }
@@ -2028,11 +2082,8 @@ class LoanController extends Controller
                     } else {
                         $temp['fees'] = $temp['fees'] + $key->charge->amount;
                     }
-
                 }
-
             }
-
         }
         $loan_details['total_interest'] = $total_interest;
         $loan_details['decimals'] = $loan_product->decimals;
@@ -2107,7 +2158,6 @@ class LoanController extends Controller
                     $key->charge->loan_charge_option_id = trans_choice('loan::general.original_loan_principal', 1);
                 }
                 $charges[$key->charge->id] = $key;
-
             }
         }
         JavaScript::put([
@@ -2119,7 +2169,6 @@ class LoanController extends Controller
         ]);
 
         return theme_view('loan::application.approve', compact('client', 'loan_product', 'users', 'loan_purposes', 'funds', 'loan_application'));
-
     }
 
     public function store_approve_application(Request $request, $id)

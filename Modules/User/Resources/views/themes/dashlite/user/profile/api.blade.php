@@ -38,7 +38,7 @@
 
                                 </div>
                                 <div class="nk-block-head-content">
-                                    <a href="#" data-toggle="modal" data-target="#new_oauth_client"
+                                    <a href="#" data-bs-toggle="modal" data-target="#new_oauth_client"
                                        class="btn btn-info btn-sm">
                                         {{ __('core::general.new') }} {{ __('user::general.Oauth Client') }}
                                     </a>
@@ -61,7 +61,7 @@
                                     <td>{{$client->name}}</td>
                                     <td>{{$client->created_at}}</td>
                                     <td>
-                                        <button type="button" data-toggle="modal" data-id="{{$client->id}}"
+                                        <button type="button" data-bs-toggle="modal" data-id="{{$client->id}}"
                                                 data-name="{{$client->name}}"
                                                 data-secret="{{$client->secret}}"
                                                 data-redirect="{{$client->redirect}}"
@@ -69,7 +69,7 @@
                                                 class="btn btn-success btn-elevate-hover btn-sm btn-circle btn-icon">
                                             <i class="fa fa-info"></i>
                                         </button>
-                                        <button type="button" data-toggle="modal" data-id="{{$client->id}}"
+                                        <button type="button" data-bs-toggle="modal" data-id="{{$client->id}}"
                                                 data-name="{{$client->name}}"
                                                 data-secret="{{$client->secret}}"
                                                 data-redirect="{{$client->redirect}}"
@@ -97,7 +97,7 @@
 
                                 </div>
                                 <div class="nk-block-head-content">
-                                    <a href="#" data-toggle="modal" data-target="#new_personal_key"
+                                    <a href="#" data-bs-toggle="modal" data-target="#new_personal_key"
                                        class="btn btn-info btn-sm">
                                         {{ __('core::general.new') }} {{ __('user::general.Key') }}
                                     </a>
@@ -118,13 +118,13 @@
                                     <td>{{$token->name}}</td>
                                     <td>{{$token->created_at}}</td>
                                     <td>
-                                        <button type="button" data-toggle="modal" data-id="{{$token->id}}"
+                                        <button type="button" data-bs-toggle="modal" data-id="{{$token->id}}"
                                                 data-name="{{$token->name}}"
                                                 data-target="#view_personal_key"
                                                 class="btn btn-success btn-elevate-hover btn-sm btn-circle btn-icon">
                                             <i class="fa fa-info"></i>
                                         </button>
-                                        <button type="button" data-toggle="modal" data-id="{{$token->id}}"
+                                        <button type="button" data-bs-toggle="modal" data-id="{{$token->id}}"
                                                 data-name="{{$token->name}}"
                                                 data-target="#edit_personal_key"
                                                 class="btn btn-warning btn-elevate-hover btn-sm btn-circle btn-icon">

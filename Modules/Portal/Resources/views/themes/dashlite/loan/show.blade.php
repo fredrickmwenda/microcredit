@@ -308,54 +308,54 @@
                     <ul class="nav nav-tabs">
                         <li class="nav-item">
                             <a href="#account_details" class="nav-link active"
-                               data-toggle="tab">
+                               data-bs-toggle="tab">
                                 {{ trans_choice('loan::general.account',1) }} {{ trans_choice('core::general.detail',2) }}
                             </a>
                         </li>
                         @if($loan->status=='active' ||$loan->status=='closed'||$loan->status=='written_off'||$loan->status=='overpaid'||$loan->status=='rescheduled')
                             <li class="nav-item">
                                 <a href="#repayment_schedule" class="nav-link"
-                                   data-toggle="tab">
+                                   data-bs-toggle="tab">
                                     {{ trans_choice('loan::general.repayment',1) }} {{ trans_choice('loan::general.schedule',1) }}
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="#loan_transactions" class="nav-link"
-                                   data-toggle="tab">
+                                   data-bs-toggle="tab">
                                     {{ trans_choice('loan::general.transaction',2) }}
                                 </a>
                             </li>
                         @endif
                         <li class="nav-item">
                             <a href="#loan_charges" class="nav-link"
-                               data-toggle="tab">
+                               data-bs-toggle="tab">
                                 {{ trans_choice('loan::general.charge',2) }}
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="#loan_files" class="nav-link"
-                               data-toggle="tab">
+                               data-bs-toggle="tab">
                                 {{ trans_choice('loan::general.file',2) }}
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a href="#loan_collateral" class="nav-link"
-                               data-toggle="tab">
+                               data-bs-toggle="tab">
                                 {{ trans_choice('loan::general.collateral',2) }}
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a href="#loan_guarantors" class="nav-link"
-                               data-toggle="tab">
+                               data-bs-toggle="tab">
                                 {{ trans_choice('loan::general.guarantor',2) }}
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a href="#loan_notes" class="nav-link"
-                               data-toggle="tab">
+                               data-bs-toggle="tab">
                                 {{ trans_choice('core::general.note',2) }}
                             </a>
                         </li>
@@ -489,7 +489,7 @@
                                 <div class="m-4">
                                     <div class="dropdown">
                                         <button type="button" class="btn btn-info  btn-action dropdown-toggle"
-                                                data-toggle="dropdown">
+                                                data-bs-toggle="dropdown">
                                             <span>{{trans_choice('core::general.action',1)}}</span>
                                             <em class="icon ni ni-chevron-down"></em>
                                         </button>
@@ -741,7 +741,7 @@
                                             <td>
                                                 <div class="dropdown">
                                                     <a href="#" class="dropdown-toggle btn btn-icon btn-trigger"
-                                                       data-toggle="dropdown"><em
+                                                       data-bs-toggle="dropdown"><em
                                                                 class="icon ni ni-more-h"></em></a>
                                                     <div class="dropdown-menu dropdown-menu-right">
                                                         <ul class="link-list-opt no-bdr">

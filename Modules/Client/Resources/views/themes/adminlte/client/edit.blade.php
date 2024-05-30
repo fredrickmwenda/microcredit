@@ -394,7 +394,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <!-- <div class="col-md-4">
                         <div class="form-group">
                             <label for="church" class="control-label">Church</label>
                             <input type="text" name="church" id="church" v-model="church" class="form-control @error('church') is-invalid @enderror" required>
@@ -430,7 +430,7 @@
                             @enderror
                         </div>
 
-                    </div>
+                    </div> -->
 
                     <div class="col-md-6">
                         <div class="form-group">

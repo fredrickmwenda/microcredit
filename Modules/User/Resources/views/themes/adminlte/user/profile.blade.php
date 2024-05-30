@@ -35,13 +35,13 @@
                     <div class="card-body">
                         <ul class="nav nav-pills navtab-bg nav-justified">
                             <li class="nav-item">
-                                <a href="#notes" data-toggle="tab" aria-expanded="false" class="nav-link active">
+                                <a href="#notes" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
                                     <span class="d-block d-sm-none"><i class="uil-home-alt"></i></span>
                                     <span class="d-none d-sm-block">{{ trans_choice('general.note',2) }}</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#activity_log" data-toggle="tab" aria-expanded="true" class="nav-link">
+                                <a href="#activity_log" data-bs-toggle="tab" aria-expanded="true" class="nav-link">
                                     <span class="d-block d-sm-none"><i class="uil-user"></i></span>
                                     <span class="d-none d-sm-block">{{ trans_choice('general.activity_log',2) }}</span>
                                 </a>

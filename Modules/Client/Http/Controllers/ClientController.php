@@ -97,7 +97,7 @@ class ClientController extends Controller
         return DataTables::of($query)->editColumn('staff', function ($data) {
             return $data->staff;
         })->editColumn('action', function ($data) {
-            $action = '<div class="btn-group"><button type="button" class="btn btn-info btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="true"><i class="fa fa-navicon"></i></button> <ul class="dropdown-menu dropdown-menu-right" role="menu">';
+            $action = '<div class="btn-group"><button type="button" class="btn btn-info btn-xs dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa fa-navicon"></i></button> <ul class="dropdown-menu dropdown-menu-right" role="menu">';
             $action .= '<li><a href="' . url('client/' . $data->id . '/show') . '" class="">' . trans_choice('user::general.detail', 2) . '</a></li>';
             if (Auth::user()->hasPermissionTo('client.clients.edit')) {
                 $action .= '<li><a href="' . url('client/' . $data->id . '/edit') . '" class="">' . trans_choice('user::general.edit', 2) . '</a></li>';
@@ -744,9 +744,9 @@ class ClientController extends Controller
         $client->client_type_id = $request->client_type_id;
         $client->profession_id = $request->profession_id;
         $client->mobile = $request->mobile;
-        $client->church = $request->church;
-        $client->pastor = $request->pastor;
-        $client->church_location = $request->church_location;
+        // $client->church = $request->church;
+        // $client->pastor = $request->pastor;
+        // $client->church_location = $request->church_location;
         $client->notes = $request->notes;
         $client->email = $request->email;
         $client->address = $request->address;
@@ -763,9 +763,9 @@ class ClientController extends Controller
         $client->business_location      = $request->business_location ;
         $client->business_address       = $request->business_address ;
 
-        $client->mobile = $request->mobile;
-        $client->church = $request->church;
-        $client->pastor = $request->pastor;
+        // $client->mobile = $request->mobile;
+        // $client->church = $request->church;
+        // $client->pastor = $request->pastor;
 
         $client->state = $request->state;
         $client->city = $request->city;

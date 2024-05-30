@@ -76,7 +76,7 @@
                                     {{trans_choice('core::general.status',1)}}
                                 </b>
                                 <a class="float-right">
-                                    <a class="float-right" data-toggle="modal"
+                                    <a class="float-right" data-bs-toggle="modal"
                                        data-target="#change_status_modal" href="#">
                                         @if($client->status=='pending')
                                             {{trans_choice('core::general.pending',1)}}
@@ -272,7 +272,7 @@
                 @if(count($clients)>1)
                     <div class="alert alert-info">
                         {{trans_choice('portal::general.you_have_more_account',1)}}
-                        <button class="btn btn-info" data-toggle="modal"
+                        <button class="btn btn-info" data-bs-toggle="modal"
                                 data-target="#switch_client_modal">{{trans_choice('portal::general.switch',1)}} {{trans_choice('client::general.account',1)}}</button>
                     </div>
                 @endif
@@ -281,21 +281,21 @@
                         <div class="card-header p-0 border-bottom-0">
                             <ul class="nav nav-tabs">
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="#accounts" data-toggle="tab"
+                                    <a class="nav-link active" href="#accounts" data-bs-toggle="tab"
                                        aria-expanded="false">{{trans_choice('client::general.account',2)}}
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#client_identification" data-toggle="tab"
+                                    <a class="nav-link" href="#client_identification" data-bs-toggle="tab"
                                        aria-expanded="false">{{trans_choice('client::general.identification',1)}}</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#client_next_of_kin" data-toggle="tab"
+                                    <a class="nav-link" href="#client_next_of_kin" data-bs-toggle="tab"
                                        aria-expanded="true">{{trans_choice('client::general.next_of_kin',1)}}</a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#files" data-toggle="tab"
+                                    <a class="nav-link" href="#files" data-bs-toggle="tab"
                                        aria-expanded="false">{{trans_choice('client::general.file',2)}}</a>
                                 </li>
                             </ul>

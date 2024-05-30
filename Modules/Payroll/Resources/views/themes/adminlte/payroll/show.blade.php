@@ -243,7 +243,7 @@
                                     <td>
                                         <div class="btn-group">
                                             <button href="#" class="btn btn-default dropdown-toggle"
-                                                    data-toggle="dropdown">
+                                                    data-bs-toggle="dropdown">
                                                 <i class="fas fa-ellipsis-h"></i>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right">

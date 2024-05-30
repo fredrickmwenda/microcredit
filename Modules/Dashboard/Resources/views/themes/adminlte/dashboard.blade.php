@@ -1,6 +1,9 @@
 @extends('core::layouts.master')
+@push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/5.1.0/gridstack.min.css" integrity="sha512-fUN9aO64eYDb4vrlQrSuhabckaNlFo/+34YxvRZ4+l9mk8NZHsWVw1nIWLM++oN/1U5rY+Q+1bWFeLT+dA9YPQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />    
+@endpush
 @section('title')
-    {{trans_choice('dashboard::general.dashboard',1)}}
+    {{trans_choice('dashboard::general.dashboard',1)}}  
 @endsection
 @section('styles')
     <style>
@@ -41,7 +44,7 @@
             <div class="row">
                 @can('widget.widget.add_widget_button')
                 <div class="col-md-12">
-                    <button data-toggle="modal" data-target="#add_widget"
+                    <button data-bs-toggle="modal" data-target="#add_widget"
                             class="btn btn-info margin float-right">
                         {{trans_choice('core::general.add',1)}}  {{trans_choice('dashboard::general.widget',1)}}
                     </button>
@@ -99,7 +102,9 @@
     </section>
 @endsection
 @section('scripts')
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/5.1.0/gridstack.min.js" integrity="sha512-nZOZ9Asn7u7gHMUWDCZhWnG5k6qrNrJrMvxgSKCtRNaoIDNcAhpbpvT0dDsLA3N0sSKBilKxRf+vaZ4xcQdYuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/6.0.6/highcharts.js" charset="utf-8"></script>
+
     <script>
         var grid = GridStack.init();
         grid.on('change', function (event, items) {

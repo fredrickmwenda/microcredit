@@ -39,7 +39,7 @@
                 <div class="card-tools pull-right hidden-print">
                     <div class="dropdown">
                         <a href="#" class="btn btn-info btn-trigger btn-icon dropdown-toggle"
-                           data-toggle="dropdown">
+                           data-bs-toggle="dropdown">
                             {{trans_choice('core::general.action',2)}}
                         </a>
                         <div class="dropdown-menu dropdown-menu-xs dropdown-menu-right">

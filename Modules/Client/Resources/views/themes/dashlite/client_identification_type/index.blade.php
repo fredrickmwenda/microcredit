@@ -83,7 +83,7 @@
                                                 <li>
                                                     <div class="dropdown">
                                                         <a href="#" class="btn btn-trigger btn-icon dropdown-toggle"
-                                                           data-toggle="dropdown">
+                                                           data-bs-toggle="dropdown">
                                                             <div class="dot dot-primary"></div>
                                                             <em class="icon ni ni-filter-alt"></em>
                                                         </a>
@@ -138,7 +138,7 @@
                                                 <li>
                                                     <div class="dropdown">
                                                         <a href="#" class="btn btn-trigger btn-icon dropdown-toggle"
-                                                           data-toggle="dropdown">
+                                                           data-bs-toggle="dropdown">
                                                             <em class="icon ni ni-setting"></em>
                                                         </a>
                                                         <div class="dropdown-menu dropdown-menu-xs dropdown-menu-right">
@@ -229,7 +229,7 @@
                                         <li>
                                             <div class="drodown">
                                                 <a href="#" class="dropdown-toggle btn btn-icon btn-trigger"
-                                                   data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
+                                                   data-bs-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
                                                 <div class="dropdown-menu dropdown-menu-right">
                                                     <ul class="link-list-opt no-bdr">
                                                         @can('client.clients.identification_types.edit')

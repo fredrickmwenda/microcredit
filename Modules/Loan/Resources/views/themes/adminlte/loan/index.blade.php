@@ -35,7 +35,7 @@
                 <div class="btn-group">
                     <div class="dropdown">
                         <a href="#" class="btn btn-trigger btn-icon dropdown-toggle"
-                           data-toggle="dropdown">
+                           data-bs-toggle="dropdown">
                             <i class="fas fa-wrench"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-xs">
@@ -197,12 +197,15 @@
                                 @if($key->status == 'rescheduled')
                                     <span class="badge badge-info">{{trans_choice('loan::general.rescheduled', 1)}}</span>
                                 @endif
+                                @if($key->status == 'appending_ceo_approval')
+                                    <span class="badge badge-info">Awaiting CEO Approval</span>
+                                @endif
                             </td>
 
                             <td>
                                 <div class="btn-group">
                                     <button href="#" class="btn btn-default dropdown-toggle"
-                                            data-toggle="dropdown">
+                                            data-bs-toggle="dropdown">
                                         <i class="fas fa-ellipsis-h"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right">
@@ -212,6 +215,8 @@
                                         </a>
 
                                         @if(($key->status=='submitted'||$key->status=='pending') && Auth::user()->can('loan.loans.edit'))
+                                            
+
 
                                             <a href="{{url('loan/' . $key->id . '/edit')}}" class="dropdown-item">
                                                 <i class="far fa-edit"></i>
@@ -219,6 +224,10 @@
                                             </a>
 
                                         @endif
+
+                                        <!-- If the user can edit which is in ceo_approval -->
+
+
                                         <div class="divider"></div>
                                         @if(($key->status=='submitted'||$key->status=='pending') && Auth::user()->can('loan.loans.destroy'))
 

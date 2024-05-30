@@ -10,6 +10,17 @@ use Modules\User\Entities\User;
 
 class Loan extends Model
 {
+    const STATUS_PENDING = 'pending';
+    const STATUS_PENDING_CEO_APPROVAL = 'pending_ceo_approval';
+    const STATUS_APPROVED = 'approved';
+    const STATUS_ACTIVE = 'active';
+    const STATUS_WITHDRAWN = 'withdrawn';
+    const STATUS_REJECTED = 'rejected';
+    const STATUS_CLOSED = 'closed';
+    const STATUS_RESCHEDULED = 'rescheduled';
+    const STATUS_WRITTEN_OFF = 'written_off';
+    const STATUS_OVERPAID = 'overpaid';
+    const STATUS_SUBMITTED = 'submitted';
     protected $fillable = [];
     public $table = "loans";
 
@@ -126,4 +137,11 @@ class Loan extends Model
     {
         return $this->hasMany(LoanTransaction::class, 'loan_id', 'id')->orderBy('submitted_on', 'asc')->orderBy('id', 'asc');
     }
+
+    public function approved_by_user()
+    {
+        return $this->belongsTo(User::class, 'approved_by_user_id');
+    }
+
+ 
 }

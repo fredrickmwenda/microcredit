@@ -23,7 +23,7 @@
     <div id="app">
         <div class="row">
             <div class="col-md-12">
-                <button data-toggle="modal" data-target="#add_widget"
+                <button data-bs-toggle="modal" data-target="#add_widget"
                         class="btn btn-info m-2 float-right">
                     {{trans_choice('core::general.add',1)}}  {{trans_choice('dashboard::general.widget',1)}}
                 </button>

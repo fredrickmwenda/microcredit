@@ -46,4 +46,10 @@ class User extends Authenticatable
     {
         return $this->first_name . ' ' . $this->last_name;
     }
+
+    //Checks if the user is a CEO
+    public function is_ceo()
+    {
+        return $this->role == 'CEO';
+    }
 }

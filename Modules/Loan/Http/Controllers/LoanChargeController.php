@@ -60,7 +60,7 @@ class LoanChargeController extends Controller
             ->selectRaw("loan_charges.*,currencies.name currency,loan_charge_types.name charge_type,loan_charge_options.name charge_option");
 
         return DataTables::of($query)->editColumn('action', function ($data) {
-            $action = '<div class="btn-group"><button type="button" class="btn btn-info btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="true"><i class="fa fa-navicon"></i></button> <ul class="dropdown-menu dropdown-menu-right" role="menu">';
+            $action = '<div class="btn-group"><button type="button" class="btn btn-info btn-xs dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa fa-navicon"></i></button> <ul class="dropdown-menu dropdown-menu-right" role="menu">';
             if (Auth::user()->hasPermissionTo('loan.loans.charges.edit')) {
                 $action .= '<li><a href="' . url('loan/charge/' . $data->id . '/edit') . '" class="">' . trans_choice('core::general.edit', 2) . '</a></li>';
             }

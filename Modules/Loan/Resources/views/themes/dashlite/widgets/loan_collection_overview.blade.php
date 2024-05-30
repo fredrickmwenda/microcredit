@@ -61,7 +61,7 @@
                             <div class="text-center">
                                 <h5 class=" text-semibold">{{ trans_choice('loan::general.monthly',1) }} {{ trans_choice('loan::general.target',1) }}</h5>
                             </div>
-                            <div class="progress" data-toggle="tooltip" title=""
+                            <div class="progress" data-bs-toggle="tooltip" title=""
                                  data-original-title="{{ trans_choice('loan::general.target',1) }} : {{number_format($target,2)}}">
 
                                 <div class="progress-bar progress-bar-success progress-bar-striped active"

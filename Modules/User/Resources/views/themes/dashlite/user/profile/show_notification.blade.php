@@ -68,7 +68,7 @@
                                             <li>
                                                 <a href="{{url('user/profile/notification/'.$notification->id.'/destroy')}}"
                                                    class="btn btn-sm btn-icon btn-trigger confirm"
-                                                   data-toggle="tooltip" data-placement="top" title=""
+                                                   data-bs-toggle="tooltip" data-placement="top" title=""
                                                    data-original-title="{{trans_choice('core::general.delete',1)}}"><em
                                                             class="icon ni ni-trash"></em>
                                                 </a>
@@ -79,7 +79,7 @@
                                                 <div class="dropdown">
                                                     <a href="#"
                                                        class="dropdown-toggle btn btn-sm btn-icon btn-trigger"
-                                                       data-toggle="dropdown"><em
+                                                       data-bs-toggle="dropdown"><em
                                                                 class="icon ni ni-more-h"></em></a>
                                                     <div class="dropdown-menu dropdown-menu-right">
                                                         <ul class="link-list-opt no-bdr">

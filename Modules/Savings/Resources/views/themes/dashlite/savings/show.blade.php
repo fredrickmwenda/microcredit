@@ -17,16 +17,16 @@
                                     <div class="float-right btn-group">
                                         @if($savings->status=='submitted' ||$savings->status=='pending')
                                             @can('savings.savings.approve_savings')
-                                                <a href="#" data-toggle="modal" data-target="#approve_savings_modal"
+                                                <a href="#" data-bs-toggle="modal" data-target="#approve_savings_modal"
                                                    class="btn btn-primary"><i
                                                             class="fa fa-check"></i>
                                                     {{ trans_choice('savings::general.approve',1) }}
                                                 </a>
-                                                <a href="#" data-toggle="modal" data-target="#reject_savings_modal"
+                                                <a href="#" data-bs-toggle="modal" data-target="#reject_savings_modal"
                                                    class="btn btn-primary"><i class="fa fa-times"></i>
                                                     {{ trans_choice('savings::general.reject',1) }}
                                                 </a>
-                                                <a href="#" data-toggle="modal" data-target="#withdraw_savings_modal"
+                                                <a href="#" data-bs-toggle="modal" data-target="#withdraw_savings_modal"
                                                    class="btn btn-primary"><i class="fa fa-times"></i>
                                                     {{ trans_choice('savings::general.withdraw',1) }}
                                                 </a>
@@ -171,7 +171,7 @@
                                                 </a>
                                             @endcan
                                             @can('savings.savings.edit')
-                                                <a href="#" data-toggle="modal"
+                                                <a href="#" data-bs-toggle="modal"
                                                    data-target="#change_savings_officer_modal"
                                                    class="btn btn-primary">
                                                     {{ trans_choice('savings::general.change',1) }} {{ trans_choice('savings::general.savings',1) }} {{ trans_choice('savings::general.officer',1) }}
@@ -185,7 +185,7 @@
                                                 </a>
                                             @endcan
                                             @can('savings.savings.close_savings')
-                                                <a href="#" data-toggle="modal" data-target="#close_savings_modal"
+                                                <a href="#" data-bs-toggle="modal" data-target="#close_savings_modal"
                                                    class="btn btn-primary">
                                                     {{ trans_choice('core::general.close',1) }} {{ trans_choice('savings::general.savings',1) }}
                                                 </a>
@@ -306,13 +306,13 @@
                                         @endif
                                         @if($savings->status=='approved')
                                             @can('savings.savings.activate_savings')
-                                                <a href="#" data-toggle="modal" data-target="#activate_savings_modal"
+                                                <a href="#" data-bs-toggle="modal" data-target="#activate_savings_modal"
                                                    class="btn btn-primary"><i class="fa fa-flag"></i>
                                                     {{ trans_choice('savings::general.activate',1) }}
                                                 </a>
                                             @endcan
                                             @can('savings.savings.edit')
-                                                <a href="#" data-toggle="modal"
+                                                <a href="#" data-bs-toggle="modal"
                                                    data-target="#change_savings_officer_modal"
                                                    class="btn btn-primary">
                                                     {{ trans_choice('savings::general.change',1) }} {{ trans_choice('savings::general.savings',1) }} {{ trans_choice('savings::general.officer',1) }}
@@ -581,7 +581,7 @@
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
                                 <a href="#account_details" class="nav-link active"
-                                   data-toggle="tab">
+                                   data-bs-toggle="tab">
                                     {{ trans_choice('savings::general.account',1) }} {{ trans_choice('core::general.detail',2) }}
                                 </a>
                             </li>
@@ -589,7 +589,7 @@
                                 @can('savings.savings.transactions.index')
                                     <li class="nav-item">
                                         <a href="#savings_transactions" class="nav-link"
-                                           data-toggle="tab">
+                                           data-bs-toggle="tab">
                                             {{ trans_choice('savings::general.transaction',2) }}
                                         </a>
                                     </li>
@@ -598,7 +598,7 @@
                             @can('savings.savings.charges.index')
                                 <li class="nav-item">
                                     <a href="#savings_charges" class="nav-link"
-                                       data-toggle="tab">
+                                       data-bs-toggle="tab">
                                         {{ trans_choice('savings::general.charge',2) }}
                                     </a>
                                 </li>
@@ -761,7 +761,7 @@
                                                     <td>
                                                         <div class="dropdown">
                                                             <a href="#" class="dropdown-toggle btn btn-icon btn-trigger"
-                                                               data-toggle="dropdown"><em
+                                                               data-bs-toggle="dropdown"><em
                                                                         class="icon ni ni-more-h"></em></a>
                                                             <div class="dropdown-menu dropdown-menu-right">
                                                                 <ul class="link-list-opt no-bdr">

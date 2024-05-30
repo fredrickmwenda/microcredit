@@ -1561,7 +1561,7 @@ class SavingsController extends Controller
                 
                 $action .= '<div class="btn-group" style="margin-left:5px;">
                 <button href="#" class="btn btn-default dropdown-toggle"
-                        data-toggle="dropdown">
+                        data-bs-toggle="dropdown">
                     <i class="fas fa-ellipsis-h"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">

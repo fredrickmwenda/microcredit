@@ -98,7 +98,7 @@
 
                         <div class="card-tools pull-right">
                             @can('branch.branches.assign_user')
-                                <a href="#" data-toggle="modal" data-target="#addUser"
+                                <a href="#" data-bs-toggle="modal" data-target="#addUser"
                                    class="btn btn-info btn-sm">{{trans_choice('core::general.add',1)}} {{trans_choice('core::general.user',1)}}</a>
                             @endcan
                         </div>
@@ -126,7 +126,7 @@
                                             <td>
                                                 <div class="btn-group">
                                                     <button href="#" class="btn btn-default dropdown-toggle"
-                                                            data-toggle="dropdown">
+                                                            data-bs-toggle="dropdown">
                                                         <i class="fas fa-ellipsis-h"></i>
                                                     </button>
                                                     <div class="dropdown-menu dropdown-menu-right">

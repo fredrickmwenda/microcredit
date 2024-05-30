@@ -34,7 +34,7 @@
                         @foreach($data as $key)
                             <li class="nav-item">
                                 <a href="#{{ $key->getName() }}"
-                                   data-toggle="tab" class="nav-link @if($count==1) active @endif">
+                                   data-bs-toggle="tab" class="nav-link @if($count==1) active @endif">
                                     {{ $key->getName() }}
                                 </a>
                             </li>

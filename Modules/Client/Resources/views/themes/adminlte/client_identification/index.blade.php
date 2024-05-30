@@ -31,7 +31,7 @@
                         <td>{{$key->name}}</td>
                         <td>
                             <div class="btn-group">
-                                <button type="button" class="btn btn-info btn-xs dropdown-toggle" data-toggle="dropdown"
+                                <button type="button" class="btn btn-info btn-xs dropdown-toggle" data-bs-toggle="dropdown"
                                         aria-expanded="true"><i class="fa fa-navicon"></i></button>
                                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                     <li><a href="{{url('client_identification_type/' . $key->id . '/edit') }}"

@@ -55,7 +55,7 @@ class ChartOfAccountController extends Controller
         return DataTables::of($query)->editColumn('user', function ($data) {
             return $data->first_name . ' ' . $data->last_name;
         })->editColumn('action', function ($data) {
-            $action = '<div class="btn-group"><button type="button" class="btn btn-info btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="true"><i class="fa fa-navicon"></i></button> <ul class="dropdown-menu dropdown-menu-right" role="menu">';
+            $action = '<div class="btn-group"><button type="button" class="btn btn-info btn-xs dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa fa-navicon"></i></button> <ul class="dropdown-menu dropdown-menu-right" role="menu">';
             $action .= '<li><a href="' . url('accounting/chart_of_account/' . $data->id . '/show') . '" class="">' . trans_choice('core::general.detail', 2) . '</a></li>';
             if (Auth::user()->hasPermissionTo('accounting.chart_of_accounts.edit')) {
                 $action .= '<li><a href="' . url('accounting/chart_of_account/' . $data->id . '/edit') . '" class="">' . trans_choice('core::general.edit', 2) . '</a></li>';

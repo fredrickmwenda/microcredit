@@ -198,21 +198,21 @@
                     <ul class="nav nav-tabs">
                         <li class="active">
                             <a href="#account_details"
-                               data-toggle="tab">
+                               data-bs-toggle="tab">
                                 {{ trans_choice('savings::general.account',1) }} {{ trans_choice('core::general.detail',2) }}
                             </a>
                         </li>
                         @if($savings->status=='active' ||$savings->status=='closed'||$savings->status=='dormant'||$savings->status=='overpaid'||$savings->status=='rescheduled')
                             <li class="">
                                 <a href="#savings_transactions"
-                                   data-toggle="tab">
+                                   data-bs-toggle="tab">
                                     {{ trans_choice('savings::general.transaction',2) }}
                                 </a>
                             </li>
                         @endif
                         <li class="">
                             <a href="#savings_charges"
-                               data-toggle="tab">
+                               data-bs-toggle="tab">
                                 {{ trans_choice('savings::general.charge',2) }}
                             </a>
                         </li>
@@ -355,7 +355,7 @@
                                             <td>
                                                 <div class="btn-group">
                                                     <button type="button" class="btn btn-info btn-xs dropdown-toggle"
-                                                            data-toggle="dropdown"
+                                                            data-bs-toggle="dropdown"
                                                             aria-expanded="true"><i class="fa fa-navicon"></i></button>
                                                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                                         <li>

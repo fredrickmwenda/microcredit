@@ -52,7 +52,7 @@ class SmsGatewayController extends Controller
 
         $query = SmsGateway::query();
         return DataTables::of($query)->editColumn('description', function ($data) {
-            return '<span data-toggle="tooltip" title="' . $data->description . '">' . Str::words($data->description, 10);
+            return '<span data-bs-toggle="tooltip" title="' . $data->description . '">' . Str::words($data->description, 10);
         })->editColumn('active', function ($data) {
             if ($data->active == '0') {
                 return '<span class="label label-warning">' . trans_choice('core::general.no', 1) . '</span>';
@@ -68,7 +68,7 @@ class SmsGatewayController extends Controller
 
             return $action;
         })->editColumn('action', function ($data) {
-            $action = '<div class="btn-group"><button type="button" class="btn btn-info btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="true"><i class="fa fa-navicon"></i></button> <ul class="dropdown-menu dropdown-menu-right" role="menu">';
+            $action = '<div class="btn-group"><button type="button" class="btn btn-info btn-xs dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa fa-navicon"></i></button> <ul class="dropdown-menu dropdown-menu-right" role="menu">';
             if (Auth::user()->hasPermissionTo('communication.campaigns.edit')) {
                 // $action .= '<li><a href="' . url('communication/campaign/' . $data->id . '/show') . '" class="">' . trans_choice('core::general.detail', 2) . '</a></li>';
             }

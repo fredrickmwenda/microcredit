@@ -117,7 +117,7 @@ class JournalEntryController extends Controller
                 return trans_choice('accounting::general.income', 1);
             }
         })->editColumn('action', function ($data) {
-            $action = '<div class="btn-group"><button type="button" class="btn btn-info btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="true"><i class="fa fa-navicon"></i></button> <ul class="dropdown-menu dropdown-menu-right" role="menu">';
+            $action = '<div class="btn-group"><button type="button" class="btn btn-info btn-xs dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa fa-navicon"></i></button> <ul class="dropdown-menu dropdown-menu-right" role="menu">';
             $action .= '<li><a href="' . url('accounting/journal_entry/' . $data->transaction_number . '/show') . '" class="">' . trans_choice('core::general.detail', 2) . '</a></li>';
             $action .= "</ul></li></div>";
             return $action;

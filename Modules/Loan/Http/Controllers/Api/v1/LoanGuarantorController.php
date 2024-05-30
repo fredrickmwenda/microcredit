@@ -55,9 +55,9 @@ class LoanGuarantorController extends Controller
             $loan_guarantor->loan_id = $id;
             $loan_guarantor->client_id = $request->client_id;
             $loan_guarantor->is_client = $request->is_client;
-            $loan_guarantor->church = $request->church;
-            $loan_guarantor->pastor = $request->pastor;
-            $loan_guarantor->church_location = $request->church_location;
+            // $loan_guarantor->church = $request->church;
+            // $loan_guarantor->pastor = $request->pastor;
+            // $loan_guarantor->church_location = $request->church_location;
             $loan_guarantor->client_relationship_id = $request->client_relationship_id;
             (!empty($client)) ? $loan_guarantor->first_name = $client->first_name : $loan_guarantor->first_name = $request->first_name;
             (!empty($client)) ? $loan_guarantor->last_name = $client->last_name : $loan_guarantor->last_name = $request->last_name;
@@ -129,9 +129,9 @@ class LoanGuarantorController extends Controller
             $loan_guarantor = LoanGuarantor::find($id);
             $loan_guarantor->client_id = $request->client_id;
             $loan_guarantor->client_relationship_id = $request->client_relationship_id;
-            (!empty($client)) ?$loan_guarantor->church =  $client->church : $loan_guarantor->church = $request->church;
-            (!empty($client)) ?$loan_guarantor->pastor =  $client->pastor : $loan_guarantor->pastor = $request->pastor;
-            (!empty($client)) ?$loan_guarantor->church_location =  $client->church_location : $loan_guarantor->church_location = $request->church_location;
+            // (!empty($client)) ?$loan_guarantor->church =  $client->church : $loan_guarantor->church = $request->church;
+            // (!empty($client)) ?$loan_guarantor->pastor =  $client->pastor : $loan_guarantor->pastor = $request->pastor;
+            // (!empty($client)) ?$loan_guarantor->church_location =  $client->church_location : $loan_guarantor->church_location = $request->church_location;
 
             (!empty($client)) ? $loan_guarantor->first_name = $client->first_name : $loan_guarantor->first_name = $request->first_name;
             (!empty($client)) ? $loan_guarantor->last_name = $client->last_name : $loan_guarantor->last_name = $request->last_name;

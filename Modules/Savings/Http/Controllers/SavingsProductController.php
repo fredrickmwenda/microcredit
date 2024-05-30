@@ -57,7 +57,7 @@ class SavingsProductController extends Controller
             ->selectRaw("savings_products.*,currencies.name currency");
 
         return DataTables::of($query)->editColumn('action', function ($data) {
-            $action = '<div class="btn-group"><button type="button" class="btn btn-info btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="true"><i class="fa fa-navicon"></i></button> <ul class="dropdown-menu dropdown-menu-right" role="menu">';
+            $action = '<div class="btn-group"><button type="button" class="btn btn-info btn-xs dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa fa-navicon"></i></button> <ul class="dropdown-menu dropdown-menu-right" role="menu">';
             if (Auth::user()->hasPermissionTo('savings.savings.products.edit')) {
                 $action .= '<li><a href="' . url('savings/product/' . $data->id . '/edit') . '" class="">' . trans_choice('core::general.edit', 2) . '</a></li>';
             }

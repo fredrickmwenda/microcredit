@@ -200,12 +200,12 @@
         <div class="col-md-9">
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#client_identification" data-toggle="tab"
+                    <li class="active"><a href="#client_identification" data-bs-toggle="tab"
                                           aria-expanded="false">{{trans_choice('client::general.identification',1)}}</a>
                     </li>
-                    <li class=""><a href="#client_next_of_kin" data-toggle="tab"
+                    <li class=""><a href="#client_next_of_kin" data-bs-toggle="tab"
                                     aria-expanded="true">{{trans_choice('client::general.next_of_kin',1)}}</a></li>
-                    <li class=""><a href="#login_details" data-toggle="tab"
+                    <li class=""><a href="#login_details" data-bs-toggle="tab"
                                     aria-expanded="false">{{trans_choice('user::general.login',1)}} {{trans_choice('core::general.detail',2)}}</a>
                     </li>
                 </ul>

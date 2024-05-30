@@ -14,7 +14,7 @@
 
             <div class="box-tools pull-right hidden-print">
                 <div class="input-group ">
-                    <button type="button" class="btn btn-info btn-sm  dropdown-toggle" data-toggle="dropdown"
+                    <button type="button" class="btn btn-info btn-sm  dropdown-toggle" data-bs-toggle="dropdown"
                             aria-expanded="true"> {{trans_choice('core::general.action',2)}}
                         <span class="fa fa-caret-down"></span></button>
                     <ul class="dropdown-menu">

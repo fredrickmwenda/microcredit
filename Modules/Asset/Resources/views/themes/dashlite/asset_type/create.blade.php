@@ -45,7 +45,7 @@
                             <div class="form-group">
                                 <label for="chart_of_account_asset_id"
                                        class="control-label">{{trans_choice('asset::general.cash',1)}} {{trans_choice('asset::general.account',1)}}
-                                    <i class="fa fa-question-circle" data-toggle="tooltip"
+                                    <i class="fa fa-question-circle" data-bs-toggle="tooltip"
                                        data-title="{{trans_choice('asset::general.cash_account_hint',1)}}"></i>
 
                                 </label>
@@ -74,7 +74,7 @@
                             <div class="form-group">
                                 <label for="chart_of_account_fixed_asset_id"
                                        class="control-label">{{trans_choice('asset::general.fixed',1)}} {{trans_choice('asset::general.asset',1)}} {{trans_choice('asset::general.account',1)}}
-                                    <i class="fa fa-question-circle" data-toggle="tooltip"
+                                    <i class="fa fa-question-circle" data-bs-toggle="tooltip"
                                        data-title="{{trans_choice('asset::general.fixed_asset_account_hint',1)}}"></i>
                                 </label>
                                 <v-select label="name" :options="chart_of_accounts"
@@ -102,7 +102,7 @@
                             <div class="form-group">
                                 <label for="chart_of_account_expense_id"
                                        class="control-label">{{trans_choice('asset::general.expense',1)}} {{trans_choice('asset::general.account',1)}}
-                                    <i class="fa fa-question-circle" data-toggle="tooltip"
+                                    <i class="fa fa-question-circle" data-bs-toggle="tooltip"
                                        data-title="{{trans_choice('asset::general.expense_account_hint',1)}}"></i>
                                 </label>
                                 <v-select label="name" :options="chart_of_accounts"
@@ -130,7 +130,7 @@
                             <div class="form-group">
                                 <label for="chart_of_account_contra_asset_id"
                                        class="control-label">{{trans_choice('asset::general.accumulated',1)}} {{trans_choice('asset::general.depreciation',1)}} {{trans_choice('asset::general.account',1)}}
-                                    <i class="fa fa-question-circle" data-toggle="tooltip"
+                                    <i class="fa fa-question-circle" data-bs-toggle="tooltip"
                                        data-title="{{trans_choice('asset::general.accumulated_depreciation_account_hint',1)}}"></i>
 
                                 </label>
@@ -159,7 +159,7 @@
                             <div class="form-group">
                                 <label for="chart_of_account_income_id"
                                        class="control-label">{{trans_choice('asset::general.income',1)}} {{trans_choice('asset::general.account',1)}}
-                                    <i class="fa fa-question-circle" data-toggle="tooltip"
+                                    <i class="fa fa-question-circle" data-bs-toggle="tooltip"
                                        data-title="{{trans_choice('asset::general.income_account_hint',1)}}"></i>
                                 </label>
                                 <v-select label="name" :options="chart_of_accounts"

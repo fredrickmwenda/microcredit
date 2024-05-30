@@ -58,7 +58,7 @@ class ShareChargeController extends Controller
             ->selectRaw("share_charges.*,currencies.name currency,share_charge_types.name charge_type,share_charge_options.name charge_option");
 
         return DataTables::of($query)->editColumn('action', function ($data) {
-            $action = '<div class="btn-group"><button type="button" class="btn btn-info btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="true"><i class="fa fa-navicon"></i></button> <ul class="dropdown-menu dropdown-menu-right" role="menu">';
+            $action = '<div class="btn-group"><button type="button" class="btn btn-info btn-xs dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa fa-navicon"></i></button> <ul class="dropdown-menu dropdown-menu-right" role="menu">';
             if (Auth::user()->hasPermissionTo('share.shares.charges.edit')) {
                 $action .= '<li><a href="' . url('share/charge/' . $data->id . '/edit') . '" class="">' . trans_choice('core::general.edit', 2) . '</a></li>';
             }

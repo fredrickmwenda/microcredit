@@ -264,7 +264,7 @@
                             @enderror
                         </div>
                         <!-- Church -->
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="church"
                                    class="control-label">Church</label>
                             <input type="text" name="church" id="church" v-model="church"
@@ -298,7 +298,7 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                             @enderror
-                        </div>
+                        </div> -->
 
                         <div class="form-group">
                             <label for="photo"
