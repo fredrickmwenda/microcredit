@@ -36,7 +36,7 @@
                     <div class="dropdown">
                         <a href="#" class="btn btn-trigger btn-icon dropdown-toggle"
                            data-bs-toggle="dropdown">
-                            <i class="fas fa-wrench"></i>
+                            <i class="ri-tools-line"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-xs">
                             <a class="dropdown-item"><span>Show</span></a>
@@ -69,7 +69,7 @@
                                    placeholder="Search">
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-search"></i>
+                                    <i class="ri-search-line"></i>
                                 </button>
                             </div>
                         </div>
@@ -197,7 +197,7 @@
                                 @if($key->status == 'rescheduled')
                                     <span class="badge badge-info">{{trans_choice('loan::general.rescheduled', 1)}}</span>
                                 @endif
-                                @if($key->status == 'appending_ceo_approval')
+                                @if($key->status == 'pending_ceo_approval')
                                     <span class="badge badge-info">Awaiting CEO Approval</span>
                                 @endif
                             </td>
@@ -206,11 +206,11 @@
                                 <div class="btn-group">
                                     <button href="#" class="btn btn-default dropdown-toggle"
                                             data-bs-toggle="dropdown">
-                                        <i class="fas fa-ellipsis-h"></i>
+                                        <i class="ri-settings-3-line"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right">
                                         <a href="{{url('loan/' . $key->id . '/show')}}" class="dropdown-item">
-                                            <i class="far fa-eye"></i>
+                                            <i class="ri-eye-fill"></i>
                                             <span>{{trans_choice('core::general.detail',2)}}</span>
                                         </a>
 
@@ -219,7 +219,7 @@
 
 
                                             <a href="{{url('loan/' . $key->id . '/edit')}}" class="dropdown-item">
-                                                <i class="far fa-edit"></i>
+                                                <i class="ri-edit-fill"></i>
                                                 <span>{{trans_choice('core::general.edit',1)}}</span>
                                             </a>
 
@@ -233,7 +233,7 @@
 
                                             <a href="{{url('loan/' . $key->id . '/destroy')}}"
                                                class="dropdown-item confirm">
-                                                <i class="fas fa-trash"></i>
+                                                <i class="ri-delete-bin-fill"></i>
                                                 <span>{{trans_choice('core::general.delete',1)}}</span>
                                             </a>
 

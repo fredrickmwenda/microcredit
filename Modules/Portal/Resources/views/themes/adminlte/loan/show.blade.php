@@ -756,13 +756,13 @@
                                                     <div class="btn-group">
                                                         <button href="#" class="btn btn-default dropdown-toggle"
                                                                 data-bs-toggle="dropdown">
-                                                            <i class="fas fa-ellipsis-h"></i>
+                                                            <i class="ri-settings-3-line"></i>
                                                         </button>
                                                         <div class="dropdown-menu dropdown-menu-right">
 
                                                             <a href="{{url('portal/loan/transaction/' . $key->id . '/show') }}"
                                                                class="dropdown-item"><i
-                                                                        class="fas fa-eye"></i> {{ trans_choice('core::general.view', 2) }}
+                                                                        class="ri-eye-fill"></i> {{ trans_choice('core::general.view', 2) }}
                                                             </a>
 
                                                         </div>
@@ -880,7 +880,7 @@
                                             <td>{{$key->description}}</td>
                                             <td>
                                                 <a href="{{asset('storage/uploads/loans/'.$key->link)}}"
-                                                   target="_blank"><i class="fa fa-download"></i> </a>
+                                                   target="_blank"><i class="ri-download-line"></i> </a>
 
                                             </td>
                                         </tr>
@@ -911,7 +911,7 @@
                                             <td>{{$key->description}}</td>
                                             <td>
                                                 <a href="{{asset('storage/uploads/loans/'.$key->link)}}"
-                                                   target="_blank"><i class="fas fa-download"></i> </a>
+                                                   target="_blank"><i class="ri-download-line"></i> </a>
 
                                             </td>
                                         </tr>
@@ -947,10 +947,225 @@
                                             <td>
                                                 @if($key->is_client==1)
                                                     <a href="#"><i
-                                                                class="fa fa-eye"></i> </a>
+                                                                class="
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                a>
                                                 @else
                                                     <a href="{{url('portal/loan/guarantor/'.$key->id.'/show')}}"><i
-                                                                class="fas fa-eye"></i> </a>
+                                                                class="ri-eye-fill"></i> </a>
                                                 @endif
 
                                             </td>

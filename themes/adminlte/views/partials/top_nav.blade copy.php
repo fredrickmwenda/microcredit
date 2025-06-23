@@ -12,7 +12,7 @@
             <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
             <div class="input-group-append">
                 <button class="btn btn-navbar" type="submit">
-                    <i class="fas fa-search"></i>
+                    <i class="ri-search-line"></i>
                 </button>
             </div>
         </div>

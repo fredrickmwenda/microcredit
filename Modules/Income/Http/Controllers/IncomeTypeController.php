@@ -57,10 +57,10 @@ class IncomeTypeController extends Controller
         return DataTables::of($query)->editColumn('action', function ($data) {
             $action = '';
             if (Auth::user()->hasPermissionTo('income.income.types.edit')) {
-                $action .= '<a href="' . url('income/type/' . $data->id . '/edit') . '" class="m-2"><i class="fa fa-edit"></i></a>';
+                $action .= '<a href="' . url('income/type/' . $data->id . '/edit') . '" class="m-2"><i class="ri-edit-fill"></i></a>';
             }
             if (Auth::user()->hasPermissionTo('income.income.types.destroy')) {
-                $action .= '<a href="' . url('income/type/' . $data->id . '/destroy') . '" class="m-2 confirm"><i class="fa fa-trash"></i></a>';
+                $action .= '<a href="' . url('income/type/' . $data->id . '/destroy') . '" class="m-2 confirm"><i class="ri-delete-bin-fill"></i></a>';
             }
             return $action;
         })->editColumn('id', function ($data) {

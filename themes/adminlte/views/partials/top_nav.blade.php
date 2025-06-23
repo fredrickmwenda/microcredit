@@ -13,9 +13,9 @@
                     <span class="logo-sm">
                         <img src="assets/images/logo-sm.png" alt="small logo">
                     </span> -->
-                  
+
                     <img src="{{asset('themes/adminlte/img/logo-white.png')}}" alt="{{\Modules\Setting\Entities\Setting::where('setting_key','core.company_name')->first()->setting_value}}" />
-                    
+
                 </a>
 
                 <!-- Logo Dark -->
@@ -57,7 +57,7 @@
                         <span>Analytics Report</span>
                     </a> -->
 
-                
+
                     <!-- <a href="javascript:void(0);" class="dropdown-item notify-item">
                         <i class="ri-lifebuoy-line fs-16 me-1"></i>
                         <span>How can I help you?</span>
@@ -118,13 +118,18 @@
             <li class="dropdown notification-list">
                 <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                     <i class="ri-notification-3-line fs-22"></i>
-                    <span class="noti-icon-badge"></span>
+                    <!-- <span class="badge badge-warning navbar-badge">{{Auth::user()->unreadNotifications()->count()}}</span> -->
+                    @if(Auth::user()->unreadNotifications()->count() > 0)
+                    <span class="noti-icon-badge">{{ Auth::user()->unreadNotifications()->count()}}</span>
+                    @endif
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated dropdown-lg py-0">
                     <div class="p-2 border-top-0 border-start-0 border-end-0 border-dashed border">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h6 class="m-0 fs-16 fw-semibold"> Notification</h6>
+
+
+                                <h6 class="m-0 fs-16 fw-semibold"> {{Auth::user()->unreadNotifications()->count()}} {{trans_choice('core::general.notification',2)}}</h6>
                             </div>
                             <div class="col-auto">
                                 <a href="javascript: void(0);" class="text-dark text-decoration-underline">
@@ -134,29 +139,21 @@
                         </div>
                     </div>
 
+                    @php
+                    use Carbon\Carbon;
+
+                    $groupedNotifications = Auth::user()->unreadNotifications->groupBy(function($date) {
+                    return Carbon::parse($date->created_at)->format('Y-m-d');
+                    });
+                    @endphp
+
                     <div style="max-height: 300px;" data-simplebar>
-
-                        <h5 class="text-muted fs-12 fw-bold p-2 text-uppercase mb-0">Today</h5>
-                        <!-- item-->
-
-                        <a href="javascript:void(0);" class="dropdown-item p-0 notify-item unread-noti card m-0 shadow-none">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-shrink-0">
-                                        <div class="notify-icon bg-primary">
-                                            <i class="ri-message-3-line fs-18"></i>
-                                        </div>
-                                    </div>
-                                    <div class="flex-grow-1 text-truncate ms-2">
-                                        <h5 class="noti-item-title fw-semibold fs-14">Datacorp <small class="fw-normal text-muted float-end ms-1">1 min ago</small></h5>
-                                        <small class="noti-item-subtitle text-muted">Caleb Flakelar commented on Admin</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item p-0 notify-item read-noti card m-0 shadow-none">
+                        @foreach($groupedNotifications as $date => $notifications)
+                        <h5 class="text-muted fs-12 fw-bold p-2 text-uppercase mb-0">
+                            {{ Carbon::parse($date)->isToday() ? 'Today' : (Carbon::parse($date)->isYesterday() ? 'Yesterday' : Carbon::parse($date)->format('d M Y')) }}
+                        </h5>
+                        @foreach($notifications as $notification)
+                        <a href="@if(!empty($notification->data['link'])) {{url($notification->data['link'])}} @else {{url('user/profile/notification/'.$notification->id.'/show')}} @endif" class="dropdown-item p-0 notify-item {{ $notification->read_at ? 'read-noti' : 'unread-noti' }} card m-0 shadow-none">
                             <div class="card-body">
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
@@ -165,78 +162,36 @@
                                         </div>
                                     </div>
                                     <div class="flex-grow-1 text-truncate ms-2">
-                                        <h5 class="noti-item-title fw-semibold fs-14">Admin <small class="fw-normal text-muted float-end ms-1">1 hr ago</small></h5>
-                                        <small class="noti-item-subtitle text-muted">New user registered</small>
+                                        @if(!empty($notification->data['message']))
+                                        <h3 class="noti-item-title fw-semibold fs-14">
+                                            {{$notification->data['message']}} <small class="fw-normal text-muted float-end ms-1">{{ $notification->created_at->diffForHumans() }}</small>
+                                        </h3>
+
+                                        @else
+                                        <h3 class="noti-item-title fw-semibold fs-14">{{$notification->data['type']}} <small class="fw-normal text-muted float-end ms-1">{{ $notification->created_at->diffForHumans() }}</small></h3>
+
+
+                                        @endif
+                                        <!-- <small class="noti-item-subtitle text-muted"></small> -->
                                     </div>
                                 </div>
                             </div>
                         </a>
-
-                        <h5 class="text-muted fs-12 fw-bold p-2 mb-0 text-uppercase">Yesterday</h5>
-
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item p-0 notify-item read-noti card m-0 shadow-none">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-shrink-0">
-                                        <div class="notify-icon">
-                                            <img src="assets/images/users/avatar-2.jpg" class="img-fluid rounded-circle" alt="" />
-                                        </div>
-                                    </div>
-                                    <div class="flex-grow-1 text-truncate ms-2">
-                                        <h5 class="noti-item-title fw-semibold fs-14">Cristina Pride <small class="fw-normal text-muted float-end ms-1">1 day ago</small></h5>
-                                        <small class="noti-item-subtitle text-muted">Hi, How are you? What about our next meeting</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-
-                        <h5 class="text-muted fs-12 fw-bold p-2 mb-0 text-uppercase">31 Jan 2023</h5>
-
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item p-0 notify-item read-noti card m-0 shadow-none">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-shrink-0">
-                                        <div class="notify-icon bg-primary">
-                                            <i class="ri-discuss-line fs-18"></i>
-                                        </div>
-                                    </div>
-                                    <div class="flex-grow-1 text-truncate ms-2">
-                                        <h5 class="noti-item-title fw-semibold fs-14">Datacorp</h5>
-                                        <small class="noti-item-subtitle text-muted">Caleb Flakelar commented on Admin</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item p-0 notify-item read-noti card m-0 shadow-none">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-shrink-0">
-                                        <div class="notify-icon">
-                                            <img src="assets/images/users/avatar-4.jpg" class="img-fluid rounded-circle" alt="" />
-                                        </div>
-                                    </div>
-                                    <div class="flex-grow-1 text-truncate ms-2">
-                                        <h5 class="noti-item-title fw-semibold fs-14">Karen Robinson</h5>
-                                        <small class="noti-item-subtitle text-muted">Wow ! this admin looks good and awesome design</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
+                        @endforeach
+                        @endforeach
                     </div>
 
+
+
                     <!-- All-->
-                    <a href="javascript:void(0);" class="dropdown-item text-center text-primary text-decoration-underline fw-bold notify-item border-top border-light py-2">
+                    <a href="{{url('user/profile/notification')}}" class="dropdown-item text-center text-primary text-decoration-underline fw-bold notify-item border-top border-light py-2">
                         View All
                     </a>
 
                 </div>
             </li>
 
-     
+
             <!-- Theme settings -->
             <li class="d-none d-sm-inline-block">
                 <a class="nav-link" data-bs-toggle="offcanvas" href="#theme-settings-offcanvas">
@@ -273,7 +228,7 @@
                         <!-- <h6 class="my-0 fw-normal">Founder</h6> -->
                     </span>
 
-               
+
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated profile-dropdown">
                     <!-- item-->
@@ -310,7 +265,7 @@
                         <i class="ri-logout-box-line fs-18 align-middle me-1"></i>
                         <span>Logout</span>
                     </a>
-                    <a href="#" onclick="logout()"class="dropdown-item">
+                    <a href="#" onclick="logout()" class="dropdown-item">
                         <i class="ri-logout-box-line fs-18 align-middle me-1"></i>
                         <span>{{trans_choice('core::general.logout',1)}}</span>
                     </a>
@@ -328,5 +283,3 @@
     </div>
 </div>
 <!-- ========== Topbar End ========== -->
-
-

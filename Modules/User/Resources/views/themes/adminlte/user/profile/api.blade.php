@@ -82,11 +82,11 @@
                                                 data-redirect="{{$client->redirect}}"
                                                 data-target="#edit_oauth_client"
                                                 class="btn btn-warning btn-elevate-hover btn-sm btn-circle btn-icon">
-                                            <i class="fas fa-edit"></i>
+                                            <i class="ri-edit-fill"></i>
                                         </button>
                                         <a href="{{url('user/profile/api/oauth_client/'.$client->id.'/destroy')}}"
                                            class="btn btn-danger btn-elevate-hover btn-sm btn-circle confirm btn-icon">
-                                            <i class="fas fa-trash"></i>
+                                            <i class="ri-delete-bin-fill"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -132,11 +132,11 @@
                                                 data-name="{{$token->name}}"
                                                 data-target="#edit_personal_key"
                                                 class="btn btn-warning btn-elevate-hover btn-sm btn-circle btn-icon">
-                                            <i class="fas fa-edit"></i>
+                                            <i class="ri-edit-fill"></i>
                                         </button>
                                         <a href="{{url('user/profile/api/personal_access_token/'.$token->id.'/destroy')}}"
                                            class="btn btn-danger btn-elevate-hover btn-sm btn-circle confirm btn-icon">
-                                            <i class="fas fa-trash"></i>
+                                            <i class="ri-delete-bin-fill"></i>
                                         </a>
                                     </td>
                                 </tr>

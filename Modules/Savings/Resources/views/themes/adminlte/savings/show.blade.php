@@ -60,7 +60,7 @@
                                         @can('savings.savings.edit')
                                             <a href="{{url('savings/'.$savings->id.'/edit')}}"
                                                class="btn btn-primary">
-                                                <i class="fas fa-edit"></i>
+                                                <i class="ri-edit-fill"></i>
                                                 {{ trans_choice('core::general.edit',1) }}
                                             </a>
                                         @endcan
@@ -797,12 +797,12 @@
                                                         <div class="btn-group">
                                                             <button href="#" class="btn btn-default dropdown-toggle"
                                                                     data-bs-toggle="dropdown">
-                                                                <i class="fas fa-ellipsis-h"></i>
+                                                                <i class="ri-settings-3-line"></i>
                                                             </button>
                                                             <div class="dropdown-menu dropdown-menu-right">
                                                                 <a href="{{url('savings/transaction/' . $key->id . '/show') }}"
                                                                    class="dropdown-item"><i
-                                                                            class="fas fa-eye"></i> {{ trans_choice('core::general.view', 2) }}
+                                                                            class="ri-eye-fill"></i> {{ trans_choice('core::general.view', 2) }}
                                                                 </a>
 
                                                                 <a href="{{url('savings/transaction/' . $key->id . '/pdf') }}"
@@ -819,7 +819,7 @@
 
                                                                     <a href="{{url('savings/transaction/' . $key->id . '/edit') }}"
                                                                        class="dropdown-item"><i
-                                                                                class="fas fa-edit"></i> {{ trans_choice('core::general.edit', 1) }}
+                                                                                class="ri-edit-fill"></i> {{ trans_choice('core::general.edit', 1) }}
                                                                     </a>
                                                                     <a href="{{url('savings/transaction/' . $key->id . '/reverse') }}"
                                                                        class="dropdown-item confirm"><i

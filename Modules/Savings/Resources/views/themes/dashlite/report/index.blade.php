@@ -30,7 +30,7 @@
                         {{trans_choice('savings::general.savings_transaction_report_description',1)}}
                     </td>
                     <td><a href="{{url('report/savings/transaction')}}"><i
-                                    class="fa fa-search"></i> </a>
+                                    class="ri-search-line"></i> </a>
                     </td>
                 </tr>
                 <tr>
@@ -41,7 +41,7 @@
                         {{trans_choice('savings::general.savings_balance_report_description',1)}}
                     </td>
                     <td><a href="{{url('report/savings/balance')}}"><i
-                                    class="fa fa-search"></i> </a>
+                                    class="ri-search-line"></i> </a>
                     </td>
                 </tr>
                 <tr>
@@ -52,7 +52,7 @@
                         {{trans_choice('savings::general.savings_account_report_description',1)}}
                     </td>
                     <td><a href="{{url('report/savings/account')}}"><i
-                                    class="fa fa-search"></i> </a>
+                                    class="ri-search-line"></i> </a>
                     </td>
                 </tr>
 

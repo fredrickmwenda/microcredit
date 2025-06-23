@@ -39,7 +39,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="branch_id"
-                                       class="control-label">{{trans_choice('core::general.branch',1)/ Team}}</label>
+                                       class="control-label">{{trans_choice('core::general.branch',1)}}/ Team</label>
                                 <select class="form-control @error('branch_id') is-invalid @enderror" name="branch_id"
                                         id="branch_id" v-model="branch_id" required>
                                     <option value="" disabled

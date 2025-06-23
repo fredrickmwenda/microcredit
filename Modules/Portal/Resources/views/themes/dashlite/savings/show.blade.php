@@ -361,7 +361,7 @@
                                                         <li>
                                                             <a href="{{url('portal/savings/transaction/' . $key->id . '/show') }}"
                                                                class=""><i
-                                                                        class="fa fa-search"></i> {{ trans_choice('core::general.view', 2) }}
+                                                                        class="ri-search-line"></i> {{ trans_choice('core::general.view', 2) }}
                                                             </a></li>
 
                                                         <li>

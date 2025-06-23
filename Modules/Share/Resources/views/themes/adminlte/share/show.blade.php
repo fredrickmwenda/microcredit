@@ -59,7 +59,7 @@
                                         @endcan
                                         @can('share.shares.edit')
                                             <a href="{{url('share/'.$share->id.'/edit')}}" class="btn btn-primary">
-                                                <i class="fas fa-edit"></i>
+                                                <i class="ri-edit-fill"></i>
                                                 {{ trans_choice('core::general.edit',1) }}
                                             </a>
                                         @endcan
@@ -801,12 +801,12 @@
                                                         <div class="btn-group">
                                                             <button href="#" class="btn btn-default dropdown-toggle"
                                                                     data-bs-toggle="dropdown">
-                                                                <i class="fas fa-ellipsis-h"></i>
+                                                                <i class="ri-settings-3-line"></i>
                                                             </button>
                                                             <div class="dropdown-menu dropdown-menu-left">
                                                                 <a href="{{url('share/transaction/' . $key->id . '/show') }}"
                                                                    class="dropdown-item"><i
-                                                                            class="fas fa-eye"></i> {{ trans_choice('core::general.view', 2) }}
+                                                                            class="ri-eye-fill"></i> {{ trans_choice('core::general.view', 2) }}
                                                                 </a>
                                                                 <a href="{{url('share/transaction/' . $key->id . '/pdf') }}" class="dropdown-item"
                                                                    target="_blank"><i
@@ -820,7 +820,7 @@
 
                                                                 @if($key->reversible == 1 && $key->reversed==0)
                                                                     <a href="{{url('share/transaction/' . $key->id . '/edit') }}" class="dropdown-item"><i
-                                                                                class="fas fa-edit"></i> {{ trans_choice('core::general.edit', 1) }}
+                                                                                class="ri-edit-fill"></i> {{ trans_choice('core::general.edit', 1) }}
                                                                     </a>
 
                                                                     <a href="{{url('share/transaction/' . $key->id . '/reverse') }}"

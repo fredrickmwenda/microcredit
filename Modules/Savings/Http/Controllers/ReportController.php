@@ -161,8 +161,11 @@ class ReportController extends Controller
         $data = [];
         $branches = Branch::all();
         $savings_products = SavingsProduct::where('active', 1)->get();
-        $users = User::whereHas('roles', function ($query) {
-            return $query->where('name', '!=', 'client');
+        // $users = User::whereHas('roles', function ($query) {
+        //     return $query->where('name', '!=', 'client');
+        // })->get();
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->whereIn('name', ['client', 'admin']);
         })->get();
         if (!empty($start_date)) {
             $data = DB::table("savings")
@@ -217,8 +220,11 @@ class ReportController extends Controller
         $data = [];
         $branches = Branch::all();
         $savings_products = SavingsProduct::where('active', 1)->get();
-        $users = User::whereHas('roles', function ($query) {
-            return $query->where('name', '!=', 'client');
+        // $users = User::whereHas('roles', function ($query) {
+        //     return $query->where('name', '!=', 'client');
+        // })->get();
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->whereIn('name', ['client', 'admin']);
         })->get();
         if (!empty($start_date)) {
             $data = DB::table("savings_transactions")

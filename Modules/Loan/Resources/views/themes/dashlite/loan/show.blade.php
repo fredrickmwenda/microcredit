@@ -34,7 +34,7 @@
                                             @can('loan.loans.edit')
                                                 <a href="{{url('loan/'.$loan->id.'/edit')}}"
                                                    class="btn btn-primary">
-                                                    <i class="fa fa-edit"></i>
+                                                    <i class="ri-edit-fill"></i>
                                                     {{ trans_choice('core::general.edit',1) }}
                                                 </a>
                                             @endcan
@@ -1499,7 +1499,7 @@
                                                                     <li>
                                                                         <a href="{{url('loan/transaction/' . $key->id . '/show') }}"
                                                                            class=""><i
-                                                                                    class="fa fa-search"></i> {{ trans_choice('core::general.view', 2) }}
+                                                                                    class="ri-search-line"></i> {{ trans_choice('core::general.view', 2) }}
                                                                         </a></li>
                                                                     @if($key->loan_transaction_type_id == 2 && $key->reversed==0)
                                                                         <li>
@@ -1517,7 +1517,7 @@
                                                                         @can('loan.loans.transactions.edit')
                                                                             <li>
                                                                                 <a href="{{url('loan/repayment/' . $key->id . '/edit') }}"><i
-                                                                                            class="fa fa-edit"></i> {{ trans_choice('core::general.edit', 1) }}
+                                                                                            class="ri-edit-fill"></i> {{ trans_choice('core::general.edit', 1) }}
                                                                                 </a>
                                                                             </li>
                                                                         @endcan
@@ -1659,14 +1659,14 @@
                                                 <td>{{$key->description}}</td>
                                                 <td>
                                                     <a href="{{asset('storage/uploads/loans/'.$key->link)}}"
-                                                       target="_blank"><i class="fa fa-download"></i> </a>
+                                                       target="_blank"><i class="ri-download-line"></i> </a>
                                                     @can('loan.loans.files.edit')
                                                         <a href="{{url('loan/file/'.$key->id.'/edit')}}"><i
-                                                                    class="fa fa-edit"></i> </a>
+                                                                    class="ri-edit-fill"></i> </a>
                                                     @endcan
                                                     @can('loan.loans.files.destroy')
                                                         <a href="{{url('loan/file/'.$key->id.'/destroy')}}"
-                                                           class="confirm"><i class="fa fa-trash"></i> </a>
+                                                           class="confirm"><i class="ri-delete-bin-fill"></i> </a>
                                                     @endcan
                                                 </td>
                                             </tr>
@@ -1702,10 +1702,10 @@
                                                 <td>{{$key->description}}</td>
                                                 <td>
                                                     <a href="{{asset('storage/uploads/loans/'.$key->link)}}"
-                                                       target="_blank"><i class="fa fa-download"></i> </a>
+                                                       target="_blank"><i class="ri-download-line"></i> </a>
                                                     @can('loan.loans.collateral.edit')
                                                         <a href="{{url('loan/collateral/'.$key->id.'/edit')}}"><i
-                                                                    class="fa fa-edit"></i> </a>
+                                                                    class="ri-edit-fill"></i> </a>
                                                     @endcan
                                                     @can('loan.loans.collateral.destroy')
                                                         <a href="{{url('loan/collateral/'.$key->id.'/destroy')}}"
@@ -1750,18 +1750,18 @@
                                                 <td>
                                                     @if($key->is_client==1)
                                                         <a href="{{url('client/'.$key->client_id.'/show')}}"><i
-                                                                    class="fa fa-eye"></i> </a>
+                                                                    class="ri-eye-fill"></i> </a>
                                                     @else
                                                         <a href="{{url('loan/guarantor/'.$key->id.'/show')}}"><i
-                                                                    class="fa fa-eye"></i> </a>
+                                                                    class="ri-eye-fill"></i> </a>
                                                     @endif
                                                     @can('loan.loans.guarantors.edit')
                                                         <a href="{{url('loan/guarantor/'.$key->id.'/edit')}}"><i
-                                                                    class="fa fa-edit"></i> </a>
+                                                                    class="ri-edit-fill"></i> </a>
                                                     @endcan
                                                     @can('loan.loans.guarantors.destroy')
                                                         <a href="{{url('loan/guarantor/'.$key->id.'/destroy')}}"
-                                                           class="confirm"><i class="fa fa-trash"></i> </a>
+                                                           class="confirm"><i class="ri-delete-bin-fill"></i> </a>
                                                     @endcan
                                                 </td>
                                             </tr>
@@ -1796,12 +1796,12 @@
                                                             @can('loan.loans.notes.edit')
                                                                 <a href="{{url('loan/note/'.$key->id.'/edit')}}"
                                                                    class="link link-sm"><i
-                                                                            class="fa fa-edit"></i> </a>
+                                                                            class="ri-edit-fill"></i> </a>
                                                             @endcan
                                                             @can('loan.loans.notes.destroy')
                                                                 <a href="{{url('loan/note/'.$key->id.'/destroy')}}"
                                                                    class="link link-sm link-danger confirm"><i
-                                                                            class="fa fa-trash"></i> </a>
+                                                                            class="ri-delete-bin-fill"></i> </a>
                                                             @endcan
                                                         </div>
                                                     </div><!-- .bq-note-item -->

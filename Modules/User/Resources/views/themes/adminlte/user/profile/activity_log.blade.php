@@ -62,7 +62,7 @@
                                         <a href="{{url('user/profile/activity_log/' . $key->id . '/show') }}"
                                            class="bg-white btn btn-sm btn-outline-light btn-icon btn-tooltip" title=""
                                            data-original-title="Details">
-                                            <i class="fas fa-eye"></i>
+                                            <i class="ri-eye-fill"></i>
                                         </a>
                                     </td>
                                 </tr>

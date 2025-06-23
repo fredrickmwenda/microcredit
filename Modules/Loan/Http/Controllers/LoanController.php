@@ -188,6 +188,10 @@ class LoanController extends Controller
             if ($data->status == 'submitted') {
                 return '<span class="label label-warning">' . trans_choice('loan::general.pending_approval', 1) . '</span>';
             }
+
+            if ($data->status == 'pending_ceo_approval') {
+                return '<span class="label label-warning"> Pending CEO Approval</span>';
+            }
             if ($data->status == 'overpaid') {
                 return '<span class="label label-warning">' . trans_choice('loan::general.overpaid', 1) . '</span>';
             }
@@ -291,8 +295,11 @@ class LoanController extends Controller
         $loan_products = LoanProduct::with('charges')->with('charges.charge')->where('active', 1)->get();
         $funds = Fund::all();
         $loan_purposes = LoanPurpose::get();
-        $users = User::whereHas('roles', function ($query) {
-            return $query->where('name', '!=', 'client');
+        // $users = User::whereHas('roles', function ($query) {
+        //     return $query->where('name', '!=', 'client');
+        // })->get();
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->whereIn('name', ['client', 'admin']);
         })->get();
         $custom_fields = CustomField::where('category', 'add_loan')->where('active', 1)->get();
 
@@ -315,6 +322,11 @@ class LoanController extends Controller
      */
     public function store(Request $request)
     {
+        $client = Client::find($request->client_id);
+        if ($client && $client->isBlacklisted()) {
+            \flash(trans('client::general.client_is_blacklisted'))->warning()->important();
+            return redirect()->back();
+        }
 
         $request->validate([
             'fund_id' => ['required'],
@@ -601,8 +613,11 @@ class LoanController extends Controller
      */
     public function show_application($id)
     {
-        $users = User::whereHas('roles', function ($query) {
-            return $query->where('name', '!=', 'client');
+        // $users = User::whereHas('roles', function ($query) {
+        //     return $query->where('name', '!=', 'client');
+        // })->get();
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->whereIn('name', ['client', 'admin']);
         })->get();
         $payment_types = PaymentType::where('active', 1)->get();
         $loan_application = LoanApplication::with('client')->with('loan_product')->find($id);
@@ -611,13 +626,15 @@ class LoanController extends Controller
 
     public function show($id)
     {
-        $users = User::whereHas('roles', function ($query) {
-            return $query->where('name', '!=', 'client');
+        // $users = User::whereHas('roles', function ($query) {
+        //     return $query->where('name', '!=', 'client');
+        // })->get();
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->whereIn('name', ['client', 'admin']);
         })->get();
         $payment_types = PaymentType::where('active', 1)->get();
         $loan = Loan::with('repayment_schedules')->with('transactions')->with('charges')->with('client')->with('loan_product')->with('notes')->with('guarantors')->with('files')->with('collateral')->with('collateral.collateral_type')->with('notes.created_by')->find($id);
         $custom_fields = CustomField::where('category', 'add_loan')->where('active', 1)->get();
-        dd($users);
         return theme_view('loan::loan.show', compact('loan', 'users', 'payment_types', 'custom_fields'));
     }
 
@@ -630,9 +647,10 @@ class LoanController extends Controller
         $loan_product = $loan->loan_product;
         $funds = Fund::all();
         $loan_purposes = LoanPurpose::get();
-        $users = User::whereHas('roles', function ($query) {
-            return $query->where('name', '!=', 'client');
-        })->get();
+        // $users = User::whereHas('roles', function ($query) {
+        //     return $query->where('name', '!=', 'client');
+        // })->get();
+        
         $charges = [];
         $charges_list = [];
         $temp_charges = [];
@@ -2102,8 +2120,11 @@ class LoanController extends Controller
         $loan_product = $loan_application->loan_product;
         $funds = Fund::all();
         $loan_purposes = LoanPurpose::get();
-        $users = User::whereHas('roles', function ($query) {
-            return $query->where('name', '!=', 'client');
+        // $users = User::whereHas('roles', function ($query) {
+        //     return $query->where('name', '!=', 'client');
+        // })->get();
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->whereIn('name', ['client', 'admin']);
         })->get();
         $charges = [];
         $charges_list = [];

@@ -51,9 +51,13 @@ class ReportController extends Controller
         $loan_officer_id = $request->loan_officer_id;
         $data = [];
         $branches = Branch::all();
-        $users = User::whereHas('roles', function ($query) {
-            return $query->where('name', '!=', 'client');
+        // $users = User::whereHas('roles', function ($query) {
+        //     return $query->where('name', '!=', 'client');
+        // })->get();
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->whereIn('name', ['client', 'admin']);
         })->get();
+
         if (!empty($start_date)) {
             $number_of_clients = Client::where('loan_officer_id', $loan_officer_id)
                 ->when($start_date, function ($query) use ($start_date, $end_date) {

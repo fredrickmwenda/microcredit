@@ -19,23 +19,24 @@
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col-4">
-                            <span class="info-box-icon bg-green elevation-1">
-                                        <i class="ri-money-dollar-circle-fill" style="font-size: 46px;"></i>
-                                    </span>
+                                <span class="info-box-icon bg-green elevation-1" style="color: blue;">
+                                    <img src="{{asset('assets/images/cedi.svg')}}" alt="triangle with equal sides" height=50 width=50 />
+                                    <!-- <i class="ri-money-dollar-circle-fill" style="font-size: 46px;"></i> -->
+                                </span>
                             </div>
                             <div class="col-8">
                                 <!-- <div class="text-end"> -->
-                                    <!-- <h3 class="my-1 py-1">{{number_format(\Modules\Loan\Entities\Loan::where('status','active')->sum('principal'))}}</h3> -->
-                                    <!-- <div id="deals-chart" data-colors="#e7607b"></div> -->
-                                    <h5 class="text-muted fw-normal mt-0 text-truncate" title="Deals">{{ trans_choice('loan::general.loan',2) }} {{ trans_choice('loan::general.disbursed',2) }}</h5>
+                                <!-- <h3 class="my-1 py-1">{{number_format(\Modules\Loan\Entities\Loan::where('status','active')->sum('principal'))}}</h3> -->
+                                <!-- <div id="deals-chart" data-colors="#e7607b"></div> -->
+                                <h5 class="text-muted fw-normal mt-0 text-truncate" title="Deals">{{ trans_choice('loan::general.loan',2) }} {{ trans_choice('loan::general.disbursed',2) }}</h5>
 
 
-                                    <!-- <h3 class="my-1 py-1">861</h3> -->
-                                    <p class="mb-0 text-muted">
-                                    <h3 class="my-1 py-1">{{number_format(\Modules\Loan\Entities\Loan::where('status','active')->sum('principal'))}}</h3>
+                                <!-- <h3 class="my-1 py-1">861</h3> -->
+                                <p class="mb-0 text-muted">
+                                <h3 class="my-1 py-1">{{number_format(\Modules\Loan\Entities\Loan::where('status','active')->sum('principal'))}}</h3>
 
-                                        <!-- <span class="text-success me-2"><i class="ri-arrow-up-line"></i> 4.87%</span> -->
-                                    </p>
+                                <!-- <span class="text-success me-2"><i class="ri-arrow-up-line"></i> 4.87%</span> -->
+                                </p>
                                 <!-- </div> -->
                             </div>
                         </div> <!-- end row-->
@@ -60,20 +61,21 @@
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col-4">
-                            <span class="info-box-icon bg-green elevation-1">
-                                        <i class="ri-money-cny-circle-fill" style="font-size: 46px;"></i>
-                                    </span>
+                                <span class="info-box-icon bg-green elevation-1" style="color: green;">
+                                    <img src="{{asset('assets/images/cedi.svg')}}" alt="triangle with equal sides" height=50 width=50 />
+                                    <!-- <i class="ri-money-cny-circle-fill" style="font-size: 46px;"></i> -->
+                                </span>
                             </div>
                             <div class="col-8">
-                                    <h5 class="text-muted fw-normal mt-0 text-truncate" title="Deals">{{ trans_choice('loan::general.total',1) }} {{ trans_choice('loan::general.repayment',2) }}</h5>
-                                    <p class="mb-0 text-muted">
-                                    <h3 class="my-1 py-1">{{number_format(\Modules\Loan\Entities\LoanTransaction::where('reversed',0)->whereIn('loan_transaction_type_id',[2,5,8])->sum('amount'))}}</h3>
-                                    </p>
+                                <h5 class="text-muted fw-normal mt-0 text-truncate" title="Deals">{{ trans_choice('loan::general.total',1) }} {{ trans_choice('loan::general.repayment',2) }}</h5>
+                                <p class="mb-0 text-muted">
+                                <h3 class="my-1 py-1">{{number_format(\Modules\Loan\Entities\LoanTransaction::where('reversed',0)->whereIn('loan_transaction_type_id',[2,5,8])->sum('amount'))}}</h3>
+                                </p>
                             </div>
-                        </div> 
+                        </div>
                     </div>
                 </div> <!-- end card -->
-            </div>             
+            </div>
             <?php
             $total_principal = 0;
             $total_principal_waived = 0;
@@ -140,17 +142,19 @@
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col-4">
-                            <span class="info-box-icon bg-green elevation-1">
-                                        <i class="ri-money-cny-circle-fill" style="font-size: 46px;"></i>
-                                    </span>
+                                <span class="info-box-icon bg-green elevation-1" style="color:#FFD800">
+
+                                    <img src="{{asset('assets/images/cedi.svg')}}" alt="triangle with equal sides" height=50 width=50 />
+                                    <!-- <i class="ri-money-cny-circle-fill" style="font-size: 46px;"></i> -->
+                                </span>
                             </div>
                             <div class="col-8">
-                                    <h5 class="text-muted fw-normal mt-0 text-truncate" title="Deals">{{ trans_choice('loan::general.total',1) }}  {{ trans_choice('loan::general.outstanding',2) }}</h5>
-                                    <p class="mb-0 text-muted">
-                                    <h3 class="my-1 py-1">{{number_format($total_balance)}}</h3>
-                                    </p>
+                                <h5 class="text-muted fw-normal mt-0 text-truncate" title="Deals">{{ trans_choice('loan::general.total',1) }} {{ trans_choice('loan::general.outstanding',2) }}</h5>
+                                <p class="mb-0 text-muted">
+                                <h3 class="my-1 py-1">{{number_format($total_balance)}}</h3>
+                                </p>
                             </div>
-                        </div> 
+                        </div>
                     </div>
                 </div> <!-- end card -->
             </div>
@@ -160,21 +164,22 @@
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col-4">
-                            <span class="info-box-icon bg-green elevation-1">
-                                        <i class="ri-money-cny-circle-fill" style="font-size: 46px;"></i>
-                                    </span>
+                                <span class="info-box-icon bg-green elevation-1" style="color: red;">
+                                    <img src="{{asset('assets/images/cedi.svg')}}" alt="triangle with equal sides" height=50 width=50 />
+                                    <!-- <i class="ri-money-cny-circle-fill" style="font-size: 46px;"></i> -->
+                                </span>
                             </div>
                             <div class="col-8">
-                                    <h5 class="text-muted fw-normal mt-0 text-truncate" title="Deals">{{ trans_choice('loan::general.total',1) }}  {{ trans_choice('loan::general.arrears',2) }}</h5>
-                                    <p class="mb-0 text-muted">
-                                    <h3 class="my-1 py-1">{{number_format($total_arrears_amount)}}</h3>
-                                    </p>
+                                <h5 class="text-muted fw-normal mt-0 text-truncate" title="Deals">{{ trans_choice('loan::general.total',1) }} {{ trans_choice('loan::general.arrears',2) }}</h5>
+                                <p class="mb-0 text-muted">
+                                <h3 class="my-1 py-1">{{number_format($total_arrears_amount)}}</h3>
+                                </p>
                             </div>
-                        </div> 
+                        </div>
                     </div>
                 </div> <!-- end card -->
-            </div> 
-           
+            </div>
+
         </div>
 
     </div>

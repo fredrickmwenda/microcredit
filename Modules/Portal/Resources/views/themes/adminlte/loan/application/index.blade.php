@@ -39,7 +39,7 @@
                     <div class="dropdown">
                         <a href="#" class="btn btn-trigger btn-icon dropdown-toggle"
                            data-bs-toggle="dropdown">
-                            <i class="fas fa-wrench"></i>
+                            <i class="ri-tools-line"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-xs">
                             <a class="dropdown-item"><span>Show</span></a>
@@ -101,7 +101,7 @@
                             <td>
                                 @if($key->status=='pending')
                                     <a href="{{url('portal/loan/application/'.$key->id.'/destroy')}}" class="confirm">
-                                        <i class="fa fa-trash"></i>
+                                        <i class="ri-delete-bin-fill"></i>
                                     </a>
                                 @endif
                             </td>

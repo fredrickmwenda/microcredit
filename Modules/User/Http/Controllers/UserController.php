@@ -306,10 +306,11 @@ class UserController extends Controller
 
         ];
         if ($request->hasFile('photo')) {
-            $file_name = $request->file('photo')->store('public/uploads');
             if ($user->photo) {
-                Storage::delete('public/uploads/' . $user->photo);
+                Storage::delete('public/uploads' . $user->photo);
             }
+            $file_name = $request->file('photo')->store('public/uploads'); 
+ 
             $credentials['photo'] = basename($file_name);
         }
 
@@ -424,7 +425,7 @@ class UserController extends Controller
         $query = Activity::where('causer_id', Auth::id());
         return DataTables::of($query)->editColumn('action', function ($data) {
             $action = '';
-            $action .= '<a href="' . url('user/profile/activity_log/' . $data->id . '/show') . '" class=""><i class="fa fa-eye"></i></a>';
+            $action .= '<a href="' . url('user/profile/activity_log/' . $data->id . '/show') . '" class=""><i class="ri-eye-fill"></i></a>';
             return $action;
         })->editColumn('created_at', function ($data) {
             return $data->created_at->format('Y-m-d H:i:s');

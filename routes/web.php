@@ -38,6 +38,11 @@ Route::get('/queue-work', function () {
     echo "Queue restarted successfully\n";*/
 });
 
+Route::get('/storage-link', function () {
+    Artisan::call('storage:link');
+    return 'The symbolic link has been created.';
+});
+
 //
 //Route::get('update',
 //    function () {

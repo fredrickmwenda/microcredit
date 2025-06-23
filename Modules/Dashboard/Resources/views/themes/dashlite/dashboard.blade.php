@@ -129,7 +129,7 @@
         {{--        });--}}
         {{--    });--}}
         {{--    $('.grid-stack-item-content').each(function () {--}}
-        {{--        $(this).append("<span class='label label-danger trash-item'><i class='fa fa-trash'></i> </span>");--}}
+        {{--        $(this).append("<span class='label label-danger trash-item'><i class='ri-delete-bin-fill'></i> </span>");--}}
         {{--    })--}}
         {{--    $('.trash-item').on('click', function () {--}}
         {{--        var grid = $('.grid-stack').data('gridstack');--}}

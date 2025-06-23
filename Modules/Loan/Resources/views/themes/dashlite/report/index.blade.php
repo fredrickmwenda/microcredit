@@ -30,7 +30,7 @@
                         {{trans_choice('loan::general.collection_sheet_report_description',1)}}
                     </td>
                     <td><a href="{{url('report/loan/collection_sheet')}}"><i
-                                    class="fa fa-search"></i> </a>
+                                    class="ri-search-line"></i> </a>
                     </td>
                 </tr>
                 <tr>
@@ -41,7 +41,7 @@
                         {{trans_choice('loan::general.repayment_report_description',1)}}
                     </td>
                     <td><a href="{{url('report/loan/repayment')}}"><i
-                                    class="fa fa-search"></i> </a>
+                                    class="ri-search-line"></i> </a>
                     </td>
                 </tr>
                 <tr>
@@ -52,7 +52,7 @@
                         {{trans_choice('loan::general.expected_repayment_report_description',1)}}
                     </td>
                     <td><a href="{{url('report/loan/expected_repayment')}}"><i
-                                    class="fa fa-search"></i> </a>
+                                    class="ri-search-line"></i> </a>
                     </td>
                 </tr>
                 <tr>
@@ -63,7 +63,7 @@
                         {{trans_choice('loan::general.arrears_report_description',1)}}
                     </td>
                     <td><a href="{{url('report/loan/arrears')}}"><i
-                                    class="fa fa-search"></i> </a>
+                                    class="ri-search-line"></i> </a>
                     </td>
                 </tr>
 
@@ -75,7 +75,7 @@
                         {{trans_choice('loan::general.disbursement_report_description',1)}}
                     </td>
                     <td><a href="{{url('report/loan/disbursement')}}"><i
-                                    class="fa fa-search"></i> </a>
+                                    class="ri-search-line"></i> </a>
                     </td>
                 </tr>
                 <tr class="hidden">
@@ -86,7 +86,7 @@
                         {{trans_choice('loan::general.portfolio_at_risk_report_description',1)}}
                     </td>
                     <td><a href="{{url('report/loan/portfolio_at_risk')}}"><i
-                                    class="fa fa-search"></i> </a>
+                                    class="ri-search-line"></i> </a>
                     </td>
                 </tr>
                 </tbody>

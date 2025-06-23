@@ -212,8 +212,11 @@ class SavingsController extends Controller
 //
 //            $savings_charges[$key->id] = $key;
 //        }
-        $users = User::whereHas('roles', function ($query) {
-            return $query->where('name', '!=', 'client');
+        // $users = User::whereHas('roles', function ($query) {
+        //     return $query->where('name', '!=', 'client');
+        // })->get();
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->whereIn('name', ['client', 'admin']);
         })->get();
         \JavaScript::put([
             'clients' => $clients,
@@ -305,8 +308,11 @@ class SavingsController extends Controller
      */
     public function show($id)
     {
-        $users = User::whereHas('roles', function ($query) {
-            return $query->where('name', '!=', 'client');
+        // $users = User::whereHas('roles', function ($query) {
+        //     return $query->where('name', '!=', 'client');
+        // })->get();
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->whereIn('name', ['client', 'admin']);
         })->get();
         $payment_types = PaymentType::where('active', 1)->get();
         $savings = Savings::with('transactions')->with('charges')->with('client')->with('savings_product')->find($id);
@@ -337,8 +343,11 @@ class SavingsController extends Controller
                 $charges_list[] = $key;
             }
         }
-        $users = User::whereHas('roles', function ($query) {
-            return $query->where('name', '!=', 'client');
+        // $users = User::whereHas('roles', function ($query) {
+        //     return $query->where('name', '!=', 'client');
+        // })->get();
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->whereIn('name', ['client', 'admin']);
         })->get();
         \JavaScript::put([
             'clients' => $clients,
@@ -1562,12 +1571,12 @@ class SavingsController extends Controller
                 $action .= '<div class="btn-group" style="margin-left:5px;">
                 <button href="#" class="btn btn-default dropdown-toggle"
                         data-bs-toggle="dropdown">
-                    <i class="fas fa-ellipsis-h"></i>
+                    <i class="ri-settings-3-line"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a href="'. url('savings/transaction/' . $data->id . '/show') . '"
                        class="dropdown-item"><i
-                                class="fas fa-eye"></i> View
+                                class="ri-eye-fill"></i> View
                     </a>
 
                     <a href="'. url('savings/transaction/' . $data->id . '/pdf') . '"
@@ -1583,7 +1592,7 @@ class SavingsController extends Controller
                     if($data->reversible == 1 && $data->reversed==0){
                         $action .=   '<a href="'. url('savings/transaction/' . $data->id . '/edit') . '"
                            class="dropdown-item"><i
-                                    class="fas fa-edit"></i> Edit
+                                    class="ri-edit-fill"></i> Edit
                         </a>
                         <a href="'. url('savings/transaction/' . $data->id . '/reverse') . '"
                            class="dropdown-item confirm"><i

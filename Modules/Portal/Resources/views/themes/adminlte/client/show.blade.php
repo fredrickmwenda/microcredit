@@ -358,7 +358,7 @@
                                                     <td>{{$key->description}}</td>
                                                     <td>
                                                         <a href="{{asset('storage/uploads/clients/'.$key->link)}}"
-                                                           target="_blank"><i class="fa fa-download"></i> </a>
+                                                           target="_blank"><i class="ri-download-line"></i> </a>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -444,7 +444,7 @@
                                                     <td>{{$key->description}}</td>
                                                     <td>
                                                         <a href="{{asset('storage/uploads/clients/'.$key->link)}}"
-                                                           target="_blank"><i class="fa fa-download"></i> </a>
+                                                           target="_blank"><i class="ri-download-line"></i> </a>
 
                                                     </td>
                                                 </tr>

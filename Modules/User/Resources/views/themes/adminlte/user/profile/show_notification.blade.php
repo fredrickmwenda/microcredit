@@ -60,7 +60,7 @@
                                 <a class="link-black text-sm mr-2"
                                    href="{{url('user/profile/notification/'.$notification->id.'/show')}}">
                                     <small><i
-                                                class="fas fa-eye"></i>
+                                                class="ri-eye-fill"></i>
                                         {{trans_choice('core::general.detail',2)}}
                                     </small>
                                 </a>
@@ -77,7 +77,7 @@
                                 <a class="link-black text-sm mr-2 confirm"
                                    href="{{url('user/profile/notification/'.$notification->id.'/destroy')}}">
                                     <small><i
-                                                class="fas fa-trash"></i>
+                                                class="ri-delete-bin-fill"></i>
                                         {{trans_choice('core::general.delete',1)}}
                                     </small>
                                 </a>

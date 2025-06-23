@@ -29,7 +29,7 @@
                                         @endcan
                                         @can('wallet.wallets.edit')
                                             <a href="{{url('wallet/'.$wallet->id.'/edit')}}" class="btn btn-primary">
-                                                <i class="fa fa-edit"></i>
+                                                <i class="ri-edit-fill"></i>
                                                 {{ trans_choice('core::general.edit',1) }}
                                             </a>
                                         @endcan
@@ -521,7 +521,7 @@
                                                                 <li>
                                                                     <a href="{{url('wallet/transaction/' . $key->id . '/show') }}"
                                                                        class=""><i
-                                                                                class="fa fa-search"></i> {{ trans_choice('core::general.view', 2) }}
+                                                                                class="ri-search-line"></i> {{ trans_choice('core::general.view', 2) }}
                                                                     </a></li>
 
                                                                 <li>
@@ -539,7 +539,7 @@
                                                                 @if($key->reversible == 1 && $key->reversed==0)
                                                                     <li>
                                                                         <a href="{{url('wallet/transaction/' . $key->id . '/edit') }}"><i
-                                                                                    class="fa fa-edit"></i> {{ trans_choice('core::general.edit', 1) }}
+                                                                                    class="ri-edit-fill"></i> {{ trans_choice('core::general.edit', 1) }}
                                                                         </a>
                                                                     </li>
                                                                     <li>

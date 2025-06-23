@@ -184,8 +184,11 @@ class ShareController extends Controller
             }
 
         }
-        $users = User::whereHas('roles', function ($query) {
-            return $query->where('name', '!=', 'client');
+        // $users = User::whereHas('roles', function ($query) {
+        //     return $query->where('name', '!=', 'client');
+        // })->get();
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->whereIn('name', ['client', 'admin']);
         })->get();
         \JavaScript::put([
             'clients' => $clients,
@@ -269,8 +272,11 @@ class ShareController extends Controller
      */
     public function show($id)
     {
-        $users = User::whereHas('roles', function ($query) {
-            return $query->where('name', '!=', 'client');
+        // $users = User::whereHas('roles', function ($query) {
+        //     return $query->where('name', '!=', 'client');
+        // })->get();
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->whereIn('name', ['client', 'admin']);
         })->get();
         $payment_types = PaymentType::where('active', 1)->get();
         $share = Share::with('transactions')->with('charges')->with('client')->with('share_product')->find($id);
@@ -318,8 +324,11 @@ class ShareController extends Controller
                 $charges_list[] = $key;
             }
         }
-        $users = User::whereHas('roles', function ($query) {
-            return $query->where('name', '!=', 'client');
+        // $users = User::whereHas('roles', function ($query) {
+        //     return $query->where('name', '!=', 'client');
+        // })->get();
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->whereIn('name', ['client', 'admin']);
         })->get();
         \JavaScript::put([
             'clients' => $clients,

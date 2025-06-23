@@ -1424,12 +1424,12 @@ class GeneralHelper
             $html .= '<ul class="dropdown-menu" role="menu">';
             if (Sentinel::hasAccess('stock.update')) {
                 $html .= '<li><a href="' . url('product/category/' . $t['id'] . '/edit') . '"><i
-                                                        class="fa fa-edit"></i>' . trans('general.edit') . '</a>
+                                                        class="ri-edit-fill"></i>' . trans('general.edit') . '</a>
                                         </li>';
             }
             if (Sentinel::hasAccess('stock.delete')) {
                 $html .= '<li><a href="' . url('product/category/' . $t['id'] . '/delete') . '" class="delete"><i
-                                                        class="fa fa-trash"></i>' . trans('general.delete') . '</a>
+                                                        class="ri-delete-bin-fill"></i>' . trans('general.delete') . '</a>
                                         </li>';
             }
             $html .= '</ul></div></td>';

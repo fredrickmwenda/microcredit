@@ -244,19 +244,19 @@
                                         <div class="btn-group">
                                             <button href="#" class="btn btn-default dropdown-toggle"
                                                     data-bs-toggle="dropdown">
-                                                <i class="fas fa-ellipsis-h"></i>
+                                                <i class="ri-settings-3-line"></i>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right">
                                                 @can('payroll.payroll.edit')
                                                     <a href="{{url('payroll/payment/' . $key->id . '/edit') }}"
                                                        class="dropdown-item">
-                                                        <i class="far fa-edit"></i> {{ trans_choice('core::general.edit', 2) }}
+                                                        <i class="ri-edit-fill"></i> {{ trans_choice('core::general.edit', 2) }}
                                                     </a>
                                                 @endcan
                                                 @can('payroll.payroll.destroy')
                                                     <a href="{{url('payroll/payment/' . $key->id . '/destroy') }}"
                                                        class="dropdown-item confirm">
-                                                        <i class="fas fa-trash"></i> {{ trans_choice('core::general.delete', 2) }}
+                                                        <i class="ri-delete-bin-fill"></i> {{ trans_choice('core::general.delete', 2) }}
                                                     </a>
 
                                                 @endcan

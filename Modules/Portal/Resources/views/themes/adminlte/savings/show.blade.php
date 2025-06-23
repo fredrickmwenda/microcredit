@@ -345,13 +345,13 @@
                                                     <div class="btn-group">
                                                         <button href="#" class="btn btn-default dropdown-toggle"
                                                                 data-bs-toggle="dropdown">
-                                                            <i class="fas fa-ellipsis-h"></i>
+                                                            <i class="ri-settings-3-line"></i>
                                                         </button>
                                                         <div class="dropdown-menu dropdown-menu-right">
 
                                                             <a href="{{url('portal/savings/transaction/' . $key->id . '/show') }}"
                                                                class="dropdown-item"><i
-                                                                        class="fas fa-eye"></i> {{ trans_choice('core::general.view', 2) }}
+                                                                        class="ri-eye-fill"></i> {{ trans_choice('core::general.view', 2) }}
                                                             </a>
                                                             <a href="{{url('portal/savings/transaction/' . $key->id . '/pdf') }}"
                                                                target="_blank" class="dropdown-item"><i

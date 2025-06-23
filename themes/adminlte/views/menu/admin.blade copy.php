@@ -425,7 +425,7 @@
                                         <i class="nav-icon fas {{$parent->icon}}"></i>
                                         <p>
                                             {{$parent->name}}
-                                            <i class="right fas fa-angle-left"></i>
+                                            <i class="right ri-arrow-drop-left-line"></i>
                                         </p>
                                     </a>
                                     <ul class="nav nav-treeview">

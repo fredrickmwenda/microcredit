@@ -36,7 +36,7 @@
                     <div class="dropdown">
                         <a href="#" class="btn btn-trigger btn-icon dropdown-toggle"
                            data-bs-toggle="dropdown">
-                            <i class="fas fa-wrench"></i>
+                            <i class="ri-tools-line"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-xs">
                             <a class="dropdown-item"><span>Show</span></a>
@@ -69,7 +69,7 @@
                                    placeholder="Search">
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-search"></i>
+                                    <i class="ri-search-line"></i>
                                 </button>
                             </div>
                         </div>
@@ -120,14 +120,14 @@
                                 <div class="btn-group">
                                     <button href="#" class="btn btn-default dropdown-toggle"
                                             data-bs-toggle="dropdown">
-                                        <i class="fas fa-ellipsis-h"></i>
+                                        <i class="ri-settings-3-line"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right">
                                         @can('savings.savings.products.edit')
 
                                             <a href="{{url('savings/product/' . $key->id . '/edit')}}"
                                                class="dropdown-item">
-                                                <i class="fas fa-edit"></i>
+                                                <i class="ri-edit-fill"></i>
                                                 <span>{{trans_choice('core::general.edit',1)}}</span>
                                             </a>
                                         @endcan
@@ -135,7 +135,7 @@
                                         @can('savings.savings.products.destroy')
                                             <a href="{{url('savings/product/' . $key->id . '/destroy')}}"
                                                class="dropdown-item confirm">
-                                                <i class="fas fa-trash"></i>
+                                                <i class="ri-delete-bin-fill"></i>
                                                 <span>{{trans_choice('core::general.delete',1)}}</span>
                                             </a>
                                         @endcan

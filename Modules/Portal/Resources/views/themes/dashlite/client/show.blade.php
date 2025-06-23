@@ -172,7 +172,7 @@
                             <a class="btn btn-sm btn-success hidden" data-bs-toggle="modal"
                                data-target="#change_status_modal">{{trans_choice('client::general.change',1)}} {{trans_choice('core::general.status',1)}}</a>
                             <a class="btn btn-sm btn-warning hidden" data-bs-toggle="modal"
-                               data-target="#transfer_client_modal">{{trans_choice('client::general.transfer',1)}}</a>
+                               data-bs-target="#transfer_client_modal">{{trans_choice('client::general.transfer',1)}}</a>
                         @endcan
                     </p>
                 </div>
@@ -290,7 +290,7 @@
                                         <td>{{$key->description}}</td>
                                         <td>
                                             <a href="{{asset('storage/uploads/clients/'.$key->link)}}"
-                                               target="_blank"><i class="fa fa-download"></i> </a>
+                                               target="_blank"><i class="ri-download-line"></i> </a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -376,7 +376,7 @@
                                         <td>{{$key->description}}</td>
                                         <td>
                                             <a href="{{asset('storage/uploads/clients/'.$key->link)}}"
-                                               target="_blank"><i class="fa fa-download"></i> </a>
+                                               target="_blank"><i class="ri-download-line"></i> </a>
 
                                         </td>
                                     </tr>

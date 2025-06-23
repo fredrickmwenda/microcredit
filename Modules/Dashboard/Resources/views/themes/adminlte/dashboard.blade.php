@@ -45,7 +45,7 @@
                 @can('widget.widget.add_widget_button')
                 <div class="col-md-12">
                     <button data-bs-toggle="modal" data-target="#add_widget"
-                            class="btn btn-info margin float-right">
+                            class="btn btn-info margin float-right" style="margin-bottom: 20px;">
                         {{trans_choice('core::general.add',1)}}  {{trans_choice('dashboard::general.widget',1)}}
                     </button>
                     <div class="modal fade" id="add_widget">
@@ -56,7 +56,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title">{{trans_choice('core::general.add',1)}}  {{trans_choice('dashboard::general.widget',1)}}</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
                                             <span aria-hidden="true">&times;</span></button>
                                     </div>
                                     <div class="modal-body">

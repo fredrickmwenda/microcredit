@@ -61,7 +61,7 @@
                                                 </li>
                                                 <li>
                                                     <a href="#" data-bs-toggle="modal"
-                                                       data-target="#transfer_client_modal"><em
+                                                       data-bs-target="#transfer_client_modal"><em
                                                                 class="icon ni ni-forward"></em>
                                                         <span>{{trans_choice('client::general.transfer',1)}}</span>
                                                     </a>
@@ -408,14 +408,14 @@
                                                     <td>{{$key->description}}</td>
                                                     <td>
                                                         <a href="{{asset('storage/uploads/clients/'.$key->link)}}"
-                                                           target="_blank"><i class="fa fa-download"></i> </a>
+                                                           target="_blank"><i class="ri-download-line"></i> </a>
                                                         @can('client.clients.identification.edit')
                                                             <a href="{{url('client/client_identification/'.$key->id.'/edit')}}"><i
-                                                                        class="fa fa-edit"></i> </a>
+                                                                        class="ri-edit-fill"></i> </a>
                                                         @endcan
                                                         @can('client.clients.identification.destroy')
                                                             <a href="{{url('client/client_identification/'.$key->id.'/destroy')}}"
-                                                               class="confirm"><i class="fa fa-trash"></i> </a>
+                                                               class="confirm"><i class="ri-delete-bin-fill"></i> </a>
                                                         @endcan
                                                     </td>
                                                 </tr>
@@ -483,11 +483,11 @@
                                                 <td>
                                                     @can('client.clients.next_of_kin.edit')
                                                         <a href="{{url('client/client_next_of_kin/'.$key->id.'/edit')}}"><i
-                                                                    class="fa fa-edit"></i> </a>
+                                                                    class="ri-edit-fill"></i> </a>
                                                     @endcan
                                                     @can('client.clients.next_of_kin.destroy')
                                                         <a href="{{url('client/client_next_of_kin/'.$key->id.'/destroy')}}"
-                                                           class="confirm"><i class="fa fa-trash"></i> </a>
+                                                           class="confirm"><i class="ri-delete-bin-fill"></i> </a>
                                                     @endcan
                                                 </td>
                                             </tr>
@@ -518,11 +518,11 @@
                                                 <td>
                                                     @can('client.clients.user.create')
                                                         <a href="{{url('user/'.$key->user_id.'/edit')}}"
-                                                           class=""><i class="fa fa-edit"></i> </a>
+                                                           class=""><i class="ri-edit-fill"></i> </a>
                                                     @endcan
                                                     @can('client.clients.user.destroy')
                                                         <a href="{{url('client/user/'.$key->id.'/destroy')}}"
-                                                           class="confirm"><i class="fa fa-trash"></i> </a>
+                                                           class="confirm"><i class="ri-delete-bin-fill"></i> </a>
                                                     @endcan
                                                 </td>
                                             </tr>
@@ -553,14 +553,14 @@
                                                     <td>{{$key->description}}</td>
                                                     <td>
                                                         <a href="{{asset('storage/uploads/clients/'.$key->link)}}"
-                                                           target="_blank"><i class="fa fa-download"></i> </a>
+                                                           target="_blank"><i class="ri-download-line"></i> </a>
                                                         @can('client.clients.files.edit')
                                                             <a href="{{url('client/file/'.$key->id.'/edit')}}"><i
-                                                                        class="fa fa-edit"></i> </a>
+                                                                        class="ri-edit-fill"></i> </a>
                                                         @endcan
                                                         @can('client.clients.files.destroy')
                                                             <a href="{{url('client/file/'.$key->id.'/destroy')}}"
-                                                               class="confirm"><i class="fa fa-trash"></i> </a>
+                                                               class="confirm"><i class="ri-delete-bin-fill"></i> </a>
                                                         @endcan
                                                     </td>
                                                 </tr>

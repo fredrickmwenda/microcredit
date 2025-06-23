@@ -60,7 +60,7 @@ class ActivityLogController extends Controller
             ->selectRaw("activity_log.*,concat(users.first_name,' ',users.last_name) user");
         return DataTables::of($query)->editColumn('action', function ($data) {
             $action = '';
-            $action .= '<a href="' . url('activity_log/' . $data->id . '/show') . '" class=""><i class="fa fa-eye"></i></a>';
+            $action .= '<a href="' . url('activity_log/' . $data->id . '/show') . '" class=""><i class="ri-eye-fill"></i></a>';
             return $action;
         })->editColumn('user', function ($data) {
             return '<a href="' . url('user/' . $data->causer_id . '/show') . '">' . $data->user . '</a>';

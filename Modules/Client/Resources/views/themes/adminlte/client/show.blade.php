@@ -3,7 +3,7 @@
     {{ $client->first_name }} {{ $client->last_name }}
 @endsection
 @section('styles')
-@stop
+@stop 
 @section('content')
     <section class="content-header">
         <div class="container-fluid">
@@ -80,7 +80,7 @@
                                 </b>
                                 <a class="float-right">
                                     <a class="float-right" data-bs-toggle="modal"
-                                       data-target="#change_status_modal" href="#">
+                                       data-bs-target="#change_status_modal" href="#">
                                         @if($client->status=='pending')
                                             {{trans_choice('core::general.pending',1)}}
                                         @endif
@@ -245,7 +245,7 @@
                         <!-- <div class="d-flex justify-content-center"> -->
                             @can('client.clients.activate')
                                 <a href="#" data-bs-toggle="modal" class="btn btn-primary btn-sm  m-1"
-                                   data-target="#change_status_modal">
+                                   data-bs-target="#change_status_modal">
                                     <i class="fas fa-check-circle"></i>
                                     <span>{{trans_choice('client::general.change',1)}} {{trans_choice('core::general.status',1)}}</span>
                                 </a>
@@ -253,12 +253,25 @@
                             @can('client.clients.edit')
                                 <a href="{{url('client/' . $client->id . '/edit')}}"
                                    class="btn btn-primary btn-sm  m-1">
-                                    <i class="fas fa-edit"></i>
+                                    <i class="ri-edit-fill"></i>
                                     <span>{{trans_choice('core::general.edit',1)}}</span>
                                 </a>
 
+                                @if(!$client->isBlacklisted())
+                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#blacklistModal">
+                                    Blacklist
+                                </button>
+                                @include('client::client.partials.blacklist_modal')
+                                @else
+                                    <form method="POST" action="{{ url('client/' . $client->id . '/unblacklist') }}" style="display:inline;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success">Unblacklist</button>
+                                    </form>
+                                    <span class="text-danger ml-2">Blacklisted: {{ $client->blacklist->reason }}</span>
+                                @endif
+
                                 <a href="#" data-bs-toggle="modal"
-                                   data-target="#transfer_client_modal" class="btn btn-primary btn-sm m-1"><i
+                                   data-bs-target="#transfer_client_modal" class="btn btn-primary btn-sm m-1"><i
                                             class="fas fa-forward"></i>
                                     <span>{{trans_choice('client::general.transfer',1)}}</span>
                                 </a>
@@ -404,14 +417,14 @@
                                                     <td>{{$key->description}}</td>
                                                     <td>
                                                         <a href="{{asset('storage/uploads/clients/'.$key->link)}}"
-                                                           target="_blank"><i class="fa fa-download"></i> </a>
+                                                           target="_blank"><i class="ri-download-line"></i> </a>
                                                         @can('client.clients.identification.edit')
                                                             <a href="{{url('client/client_identification/'.$key->id.'/edit')}}"><i
-                                                                        class="fas fa-edit"></i> </a>
+                                                                        class="ri-edit-fill"></i> </a>
                                                         @endcan
                                                         @can('client.clients.identification.destroy')
                                                             <a href="{{url('client/client_identification/'.$key->id.'/destroy')}}"
-                                                               class="confirm"><i class="fas fa-trash"></i> </a>
+                                                               class="confirm"><i class="ri-delete-bin-fill"></i> </a>
                                                         @endcan
                                                     </td>
                                                 </tr>
@@ -479,11 +492,11 @@
                                                 <td>
                                                     @can('client.clients.next_of_kin.edit')
                                                         <a href="{{url('client/client_next_of_kin/'.$key->id.'/edit')}}"><i
-                                                                    class="fas fa-edit"></i> </a>
+                                                                    class="ri-edit-fill"></i> </a>
                                                     @endcan
                                                     @can('client.clients.next_of_kin.destroy')
                                                         <a href="{{url('client/client_next_of_kin/'.$key->id.'/destroy')}}"
-                                                           class="confirm"><i class="fas fa-trash"></i> </a>
+                                                           class="confirm"><i class="ri-delete-bin-fill"></i> </a>
                                                     @endcan
                                                 </td>
                                             </tr>
@@ -514,11 +527,11 @@
                                                 <td>
                                                     @can('client.clients.user.create')
                                                         <a href="{{url('user/'.$key->user_id.'/edit')}}"
-                                                           class=""><i class="fas fa-edit"></i> </a>
+                                                           class=""><i class="ri-edit-fill"></i> </a>
                                                     @endcan
                                                     @can('client.clients.user.destroy')
                                                         <a href="{{url('client/user/'.$key->id.'/destroy')}}"
-                                                           class="confirm"><i class="fas fa-trash"></i> </a>
+                                                           class="confirm"><i class="ri-delete-bin-fill"></i> </a>
                                                     @endcan
                                                 </td>
                                             </tr>
@@ -549,14 +562,14 @@
                                                     <td>{{$key->description}}</td>
                                                     <td>
                                                         <a href="{{asset('storage/uploads/clients/'.$key->link)}}"
-                                                           target="_blank"><i class="fa fa-download"></i> </a>
+                                                           target="_blank"><i class="ri-download-line"></i> </a>
                                                         @can('client.clients.files.edit')
                                                             <a href="{{url('client/file/'.$key->id.'/edit')}}"><i
-                                                                        class="fas fa-edit"></i> </a>
+                                                                        class="ri-edit-fill"></i> </a>
                                                         @endcan
                                                         @can('client.clients.files.destroy')
                                                             <a href="{{url('client/file/'.$key->id.'/destroy')}}"
-                                                               class="confirm"><i class="fas fa-trash"></i> </a>
+                                                               class="confirm"><i class="ri-delete-bin-fill"></i> </a>
                                                         @endcan
                                                     </td>
                                                 </tr>
@@ -579,7 +592,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">{{ trans_choice('client::general.change',1) }} {{ trans_choice('core::general.status',1) }}</h4>
-                        <button type="button" class="close" data-dismiss="modal">
+                        <button type="button" class="close" data-bs-dismiss="modal">
                             <span>×</span></button>
                     </div>
                     <form method="post"
@@ -616,7 +629,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default float-left"
-                                    data-dismiss="modal">
+                                    data-bs-dismiss="modal">
                                 {{ trans_choice('core::general.close',1) }}
                             </button>
                             <button type="submit"
@@ -732,6 +745,12 @@
                 }
             });
         })
+    </script>
+    <script>
+$('#blacklistModal select').select2({
+    dropdownParent: $('#blacklistModal'),
+    width: '100%'
+});
     </script>
 
 @endsection

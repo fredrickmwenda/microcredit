@@ -748,7 +748,7 @@
                                                             <li>
                                                                 <a href="{{url('portal/loan/transaction/' . $key->id . '/show') }}"
                                                                    class=""><i
-                                                                            class="fa fa-search"></i> {{ trans_choice('core::general.view', 2) }}
+                                                                            class="ri-search-line"></i> {{ trans_choice('core::general.view', 2) }}
                                                                 </a></li>
                                                             @if($key->loan_transaction_type_id == 2 && $key->reversed==0)
                                                                 <li>
@@ -881,7 +881,7 @@
                                         <td>{{$key->description}}</td>
                                         <td>
                                             <a href="{{asset('storage/uploads/loans/'.$key->link)}}"
-                                               target="_blank"><i class="fa fa-download"></i> </a>
+                                               target="_blank"><i class="ri-download-line"></i> </a>
 
                                         </td>
                                     </tr>
@@ -912,7 +912,7 @@
                                         <td>{{$key->description}}</td>
                                         <td>
                                             <a href="{{asset('storage/uploads/loans/'.$key->link)}}"
-                                               target="_blank"><i class="fa fa-download"></i> </a>
+                                               target="_blank"><i class="ri-download-line"></i> </a>
 
                                         </td>
                                     </tr>
@@ -948,10 +948,10 @@
                                         <td>
                                             @if($key->is_client==1)
                                                 <a href="#"><i
-                                                            class="fa fa-eye"></i> </a>
+                                                            class="ri-eye-fill"></i> </a>
                                             @else
                                                 <a href="{{url('portal/loan/guarantor/'.$key->id.'/show')}}"><i
-                                                            class="fa fa-eye"></i> </a>
+                                                            class="ri-eye-fill"></i> </a>
                                             @endif
 
                                         </td>

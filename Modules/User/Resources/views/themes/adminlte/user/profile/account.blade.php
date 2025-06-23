@@ -32,11 +32,11 @@
     </section>
     <section class="content" id="app">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-xl-4 col-lg-5">
                 @include('user::themes.adminlte.user.profile.user_profile_menu')
             </div>
             <!-- /.col -->
-            <div class="col-md-9">
+            <div class="col-xl-8 col-lg-7">
                 <form method="post" action="{{ url('user/profile/update_profile') }}"
                       enctype="multipart/form-data">
                     {{csrf_field()}}

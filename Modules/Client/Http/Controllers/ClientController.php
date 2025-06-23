@@ -543,7 +543,7 @@ class ClientController extends Controller
                 if($data->saving_debit == ""){
                     return "";
                 }
-                $action = '<a href="' . url('savings/transaction/' . $data->id . '/show') . '" class="btn btn-info"><i class="fas fa-eye"></i>' . trans_choice('general.detail', 2) . '</a>';
+                $action = '<a href="' . url('savings/transaction/' . $data->id . '/show') . '" class="btn btn-info"><i class="ri-eye-fill"></i>' . trans_choice('general.detail', 2) . '</a>';
                 return $action;
             })->rawColumns(['savings_id', 'savings_transaction_type_name', 'savings_product_name','action'])->make(true);
         }
@@ -687,7 +687,7 @@ class ClientController extends Controller
                 if($data->loan_debit == ""){
                     return "";
                 }
-                $action = '<a href="' . url('loan/transaction/' . $data->id . '/show') . '" class="btn btn-info"><i class="fas fa-eye"></i>' . trans_choice('general.detail', 2) . '</a>';
+                $action = '<a href="' . url('loan/transaction/' . $data->id . '/show') . '" class="btn btn-info"><i class="ri-eye-fill"></i>' . trans_choice('general.detail', 2) . '</a>';
                 return $action;
             })->rawColumns(['loan_id', 'loan_transaction_type_name', 'loan_product_name','action'])->make(true);
         }
@@ -703,9 +703,14 @@ class ClientController extends Controller
         $professions = Profession::all();
         $client_types = ClientType::all();
         $client_groups = ClientGroup::all();
-        $users = User::whereHas('roles', function ($query) {
-            return $query->where('name', '!=', 'client');
+        // $users = User::whereHas('roles', function ($query) {
+        //     $query->where('name', '!=', 'client')
+        //         ->orWhere('name', 'admin');
+        // })->get();
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->whereIn('name', ['client', 'admin']);
         })->get();
+
         $branches = Branch::all();
         $countries = Country::all();
         $randnum = rand(1111111111,9999999999);

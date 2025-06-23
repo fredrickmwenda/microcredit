@@ -27,22 +27,27 @@ class LoanApprovalNotification extends Notification
 
     public function toMail($notifiable)
     {
-        if ($this->type == 'pending_ceo_approval') {
-            $this->message = "Loan has been approved by loan Manager  and is pending your approval.
-            View Loan', url('/loan/' . $this->loan->id . '/show'";
-            return (new MailMessage)
-            
-                ->line('A loan has been approved by loan Manager  and is pending your approval.')
-                ->action('Review Loan', url('/loan/' . $this->loan->id . '/show'))
-                ->line('Thank you for using our application!');
+        switch ($this->type) {
+            case 'pending_ceo_approval':
+                $this->message = "Loan has been approved by the loan manager and is pending your approval.";
+                return (new MailMessage)
+                    ->line($this->message)
+                    ->action('Review Loan', url('/loan/' . $this->loan->id . '/show'))
+                    ->line('Thank you for using our application!');
+                
+            case 'approved':
+                $this->message = "Your loan has been approved by the CEO. View it here or in your Mail.";
+                return (new MailMessage)
+                    ->line($this->message)
+                    ->action('View Loan', url('/loan/' . $this->loan->id . '/show'))
+                    ->line('Thank you for using our application!');
 
-        } elseif ($this->type == 'approved') {
-            $this->message = "Your loan has been approved by the CEO. View it here or in your Mail.
-                          View Loan', url('/loan/' . $this->loan->id . '/show'";
-            return (new MailMessage)
-                ->line('Your loan has been approved by the CEO.')
-                ->action('View Loan', url('/loan/' . $this->loan->id . '/show'))
-                ->line('Thank you for using our application!');
+            default:
+                $this->message = "There has been an update to your loan.";
+                return (new MailMessage)
+                    ->line($this->message)
+                    ->action('View Loan', url('/loan/' . $this->loan->id . '/show'))
+                    ->line('Thank you for using our application!');
         }
     }
 
@@ -52,7 +57,6 @@ class LoanApprovalNotification extends Notification
             'loan_id' => $this->loan->id,
             'type' => $this->type,
             'message' => $this->message
-            
         ];
     }
 }

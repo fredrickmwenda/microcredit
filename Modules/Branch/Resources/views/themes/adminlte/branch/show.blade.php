@@ -127,21 +127,21 @@
                                                 <div class="btn-group">
                                                     <button href="#" class="btn btn-default dropdown-toggle"
                                                             data-bs-toggle="dropdown">
-                                                        <i class="fas fa-ellipsis-h"></i>
+                                                        <i class="ri-settings-3-line"></i>
                                                     </button>
                                                     <div class="dropdown-menu dropdown-menu-right">
                                                         @can('branch.branches.assign_user')
                                                             <a href="{{ url('user/'.$key->user->id.'/show') }}" class="dropdown-item"><i
-                                                                        class="fa fa-search"></i> {{trans_choice('general.detail',2)}}
+                                                                        class="ri-search-line"></i> {{trans_choice('general.detail',2)}}
                                                             </a>
 
                                                             <a href="{{ url('user/'.$key->user->id.'/edit') }}" class="dropdown-item"><i
-                                                                        class="fa fa-edit"></i> {{ trans('general.edit') }}
+                                                                        class="ri-edit-fill"></i> {{ trans('general.edit') }}
                                                             </a>
 
                                                             <a href="{{ url('branch/'.$key->id.'/remove_user') }}"
                                                                class="dropdown-item confirm"><i
-                                                                        class="fa fa-trash"></i> {{ trans('general.remove') }}
+                                                                        class="ri-delete-bin-fill"></i> {{ trans('general.remove') }}
                                                             </a>
                                                         @endcan
                                                     </div>
@@ -165,7 +165,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">{{trans_choice('core::general.add',1)}} {{trans_choice('core::general.user',1)}}</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">*</span></button>
                     </div>
                     <form method="post" action="{{url('branch/'.$branch->id.'/add_user')}}" class="">
@@ -185,7 +185,7 @@
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-info">{{trans_choice('core::general.save',1)}}</button>
                             <button type="button" class="btn default"
-                                    data-dismiss="modal">{{trans_choice('core::general.close',1)}}</button>
+                                    data-bs-dismiss="modal">{{trans_choice('core::general.close',1)}}</button>
                         </div>
                     </form>
                 </div>

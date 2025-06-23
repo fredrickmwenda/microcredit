@@ -85,4 +85,13 @@ class Client extends Model
     {
         return $this->hasMany(Savings::class, 'client_id', 'id');
     }
+       public function blacklist()
+    {
+        return $this->hasOne(Blacklist::class);
+    }
+
+    public function isBlacklisted()
+    {
+        return $this->blacklist && $this->blacklist->status === 'active';
+    }
 }

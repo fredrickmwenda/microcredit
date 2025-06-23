@@ -163,8 +163,10 @@ class CommunicationCampaignController extends Controller
             $branches[$key->id] = $key;
         }
         $users = [];
-        foreach (User::whereHas('roles', function ($query) {
-            return $query->where('name', '!=', 'client');
+               
+        foreach (User::whereDoesntHave('roles', function ($query) {
+             $query->whereIn('name', ['client', 'admin']);
+            // return $query->where('name', '!=', 'client');
         })->get() as $key) {
             $users[$key->id] = $key;
         }
@@ -276,8 +278,9 @@ class CommunicationCampaignController extends Controller
             $branches[$key->id] = $key;
         }
         $users = [];
-        foreach (User::whereHas('roles', function ($query) {
-            return $query->where('name', '!=', 'client');
+        foreach (User::whereDoesntHave('roles', function ($query) {
+             $query->whereIn('name', ['client', 'admin']);
+            // return $query->where('name', '!=', 'client');
         })->get() as $key) {
             $users[$key->id] = $key;
         }

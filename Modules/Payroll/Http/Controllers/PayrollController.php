@@ -126,9 +126,13 @@ class PayrollController extends Controller
      */
     public function create()
     {
-        $users = User::whereHas('roles', function ($query) {
-            return $query->where('name', '!=', 'client');
+        // $users = User::whereHas('roles', function ($query) {
+        //     return $query->where('name', '!=', 'client');
+        // })->get();
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->whereIn('name', ['client', 'admin']);
         })->get();
+  
         $payroll_templates = PayrollTemplate::with('payroll_items')->get();
         $payroll_items = PayrollItem::get();
         $branches = Branch::get();
@@ -252,8 +256,11 @@ class PayrollController extends Controller
      */
     public function edit($id)
     {
-        $users = User::whereHas('roles', function ($query) {
-            return $query->where('name', '!=', 'client');
+        // $users = User::whereHas('roles', function ($query) {
+        //     return $query->where('name', '!=', 'client');
+        // })->get();
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->whereIn('name', ['client', 'admin']);
         })->get();
         $payroll_templates = PayrollTemplate::with('payroll_items')->get();
         $payroll_items = PayrollItem::get();

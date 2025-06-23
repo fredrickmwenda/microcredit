@@ -36,7 +36,7 @@
                     <div class="dropdown">
                         <a href="#" class="btn btn-trigger btn-icon dropdown-toggle"
                            data-bs-toggle="dropdown">
-                            <i class="fas fa-wrench"></i>
+                            <i class="ri-tools-line"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-xs">
                             <a class="dropdown-item"><span>Show</span></a>
@@ -68,7 +68,7 @@
                             <input type="text" name="s"  class="form-control" value="{{request('s')}}" placeholder="Search">
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-search"></i>
+                                    <i class="ri-search-line"></i>
                                 </button>
                             </div>
                         </div>
@@ -153,18 +153,18 @@
                                 <div class="btn-group">
                                     <button href="#" class="btn btn-default dropdown-toggle"
                                             data-bs-toggle="dropdown">
-                                        <i class="fas fa-ellipsis-h"></i>
+                                        <i class="ri-settings-3-line"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right">
                                         <a href="{{url('accounting/chart_of_account/' . $key->id . '/show')}}"
                                            class="dropdown-item">
-                                            <i class="far fa-eye"></i>
+                                            <i class="ri-eye-fill"></i>
                                             <span>{{trans_choice('core::general.detail',2)}}</span>
                                         </a>
                                         @can('accounting.chart_of_accounts.edit')
                                             <a href="{{url('accounting/chart_of_account/' . $key->id . '/edit')}}"
                                                class="dropdown-item">
-                                                <i class="far fa-edit"></i>
+                                                <i class="ri-edit-fill"></i>
                                                 <span>{{trans_choice('core::general.edit',1)}}</span>
                                             </a>
                                         @endcan
@@ -172,7 +172,7 @@
                                         @can('accounting.chart_of_accounts.destroy')
                                             <a href="{{url('accounting/chart_of_account/' . $key->id . '/destroy')}}"
                                                class="dropdown-item confirm">
-                                                <i class="fas fa-trash"></i>
+                                                <i class="ri-delete-bin-fill"></i>
                                                 <span>{{trans_choice('core::general.delete',1)}}</span>
                                             </a>
                                         @endcan

@@ -56,7 +56,7 @@
                                         @can('wallet.wallets.edit')
                                             <a href="{{url('wallet/'.$wallet->id.'/edit')}}"
                                                class="btn btn-primary">
-                                                <i class="fas fa-edit"></i>
+                                                <i class="ri-edit-fill"></i>
                                                 {{ trans_choice('core::general.edit',1) }}
                                             </a>
                                         @endcan
@@ -548,12 +548,12 @@
                                                         <div class="btn-group">
                                                             <button href="#" class="btn btn-default dropdown-toggle"
                                                                     data-bs-toggle="dropdown">
-                                                                <i class="fas fa-ellipsis-h"></i>
+                                                                <i class="ri-settings-3-line"></i>
                                                             </button>
                                                             <div class="dropdown-menu dropdown-menu-left">
                                                                 <a href="{{url('wallet/transaction/' . $key->id . '/show') }}"
                                                                    class="dropdown-item"><i
-                                                                            class="fas fa-eye"></i> {{ trans_choice('core::general.view', 2) }}
+                                                                            class="ri-eye-fill"></i> {{ trans_choice('core::general.view', 2) }}
                                                                 </a>
                                                                 <a href="{{url('wallet/transaction/' . $key->id . '/pdf') }}"
                                                                    class="dropdown-item"
@@ -571,7 +571,7 @@
 
                                                                     <a href="{{url('wallet/transaction/' . $key->id . '/edit') }}"
                                                                        class="dropdown-item"><i
-                                                                                class="fas fa-edit"></i> {{ trans_choice('core::general.edit', 1) }}
+                                                                                class="ri-edit-fill"></i> {{ trans_choice('core::general.edit', 1) }}
                                                                     </a>
 
                                                                     <a href="{{url('wallet/transaction/' . $key->id . '/reverse') }}"

@@ -47,8 +47,11 @@ class ReportController extends Controller
         $branch_id = $request->branch_id;
         $loan_product_id = $request->loan_product_id;
         $loan_officer_id = $request->loan_officer_id;
-        $users = User::whereHas('roles', function ($query) {
-            return $query->where('name', '!=', 'client');
+        // $users = User::whereHas('roles', function ($query) {
+        //     return $query->where('name', '!=', 'client');
+        // })->get();
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->whereIn('name', ['client', 'admin']);
         })->get();
         $data = [];
         $branches = Branch::all();
@@ -111,8 +114,11 @@ class ReportController extends Controller
         $start_date = $request->start_date;
         $end_date = $request->end_date;
         $branch_id = $request->branch_id;
-        $users = User::whereHas('roles', function ($query) {
-            return $query->where('name', '!=', 'client');
+        // $users = User::whereHas('roles', function ($query) {
+        //     return $query->where('name', '!=', 'client');
+        // })->get();
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->whereIn('name', ['client', 'admin']);
         })->get();
         $data = [];
         $branches = Branch::all();
@@ -209,16 +215,17 @@ class ReportController extends Controller
 
 
     public function specific_expected_repayment(Request $request)
-{
-    $start_date = $request->start_date ?? date('Y-m-d');
-    $branch_id = $request->branch_id;
-    $data = [];
-    $branches = Branch::all();
-    if (!empty($start_date)) {
-        $data = DB::table("loan_repayment_schedules")
-            ->join("loans", "loan_repayment_schedules.loan_id", "loans.id")
-            ->join("branches", "loans.branch_id", "branches.id")
-            ->join("clients", "loans.client_id", "clients.id")
+    {
+        $start_date = $request->start_date ?? date('Y-m-d');
+        $branch_id = $request->branch_id;
+        $data = [];
+        $branches = Branch::all();
+    
+        if (!empty($start_date)) {
+            $data = DB::table("loan_repayment_schedules")
+            ->join("loans", "loan_repayment_schedules.loan_id", "=", "loans.id")
+            ->join("branches", "loans.branch_id", "=", "branches.id")
+            ->join("clients", "loans.client_id", "=", "clients.id")
             ->when($start_date, function ($query) use ($start_date) {
                 $query->where('loan_repayment_schedules.due_date', $start_date);
             })
@@ -226,34 +233,52 @@ class ReportController extends Controller
                 $query->where('loans.branch_id', $branch_id);
             })
             ->where('loans.status', 'active')
-            ->selectRaw("branches.name branch,loans.branch_id,coalesce(sum(loan_repayment_schedules.principal-loan_repayment_schedules.principal_written_off_derived),0) principal,coalesce(sum(loan_repayment_schedules.interest-loan_repayment_schedules.interest_written_off_derived-loan_repayment_schedules.interest_waived_derived),0) interest,coalesce(sum(loan_repayment_schedules.fees-loan_repayment_schedules.fees_written_off_derived-loan_repayment_schedules.fees_waived_derived),0) fees,coalesce(sum(loan_repayment_schedules.penalties-loan_repayment_schedules.penalties_written_off_derived-loan_repayment_schedules.penalties_waived_derived),0) penalties,coalesce(sum(loan_repayment_schedules.principal_repaid_derived),0) principal_repaid_derived,coalesce(sum(loan_repayment_schedules.interest_repaid_derived),0) interest_repaid_derived,coalesce(sum(loan_repayment_schedules.fees_repaid_derived),0) fees_repaid_derived,coalesce(sum(loan_repayment_schedules.penalties_repaid_derived),0) penalties_repaid_derived")
-            ->groupBy('branches.id')
+            ->selectRaw("
+                clients.id as id,
+                clients.first_name,
+                clients.middle_name,
+                clients.last_name,
+                clients.mobile,
+                branches.name as branch,
+                loans.branch_id,
+                coalesce(sum(loan_repayment_schedules.principal-loan_repayment_schedules.principal_written_off_derived), 0) as principal,
+                coalesce(sum(loan_repayment_schedules.interest-loan_repayment_schedules.interest_written_off_derived-loan_repayment_schedules.interest_waived_derived), 0) as interest,
+                coalesce(sum(loan_repayment_schedules.fees-loan_repayment_schedules.fees_written_off_derived-loan_repayment_schedules.fees_waived_derived), 0) as fees,
+                coalesce(sum(loan_repayment_schedules.penalties-loan_repayment_schedules.penalties_written_off_derived-loan_repayment_schedules.penalties_waived_derived), 0) as penalties,
+                coalesce(sum(loan_repayment_schedules.principal_repaid_derived), 0) as principal_repaid_derived,
+                coalesce(sum(loan_repayment_schedules.interest_repaid_derived), 0) as interest_repaid_derived,
+                coalesce(sum(loan_repayment_schedules.fees_repaid_derived), 0) as fees_repaid_derived,
+                coalesce(sum(loan_repayment_schedules.penalties_repaid_derived), 0) as penalties_repaid_derived
+            ")
+            ->groupBy('clients.id', 'clients.first_name', 'clients.middle_name', 'clients.last_name', 'clients.mobile', 'branches.name', 'loans.branch_id')
             ->get();
-        //check if we should download
-        if ($request->download) {
-            if ($request->type == 'pdf') {
-                $pdf = PDF::loadView(theme_view_file('loan::report.specific_expected_repayment_pdf'), compact('start_date',
-                     'branch_id', 'data', 'branches'));
-                return $pdf->download(trans_choice('loan::general.expected', 1) . ' ' . trans_choice('loan::general.repayment', 1) . '(' . $start_date .').pdf');
-            }
-            $view = theme_view('loan::report.specific_expected_repayment_pdf',
-                compact('start_date',
-                 'branch_id', 'data', 'branches'));
-            if ($request->type == 'excel_2007') {
-                return Excel::download(new LoanExport($view), trans_choice('loan::general.expected', 1) . ' ' . trans_choice('loan::general.repayment', 1) . '(' . $start_date .').xlsx');
-            }
-            if ($request->type == 'excel') {
-                return Excel::download(new LoanExport($view), trans_choice('loan::general.expected', 1) . ' ' . trans_choice('loan::general.repayment', 1) . '(' . $start_date .').xls');
-            }
-            if ($request->type == 'csv') {
-                return Excel::download(new LoanExport($view), trans_choice('loan::general.expected', 1) . ' ' . trans_choice('loan::general.repayment', 1) . '(' . $start_date . ' ).csv');
+        
+        
+    
+            // Check if we should download
+            if ($request->download) {
+                $view = theme_view('loan::report.specific_expected_repayment_pdf', compact('start_date', 'branch_id', 'data', 'branches'));
+    
+                if ($request->type == 'pdf') {
+                    $pdf = PDF::loadView($view);
+                    return $pdf->download(trans_choice('loan::general.expected', 1) . ' ' . trans_choice('loan::general.repayment', 1) . '(' . $start_date . ').pdf');
+                }
+                
+                $exportType = [
+                    'excel_2007' => 'xlsx',
+                    'excel' => 'xls',
+                    'csv' => 'csv'
+                ][$request->type] ?? null;
+                
+                if ($exportType) {
+                    return Excel::download(new LoanExport($view), trans_choice('loan::general.expected', 1) . ' ' . trans_choice('loan::general.repayment', 1) . '(' . $start_date . ').' . $exportType);
+                }
             }
         }
+    
+        return theme_view('loan::report.specific_expected_repayment', compact('start_date', 'branch_id', 'data', 'branches'));
     }
-   // dd($data);
-    return theme_view('loan::report.specific_expected_repayment',compact('start_date','branch_id', 'data', 'branches'));
- 
-}
+    
 
 
     public function arrears(Request $request)
@@ -311,8 +336,11 @@ class ReportController extends Controller
         $loan_product_id = $request->loan_product_id;
         $status = $request->status;
         $loan_officer_id = $request->loan_officer_id;
-        $users = User::whereHas('roles', function ($query) {
-            return $query->where('name', '!=', 'client');
+        // $users = User::whereHas('roles', function ($query) {
+        //     return $query->where('name', '!=', 'client');
+        // })->get();
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->whereIn('name', ['client', 'admin']);
         })->get();
         $loan_products = LoanProduct::all();
         $data = [];

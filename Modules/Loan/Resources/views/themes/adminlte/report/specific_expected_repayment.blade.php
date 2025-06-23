@@ -192,10 +192,15 @@
                     $total_expected_fees += $item->fees;
                     $total_expected_penalties += $item->penalties;
                     ?>
-                    <td> {{$item->client->first_name}} {{$item->client->middle_name}} {{$item->client->last_name}}</td>
+                    <td> 
+                        <a href="{{url('client/'.$item->id.'/show')}}">
+                            {{$item->first_name}} {{$item->middle_name}} {{$item->last_name}}</td>
+
+                        </a>
                     <td>
-                        <a href="tel:{{$item->client->mobile}}">
-                            {{$item->client->mobile}}
+                    <td>
+                        <a href="tel:{{$item->mobile}}">
+                            {{$item->mobile}}
                         </a>
                     </td>
                     <td>{{ $item->branch }}</td>

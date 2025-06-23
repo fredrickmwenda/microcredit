@@ -51,7 +51,7 @@
                             {{trans_choice('user::general.user_performance_report_description',1)}}
                         </td>
                         <td><a href="{{url('report/user/performance')}}"><i
-                                        class="fa fa-search"></i> </a>
+                                        class="ri-search-line"></i> </a>
                         </td>
                     </tr>
                     @endcan

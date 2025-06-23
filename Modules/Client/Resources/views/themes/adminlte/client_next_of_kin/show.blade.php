@@ -235,11 +235,11 @@
                                         <td>{{$key->description}}</td>
                                         <td>
                                             <a href="{{asset('storage/uploads/clients/'.$key->link)}}"
-                                               target="_blank"><i class="fa fa-download"></i> </a>
+                                               target="_blank"><i class="ri-download-line"></i> </a>
                                             <a href="{{url('client/client_identification/'.$key->id.'/edit')}}"><i
-                                                        class="fa fa-edit"></i> </a>
+                                                        class="ri-edit-fill"></i> </a>
                                             <a href="{{url('client/client_identification/'.$key->id.'/destroy')}}"
-                                               class="confirm"><i class="fa fa-trash"></i> </a>
+                                               class="confirm"><i class="ri-delete-bin-fill"></i> </a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -277,11 +277,11 @@
                                     <td>{{$key->description}}</td>
                                     <td>
                                         <a href="{{asset('storage/uploads/clients/'.$key->link)}}"
-                                           target="_blank"><i class="fa fa-download"></i> </a>
+                                           target="_blank"><i class="ri-download-line"></i> </a>
                                         <a href="{{url('client/client_identification/'.$key->id.'/edit')}}"><i
-                                                    class="fa fa-edit"></i> </a>
+                                                    class="ri-edit-fill"></i> </a>
                                         <a href="{{url('client/client_identification/'.$key->id.'/destroy')}}"
-                                           class="confirm"><i class="fa fa-trash"></i> </a>
+                                           class="confirm"><i class="ri-delete-bin-fill"></i> </a>
                                     </td>
                                 </tr>
                             @endforeach
