@@ -1072,4 +1072,40 @@ class ClientController extends Controller
 
     }
 
+        public function blacklist(Request $request, $id)
+    {
+        $request->validate([
+            'reason' => 'required|string',
+        ]);
+        $client = Client::findOrFail($id);
+        $blacklist = Blacklist::updateOrCreate(
+            ['client_id' => $client->id],
+            [
+                'reason' => $request->reason,
+                'status' => 'active',
+                'created_by' => Auth::id(),
+            ]
+        );
+        activity()->on($client)
+            ->withProperties(['id' => $client->id])
+            ->log('Client Blacklisted');
+        \flash('Client successfully blacklisted')->success()->important();
+        return redirect()->back();
+    }
+
+    public function unblacklist($id)
+    {
+        $client = Client::findOrFail($id);
+        $blacklist = $client->blacklist;
+        if ($blacklist) {
+            $blacklist->status = 'inactive';
+            $blacklist->save();
+        }
+        activity()->on($client)
+            ->withProperties(['id' => $client->id])
+            ->log('Client Unblacklisted');
+        \flash('Client successfully unblacklisted')->success()->important();
+        return redirect()->back();
+    }
+
 }
