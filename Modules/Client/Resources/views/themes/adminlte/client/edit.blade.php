@@ -394,44 +394,6 @@
                         </div>
                     </div>
 
-                    <!-- <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="church" class="control-label">Church</label>
-                            <input type="text" name="church" id="church" v-model="church" class="form-control @error('church') is-invalid @enderror" required>
-                            @error('church')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="pastor" class="control-label">Pastor</label>
-                            <input type="text" name="pastor" id="pastor" v-model="pastor" class="form-control @error('pastor') is-invalid @enderror" required>
-                            @error('pastor')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                    </div>
-
-
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="church_location" class="control-label">Church Location</label>
-                            <input type="text" name="church_location" id="church_location" v-model="church_location" class="form-control @error('church_location') is-invalid @enderror" required>
-                            @error('church_location')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-
-                    </div> -->
-
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="zip" class="control-label">{{trans_choice('client::general.zip',1)}}</label>
@@ -484,6 +446,50 @@
                             @enderror
                         </div>
                     </div>
+
+                    <div class="col-md-12 mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="church_membership" v-model="church_membership">
+                            <label class="form-check-label" for="church_membership">
+                                Church Membership
+                            </label>
+                        </div>
+                    </div>
+                    <div v-if="church_membership">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="church" class="control-label">Church</label>
+                                <input type="text" name="church" id="church" v-model="church" class="form-control @error('church') is-invalid @enderror">
+                                @error('church')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="pastor" class="control-label">Pastor</label>
+                                <input type="text" name="pastor" id="pastor" v-model="pastor" class="form-control @error('pastor') is-invalid @enderror">
+                                @error('pastor')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="church_location" class="control-label">Church Location</label>
+                                <input type="text" name="church_location" id="church_location" v-model="church_location" class="form-control @error('church_location') is-invalid @enderror">
+                                @error('church_location')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="card-footer border-top ">
@@ -529,7 +535,12 @@
             spouse_name: "{{old('spouse_name',$client->spouse_name)}}",
             nickname: "{{old('nickname',$client->nickname)}}",
             client_group_id: "{{old('client_group_id',$client->client_group_id)}}",
+            church_membership: Boolean("{{ old('church_membership', $client->church ? 1 : 0) }}"),
+            church: "{{ old('church', $client->church) }}",
+            pastor: "{{ old('pastor', $client->pastor) }}",
+            church_location: "{{ old('church_location', $client->church_location) }}",
         }
     })
+    console.log(app)
 </script>
 @endsection

@@ -41,7 +41,7 @@
                                                 <div class="modal fade" id="approve_share_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close" data-dismiss="modal"
+                                                            <button type="button" class="close"data-bs-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -73,7 +73,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                            data-dismiss="modal">
+                                                                           data-bs-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -86,7 +86,7 @@
                                                 <div class="modal fade" id="reject_share_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close" data-dismiss="modal"
+                                                            <button type="button" class="close"data-bs-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -108,7 +108,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                            data-dismiss="modal">
+                                                                           data-bs-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -121,7 +121,7 @@
                                                 <div class="modal fade" id="withdraw_share_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close" data-dismiss="modal"
+                                                            <button type="button" class="close"data-bs-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -143,7 +143,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                            data-dismiss="modal">
+                                                                           data-bs-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -196,7 +196,7 @@
                                                 <div class="modal fade" id="change_share_officer_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close" data-dismiss="modal"
+                                                            <button type="button" class="close"data-bs-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -225,7 +225,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                            data-dismiss="modal">
+                                                                           data-bs-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -240,7 +240,7 @@
                                                 <div class="modal fade" id="close_share_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close" data-dismiss="modal"
+                                                            <button type="button" class="close"data-bs-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -262,7 +262,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                            data-dismiss="modal">
+                                                                           data-bs-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -276,7 +276,7 @@
                                             <div class="modal fade" id="redeem_share_modal">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
-                                                        <button type="button" class="close" data-dismiss="modal"
+                                                        <button type="button" class="close"data-bs-dismiss="modal"
                                                                 aria-label="Close">
                                                             <span aria-hidden="true">×</span></button>
                                                         <div class="modal-header">
@@ -314,7 +314,7 @@
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-default pull-left"
-                                                                        data-dismiss="modal">
+                                                                       data-bs-dismiss="modal">
                                                                     {{ trans_choice('core::general.close',1) }}
                                                                 </button>
                                                                 <button type="submit"
@@ -327,7 +327,7 @@
                                             <div class="modal fade" id="purchase_share_modal">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
-                                                        <button type="button" class="close" data-dismiss="modal"
+                                                        <button type="button" class="close"data-bs-dismiss="modal"
                                                                 aria-label="Close">
                                                             <span aria-hidden="true">×</span></button>
                                                         <div class="modal-header">
@@ -365,7 +365,7 @@
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-default pull-left"
-                                                                        data-dismiss="modal">
+                                                                       data-bs-dismiss="modal">
                                                                     {{ trans_choice('core::general.close',1) }}
                                                                 </button>
                                                                 <button type="submit"
@@ -424,7 +424,7 @@
                                                 <div class="modal fade" id="change_share_officer_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close" data-dismiss="modal"
+                                                            <button type="button" class="close"data-bs-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -453,7 +453,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                            data-dismiss="modal">
+                                                                           data-bs-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -469,7 +469,7 @@
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
                                                             <button type="button" class="close"
-                                                                    data-dismiss="modal">
+                                                                   data-bs-dismiss="modal">
                                                                 <span>×</span></button>
                                                             <div class="modal-header">
                                                                 <h4 class="modal-title">{{ trans_choice('share::general.activate',1) }} {{ trans_choice('share::general.share',2) }}</h4>
@@ -501,7 +501,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                            data-dismiss="modal">
+                                                                           data-bs-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"

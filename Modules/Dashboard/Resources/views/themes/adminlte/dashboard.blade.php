@@ -56,7 +56,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title">{{trans_choice('core::general.add',1)}}  {{trans_choice('dashboard::general.widget',1)}}</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" >
                                             <span aria-hidden="true">&times;</span></button>
                                     </div>
                                     <div class="modal-body">
@@ -73,7 +73,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default pull-left"
-                                                data-dismiss="modal">{{trans_choice('core::general.close',1)}} </button>
+                                                data-bs-dismiss="modal">{{trans_choice('core::general.close',1)}} </button>
                                         <button type="submit"
                                                 class="btn btn-primary">{{trans_choice('core::general.save',1)}} </button>
                                     </div>

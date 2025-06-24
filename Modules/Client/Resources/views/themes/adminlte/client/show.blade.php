@@ -40,11 +40,11 @@
 
                         <div class="text-center">
                             @if(!empty($client->photo))
-                                <a href="{{asset('storage/uploads/clients/'.$client->photo)}}"
+                                <a href="{{asset('uploads/clients/'.$client->photo)}}"
                                    class="fancybox">
                                     <img
                                             class="profile-user-img img-fluid img-circle"
-                                            src="{{asset('storage/uploads/clients/'.$client->photo)}}"
+                                            src="{{asset('uploads/clients/'.$client->photo)}}"
                                             alt="User profile picture">
                                 </a>
                             @else

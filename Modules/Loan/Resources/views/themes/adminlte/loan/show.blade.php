@@ -97,7 +97,7 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h4 class="modal-title">{{ trans_choice('loan::general.approve',1) }} {{ trans_choice('loan::general.loan',1) }}</h4>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">×</span>
                                                 </button>
                                             </div>
@@ -119,7 +119,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default float-left" data-dismiss="modal">
+                                                    <button type="button" class="btn btn-default float-left" data-bs-dismiss="modal">
                                                         {{ trans_choice('core::general.close',1) }}
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">{{ trans_choice('core::general.save',1) }}</button>
@@ -133,7 +133,7 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h4 class="modal-title">{{ trans_choice('loan::general.reject',1) }} {{ trans_choice('loan::general.loan',1) }}</h4>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">×</span></button>
                                             </div>
                                             <form method="post" action="{{ url('loan/'.$loan->id.'/reject_loan') }}">
@@ -145,7 +145,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                                                    <button type="button" class="btn btn-default pull-left" data-bs-dismiss="modal">
                                                         {{ trans_choice('core::general.close',1) }}
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">{{ trans_choice('core::general.save',1) }}</button>
@@ -159,7 +159,7 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h4 class="modal-title">{{ trans_choice('loan::general.withdraw',1) }} {{ trans_choice('loan::general.loan',1) }}</h4>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">×</span></button>
                                             </div>
                                             <form method="post" action="{{ url('loan/'.$loan->id.'/withdraw_loan') }}">
@@ -171,7 +171,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                                                    <button type="button" class="btn btn-default pull-left" data-bs-dismiss="modal">
                                                         {{ trans_choice('core::general.close',1) }}
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">{{ trans_choice('core::general.save',1) }}</button>
@@ -228,7 +228,7 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h4 class="modal-title">{{ trans_choice('loan::general.change',1) }} {{ trans_choice('loan::general.loan',1) }} {{ trans_choice('loan::general.officer',1) }}</h4>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">×</span></button>
                                             </div>
                                             <form method="post" action="{{ url('loan/'.$loan->id.'/change_loan_officer') }}">
@@ -245,7 +245,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                                                    <button type="button" class="btn btn-default pull-left" data-bs-dismiss="modal">
                                                         {{ trans_choice('core::general.close',1) }}
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">{{ trans_choice('core::general.save',1) }}</button>
@@ -261,7 +261,7 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h4 class="modal-title">{{ trans_choice('loan::general.waive',1) }} {{ trans_choice('loan::general.interest',1) }}</h4>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">×</span></button>
                                             </div>
                                             <form method="post" action="{{ url('loan/'.$loan->id.'/waive_interest') }}">
@@ -282,7 +282,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                                                    <button type="button" class="btn btn-default pull-left" data-bs-dismiss="modal">
                                                         {{ trans_choice('core::general.close',1) }}
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">{{ trans_choice('core::general.save',1) }}</button>
@@ -298,7 +298,7 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h4 class="modal-title">{{ trans_choice('loan::general.write_off',1) }} {{ trans_choice('loan::general.loan',1) }}</h4>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">×</span></button>
                                             </div>
                                             <form method="post" action="{{ url('loan/'.$loan->id.'/write_off_loan') }}">
@@ -316,7 +316,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                                                    <button type="button" class="btn btn-default pull-left" data-bs-dismiss="modal">
                                                         {{ trans_choice('core::general.close',1) }}
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">{{ trans_choice('core::general.save',1) }}</button>
@@ -332,7 +332,7 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h4 class="modal-title">{{ trans_choice('loan::general.reschedule',1) }} {{ trans_choice('loan::general.loan',1) }}</h4>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">×</span></button>
                                             </div>
                                             <form method="post" action="{{ url('loan/'.$loan->id.'/reschedule_loan') }}">
@@ -414,7 +414,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                                                    <button type="button" class="btn btn-default pull-left" data-bs-dismiss="modal">
                                                         {{ trans_choice('core::general.close',1) }}
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">{{ trans_choice('core::general.save',1) }}</button>
@@ -455,7 +455,7 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h4 class="modal-title">{{ trans_choice('loan::general.change',1) }} {{ trans_choice('loan::general.loan',1) }} {{ trans_choice('loan::general.officer',1) }}</h4>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">×</span></button>
                                             </div>
                                             <form method="post" action="{{ url('loan/'.$loan->id.'/change_loan_officer') }}">
@@ -472,7 +472,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                                                    <button type="button" class="btn btn-default pull-left" data-bs-dismiss="modal">
                                                         {{ trans_choice('core::general.close',1) }}
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">{{ trans_choice('core::general.save',1) }}</button>
@@ -488,7 +488,7 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h4 class="modal-title">{{ trans_choice('loan::general.disburse',1) }} {{ trans_choice('loan::general.loan',1) }}</h4>
-                                                <button type="button" class="close" data-dismiss="modal">
+                                                <button type="button" class="close" data-bs-dismiss="modal">
                                                     <span>×</span></button>
                                             </div>
                                             <form method="post" action="{{ url('loan/'.$loan->id.'/disburse_loan') }}" class="form-horizontal">
@@ -556,7 +556,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                                                    <button type="button" class="btn btn-default pull-left" data-bs-dismiss="modal">
                                                         {{ trans_choice('core::general.close',1) }}
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">{{ trans_choice('core::general.save',1) }}</button>

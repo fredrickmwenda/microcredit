@@ -13,11 +13,11 @@
                         <div class="user-card">
                             <div class="user-avatar bg-primary">
                                 @if(!empty($client->photo))
-                                    <a href="{{asset('storage/uploads/clients/'.$client->photo)}}"
+                                    <a href="{{asset('uploads/clients/'.$client->photo)}}"
                                        class="fancybox">
                                         <img
                                                 class="profile-user-img img-responsive img-circle"
-                                                src="{{asset('storage/uploads/clients/'.$client->photo)}}"
+                                                src="{{asset('uploads/clients/'.$client->photo)}}"
                                                 alt="User profile picture">
                                     </a>
                                 @else
@@ -581,7 +581,7 @@
     <div class="modal fade in" id="change_status_modal">
         <div class="modal-dialog">
             <div class="modal-content">
-                <button type="button" class="close" data-dismiss="modal">
+                <button type="button" class="close" data-bs-dismiss="modal">
                     <span>×</span></button>
                 <div class="modal-header">
                     <h4 class="modal-title">{{ trans_choice('client::general.change',1) }} {{ trans_choice('core::general.status',1) }}</h4>
@@ -620,7 +620,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default float-left"
-                                data-dismiss="modal">
+                                data-bs-dismiss="modal">
                             {{ trans_choice('core::general.close',1) }}
                         </button>
                         <button type="submit"

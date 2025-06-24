@@ -91,7 +91,7 @@ if (typeof jQuery === 'undefined') {
   // ALERT CLASS DEFINITION
   // ======================
 
-  var dismiss = '[data-dismiss="alert"]'
+  var dismiss = '[data-bs-dismiss="alert"]'
   var Alert   = function (el) {
     $(el).on('click', dismiss, this.close)
   }
@@ -992,7 +992,7 @@ if (typeof jQuery === 'undefined') {
     this.escape()
     this.resize()
 
-    this.$element.on('click.dismiss.bs.modal', '[data-dismiss="modal"]', $.proxy(this.hide, this))
+    this.$element.on('click.dismiss.bs.modal', '[data-bs-dismiss="modal"]', $.proxy(this.hide, this))
 
     this.$dialog.on('mousedown.dismiss.bs.modal', function () {
       that.$element.one('mouseup.dismiss.bs.modal', function (e) {

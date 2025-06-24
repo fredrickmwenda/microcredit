@@ -70,7 +70,7 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h4 class="modal-title">{{ trans_choice('savings::general.approve',1) }} {{ trans_choice('savings::general.savings',1) }}</h4>
-                                                            <button type="button" class="close" data-dismiss="modal"
+                                                            <button type="button" class="close" data-bs-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
 
@@ -101,7 +101,7 @@
                                                             <div class="modal-footer">
                                                                 <button type="button"
                                                                         class="btn btn-default pull-left"
-                                                                        data-dismiss="modal">
+                                                                        data-bs-dismiss="modal">
                                                                     {{ trans_choice('core::general.close',1) }}
                                                                 </button>
                                                                 <button type="submit"
@@ -116,7 +116,7 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h4 class="modal-title">{{ trans_choice('savings::general.reject',1) }} {{ trans_choice('savings::general.savings',1) }}</h4>
-                                                            <button type="button" class="close" data-dismiss="modal"
+                                                            <button type="button" class="close" data-bs-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
 
@@ -137,7 +137,7 @@
                                                             <div class="modal-footer">
                                                                 <button type="button"
                                                                         class="btn btn-default pull-left"
-                                                                        data-dismiss="modal">
+                                                                        data-bs-dismiss="modal">
                                                                     {{ trans_choice('core::general.close',1) }}
                                                                 </button>
                                                                 <button type="submit"
@@ -152,7 +152,7 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h4 class="modal-title">{{ trans_choice('savings::general.withdraw',1) }} {{ trans_choice('savings::general.savings',1) }}</h4>
-                                                            <button type="button" class="close" data-dismiss="modal"
+                                                            <button type="button" class="close" data-bs-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                         </div>
@@ -172,7 +172,7 @@
                                                             <div class="modal-footer">
                                                                 <button type="button"
                                                                         class="btn btn-default pull-left"
-                                                                        data-dismiss="modal">
+                                                                        data-bs-dismiss="modal">
                                                                     {{ trans_choice('core::general.close',1) }}
                                                                 </button>
                                                                 <button type="submit"
@@ -227,7 +227,7 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h4 class="modal-title">{{ trans_choice('savings::general.change',1) }} {{ trans_choice('savings::general.savings',1) }} {{ trans_choice('savings::general.officer',1) }}</h4>
-                                                            <button type="button" class="close" data-dismiss="modal"
+                                                            <button type="button" class="close" data-bs-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                         </div>
@@ -254,7 +254,7 @@
                                                             <div class="modal-footer">
                                                                 <button type="button"
                                                                         class="btn btn-default pull-left"
-                                                                        data-dismiss="modal">
+                                                                        data-bs-dismiss="modal">
                                                                     {{ trans_choice('core::general.close',1) }}
                                                                 </button>
                                                                 <button type="submit"
@@ -271,7 +271,7 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h4 class="modal-title">{{ trans_choice('core::general.close',1) }} {{ trans_choice('savings::general.savings',1) }}</h4>
-                                                            <button type="button" class="close" data-dismiss="modal"
+                                                            <button type="button" class="close" data-bs-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                         </div>
@@ -291,7 +291,7 @@
                                                             <div class="modal-footer">
                                                                 <button type="button"
                                                                         class="btn btn-default pull-left"
-                                                                        data-dismiss="modal">
+                                                                        data-bs-dismis="modal">
                                                                     {{ trans_choice('core::general.close',1) }}
                                                                 </button>
                                                                 <button type="submit"
@@ -353,7 +353,7 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h4 class="modal-title">{{ trans_choice('savings::general.change',1) }} {{ trans_choice('savings::general.savings',1) }} {{ trans_choice('savings::general.officer',1) }}</h4>
-                                                            <button type="button" class="close" data-dismiss="modal"
+                                                            <button type="button" class="close"data-bs-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                         </div>
@@ -380,7 +380,7 @@
                                                             <div class="modal-footer">
                                                                 <button type="button"
                                                                         class="btn btn-default pull-left"
-                                                                        data-dismiss="modal">
+                                                                       data-bs-dismiss="modal">
                                                                     {{ trans_choice('core::general.close',1) }}
                                                                 </button>
                                                                 <button type="submit"
@@ -397,7 +397,7 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h4 class="modal-title">{{ trans_choice('savings::general.activate',1) }} {{ trans_choice('savings::general.savings',1) }}</h4>
-                                                            <button type="button" class="close" data-dismiss="modal">
+                                                            <button type="button" class="close" data-bs-dismiss="modal">
                                                                 <span>×</span></button>
                                                         </div>
                                                         <form method="post"
@@ -430,7 +430,7 @@
                                                             <div class="modal-footer">
                                                                 <button type="button"
                                                                         class="btn btn-default pull-left"
-                                                                        data-dismiss="modal">
+                                                                        data-bs-dismiss="modal">
                                                                     {{ trans_choice('core::general.close',1) }}
                                                                 </button>
                                                                 <button type="submit"

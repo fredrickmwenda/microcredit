@@ -159,7 +159,7 @@
                     <h5 class="modal-title">
                         {{ __('core::general.new') }} {{ __('user::general.Key') }}
                     </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close"data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
                 <form method="post" action="{{ url('user/profile/api/store_personal_access_token') }}">
@@ -174,7 +174,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"
-                                data-dismiss="modal">{{ __('core::general.close') }}</button>
+                               data-bs-dismiss="modal">{{ __('core::general.close') }}</button>
                         <button type="submit" class="btn btn-primary">{{ __('core::general.save') }}</button>
                     </div>
                 </form>
@@ -189,7 +189,7 @@
                     <h5 class="modal-title">
                         {{ __('core::general.edit') }} {{ __('user::general.Key') }}
                     </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close"data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
                 <form method="post" action="{{ url('user/profile/api/update_personal_access_token') }}">
@@ -206,7 +206,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"
-                                data-dismiss="modal">{{ __('core::general.close') }}</button>
+                               data-bs-dismiss="modal">{{ __('core::general.close') }}</button>
                         <button type="submit" class="btn btn-primary">{{ __('core::general.save') }}</button>
                     </div>
                 </form>
@@ -221,7 +221,7 @@
                     <h5 class="modal-title">
                         {{ __('user::general.Personal Access Token') }}(<span id="personal_token_name"></span>)
                     </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close"data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
 
@@ -234,7 +234,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary"
-                            data-dismiss="modal">{{ __('core::general.close') }}</button>
+                           data-bs-dismiss="modal">{{ __('core::general.close') }}</button>
                 </div>
             </div>
         </div>
@@ -247,7 +247,7 @@
                     <h5 class="modal-title">
                         {{ __('core::general.new') }} {{ __('user::general.Oauth Client') }}
                     </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close"data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
                 <form method="post" action="{{ url('user/profile/api/store_oauth_client') }}">
@@ -267,7 +267,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"
-                                data-dismiss="modal">{{ __('core::general.close') }}</button>
+                               data-bs-dismiss="modal">{{ __('core::general.close') }}</button>
                         <button type="submit" class="btn btn-primary">{{ __('core::general.save') }}</button>
                     </div>
                 </form>
@@ -282,7 +282,7 @@
                     <h5 class="modal-title" id="exampleModalLabel">
                         {{ __('core::general.edit') }} {{ __('user::general.Oauth Client') }}
                     </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close"data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
                 <form method="post" action="{{ url('user/profile/api/update_oauth_client') }}">
@@ -303,7 +303,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"
-                                data-dismiss="modal">{{ __('core::general.close') }}</button>
+                               data-bs-dismiss="modal">{{ __('core::general.close') }}</button>
                         <button type="submit" class="btn btn-primary">{{ __('core::general.save') }}</button>
                     </div>
                 </form>
@@ -318,7 +318,7 @@
                     <h5 class="modal-title" id="exampleModalLabel">
                         {{ __('user::general.Oauth Client') }}(<span id="oauth_client_name"></span>)
                     </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close"data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
 
@@ -344,7 +344,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary"
-                            data-dismiss="modal">{{ __('general.Close') }}</button>
+                           data-bs-dismiss="modal">{{ __('general.Close') }}</button>
                 </div>
             </div>
         </div>

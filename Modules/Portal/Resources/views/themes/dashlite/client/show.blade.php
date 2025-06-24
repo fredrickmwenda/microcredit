@@ -396,7 +396,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
+                    <button type="button" class="close" data-bs-dismiss="modal">
                         <span>×</span></button>
                     <h4 class="modal-title">{{ trans_choice('portal::general.switch',1) }} {{ trans_choice('client::general.client',1) }}</h4>
                 </div>
@@ -425,7 +425,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left"
-                                data-dismiss="modal">
+                                data-bs-dismiss="modal">
                             {{ trans_choice('core::general.close',1) }}
                         </button>
                         <button type="submit"

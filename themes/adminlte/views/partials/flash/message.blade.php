@@ -24,7 +24,7 @@
             @if ($message['important'])
                 <button type="button"
                         class="close"
-                        data-dismiss="alert"
+                        data-bs-dismiss="alert"
                         aria-hidden="true"
                 >&times;
                 </button>
@@ -38,7 +38,7 @@
         {{!empty($error)?$error:request('error')}}
         <button type="button"
                 class="close"
-                data-dismiss="alert"
+                data-bs-dismiss="alert"
                 aria-hidden="true"
         >
         </button>
@@ -53,7 +53,7 @@
         </ul>
         <button type="button"
                 class="close"
-                data-dismiss="alert"
+                data-bs-dismis="alert"
                 aria-hidden="true"
         >&times
         </button>
@@ -65,7 +65,7 @@
         {{!empty($msg)?$msg:request('msg')}}
         <button type="button"
                 class="close"
-                data-dismiss="alert"
+                data-bs-dismiss="alert"
                 aria-hidden="true"
         >
         </button>

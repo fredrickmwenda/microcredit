@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">{{ $title }}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-hidden="true">&times;</button>
             </div>
 
             <div class="modal-body">
@@ -11,7 +11,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
