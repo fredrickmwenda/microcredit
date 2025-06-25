@@ -61,7 +61,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="control-label"
-                                       for="branch_id">{{trans_choice('core::general.branch',1) / Team}}</label>
+                                       for="branch_id">{{trans_choice('core::general.branch',1) }}/Team</label>
                                 <select class="form-control" name="branch_id" id="branch_id" required>
                                     <option value="" disabled
                                             selected>{{trans_choice('core::general.select',1)}}</option>

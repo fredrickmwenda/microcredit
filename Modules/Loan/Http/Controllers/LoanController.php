@@ -1659,6 +1659,8 @@ class LoanController extends Controller
         //fire transaction updated event
         event(new TransactionUpdated($loan));
         $previous_status = '';
+                // Check if loan should be closed
+        $this->closeZeroBalanceLoan($loan);
         event(new LoanStatusChanged($loan, $previous_status, $loan_transaction->id));
         \flash(trans_choice("core::general.successfully_saved", 1))->success()->important();
         return redirect('loan/' . $loan->id . '/show');
@@ -2308,4 +2310,35 @@ class LoanController extends Controller
         \flash(trans_choice("core::general.successfully_saved", 1))->success()->important();
         return redirect()->back();
     }
+
+    private function closeZeroBalanceLoan(Loan $loan)
+{
+    // Calculate total remaining balance across all schedules
+    $total_remaining = LoanRepaymentSchedule::where('loan_id', $loan->id)
+        ->sum(DB::raw('(principal-principal_repaid_derived-principal_written_off_derived) + 
+                      (interest-interest_repaid_derived-interest_written_off_derived-interest_waived_derived) + 
+                      (fees-fees_repaid_derived-fees_written_off_derived-fees_waived_derived) + 
+                      (penalties-penalties_repaid_derived-penalties_written_off_derived-penalties_waived_derived)'));
+
+    if ($total_remaining <= 0) {
+        $previous_status = $loan->status;
+        $loan->status = 'closed';
+        $loan->closed_on_date = date("Y-m-d");
+        $loan->closed_notes = 'Loan closed automatically after full repayment';
+        $loan->save();
+
+        // Record the history
+        $loan_history = new LoanHistory();
+        $loan_history->loan_id = $loan->id;
+        $loan_history->created_by_id = Auth::id();
+        $loan_history->user = Auth::user()->first_name . ' ' . Auth::user()->last_name;
+        $loan_history->action = 'Loan Closed';
+        $loan_history->save();
+
+        // Fire loan status changed event
+        event(new LoanStatusChanged($loan, $previous_status));
+    }
+
+}
+
 }

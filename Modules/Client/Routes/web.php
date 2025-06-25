@@ -125,7 +125,7 @@ Route::prefix('client')->group(function () {
     });
 
       // Blacklist routes
-    Route::post('client/{id}/blacklist', 'ClientController@blacklist')->name('client.blacklist');
-    Route::post('client/{id}/unblacklist', 'ClientController@unblacklist')->name('client.unblacklist');
+    Route::post('{id}/blacklist', 'ClientController@blacklist')->name('client.blacklist');
+    Route::post('{id}/unblacklist', 'ClientController@unblacklist')->name('client.unblacklist');
 
 });

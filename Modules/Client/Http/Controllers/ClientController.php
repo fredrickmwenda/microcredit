@@ -24,6 +24,7 @@ use Modules\User\Entities\User;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
 use Maatwebsite\Excel\Facades\Excel;
+use Modules\Client\Entities\Blacklist;
 use Modules\Client\Entities\ClientImport;
 use Modules\Communication\Entities\SmsGateway;
 use Modules\Communication\Entities\CommunicationLog;
@@ -1077,6 +1078,7 @@ class ClientController extends Controller
         $request->validate([
             'reason' => 'required|string',
         ]);
+        //dd($request->all());
         $client = Client::findOrFail($id);
         $blacklist = Blacklist::updateOrCreate(
             ['client_id' => $client->id],

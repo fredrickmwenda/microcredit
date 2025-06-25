@@ -86,6 +86,20 @@
                                         </li>
                                     @endif
                                 @endforeach
+                                @if(strtolower($parent->name) === 'loans' || $parent->url === 'loan')
+                                    <li>
+                                        <a href="{{ url('loan?status=rejected') }}" class="@if(Request::is('loan') && request('status') == 'rejected') active @endif">
+                                            <i class="nav-icon fas fa-times-circle"></i>
+                                            Rejected Loans
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url('loan?status=closed') }}" class="@if(Request::is('loan') && request('status') == 'closed') active @endif">
+                                            <i class="nav-icon fas fa-check-circle"></i>
+                                            Completed (Closed Loans)
+                                        </a>
+                                    </li>
+                                @endif
                             </ul>
                         </div>
                     </li>
@@ -118,6 +132,20 @@
                                     </li>
                                 @endif
                             @endforeach
+                            @if(strtolower($parent->name) === 'loans' || $parent->url === 'loan')
+                                <li>
+                                    <a href="{{ url('loan?status=rejected') }}" class="@if(Request::is('loan') && request('status') == 'rejected') active @endif">
+                                        <i class="nav-icon fas fa-times-circle"></i>
+                                        Rejected Loans
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('loan?status=closed') }}" class="@if(Request::is('loan') && request('status') == 'closed') active @endif">
+                                        <i class="nav-icon fas fa-check-circle"></i>
+                                        Completed (Closed Loans)
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </div>
                 </li>
@@ -130,6 +158,6 @@
 
         <div class="clearfix"></div>
     </div>
-</div> 
+</div>
 
 
