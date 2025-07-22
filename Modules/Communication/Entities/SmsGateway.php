@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class SmsGateway extends Model
 {
-    protected $fillable = [];
-    public $table="sms_gateways";
+    protected $fillable = ['key', 'sender', 'active'];
+    public $table = "sms_gateways";
+    protected $casts = [
+        'active' => 'boolean',
+    ];
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "df1fd5edca318eab2df55958459a41cc",
+    "content-hash": "7d4ea93f4c3b159e57b553dadf913e38",
     "packages": [
         {
             "name": "arrilot/laravel-widgets",
@@ -10276,6 +10276,76 @@
                 "source": "https://github.com/tijsverkoyen/CssToInlineStyles/tree/v2.2.7"
             },
             "time": "2023-12-08T13:03:43+00:00"
+        },
+        {
+            "name": "variablesign/sms",
+            "version": "v2.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/variablesign/sms.git",
+                "reference": "fc73d7b80aa1d1c6639c03bd551a8abcdb372d82"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/variablesign/sms/zipball/fc73d7b80aa1d1c6639c03bd551a8abcdb372d82",
+                "reference": "fc73d7b80aa1d1c6639c03bd551a8abcdb372d82",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": ">=6.3",
+                "illuminate/support": ">=7.0",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^7.5",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Sms": "VariableSign\\Sms\\Facades\\Sms"
+                    },
+                    "providers": [
+                        "VariableSign\\Sms\\SmsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/Helper.php"
+                ],
+                "psr-4": {
+                    "VariableSign\\Sms\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Variable Sign",
+                    "email": "variablesign@gmail.com",
+                    "homepage": "https://variablesign.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A Laravel SMS Gateway Integration package for bulk SMS providers in Ghana",
+            "homepage": "https://github.com/variablesign/sms",
+            "keywords": [
+                "arkesel",
+                "mnotify",
+                "otp",
+                "sms",
+                "sms online gh",
+                "usms gh"
+            ],
+            "support": {
+                "issues": "https://github.com/variablesign/sms/issues",
+                "source": "https://github.com/variablesign/sms/tree/v2.1.4"
+            },
+            "time": "2024-05-28T13:49:56+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

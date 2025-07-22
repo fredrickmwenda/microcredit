@@ -39,6 +39,7 @@ class LoanServiceProvider extends ServiceProvider
         $this->commands([
             \Modules\Loan\Console\ProcessPenalties::class,
             \Modules\Loan\Console\FixSchedules::class,
+            \Modules\Loan\Console\CloseZeroBalanceLoans::class, // Register the new command
         ]);
     }
 

@@ -93,7 +93,7 @@
                     <thead>
                     <tr>
                         <th>{{ trans_choice('core::general.id',1) }}</th>
-                        <th>{{ trans_choice('communication::general.sms_gateway',1) }}</th>
+                        <th>Sender</th>
                         <th>{{ trans_choice('communication::general.client',1) }}</th>
                         <th>{{ trans_choice('communication::general.mobile',1) }}</th>
                         <th>{{ trans_choice('communication::general.text_body',1) }}</th>
@@ -153,7 +153,7 @@
 				},
                 columns: [
                     {data: 'id', name: 'id'},
-                    {data: 'sms_gateway', name: 'sms_gateway'},
+                    {data: 'sms_gateway_sender', name: 'sms_gateway_sender'},
                     {data: 'client_name', name: 'client_name'},
                     {data: 'send_to', name: 'send_to'},
                     {data: 'text_body', name: 'text_body'},

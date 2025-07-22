@@ -163,6 +163,7 @@
     </section>
 @endsection
 @section('scripts')
+    
     <script>
         var app = new Vue({
             el: '#app',
@@ -177,7 +178,6 @@
                 bank_name: "{{old('bank_name')}}",
                 description: `{{old('description')}}`,
                 payment_types: {!! json_encode($payment_types) !!},
-
             },
             created: function () {
 

@@ -38,85 +38,37 @@
                     <div class="row gy-4">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="name"
-                                       class="control-label">{{trans_choice('core::general.name',1)}}</label>
-                                <input type="text" name="name" v-model="name"
-                                       id="name"
-                                       class="form-control @error('name') is-invalid @enderror" required>
-                                @error('name')
+                                <label for="key" class="control-label">API Key</label>
+                                <input type="text" name="key" id="key" value="{{ old('key') }}" class="form-control @error('key') is-invalid @enderror" required>
+                                @error('key')
                                 <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                    <strong>{{ $message }}</strong>
+                                </span>
                                 @enderror
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="to_name"
-                                       class="control-label">{{trans_choice('communication::general.to_name',1)}}</label>
-                                <input type="text" name="to_name" id="to_name" v-model="to_name"
-                                       class="form-control @error('to_name') is-invalid @enderror" required>
-                                @error('to_name')
+                                <label for="sender" class="control-label">Sender</label>
+                                <input type="text" name="sender" id="sender" value="{{ old('sender') }}" class="form-control @error('sender') is-invalid @enderror" required>
+                                @error('sender')
                                 <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                    <strong>{{ $message }}</strong>
+                                </span>
                                 @enderror
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="msg_name"
-                                       class="control-label">{{trans_choice('communication::general.msg_name',1)}}</label>
-                                <input type="text" name="msg_name" id="msg_name" v-model="msg_name"
-                                       class="form-control @error('msg_name') is-invalid @enderror" required>
-                                @error('msg_name')
-                                <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="url"
-                                       class="control-label">{{trans_choice('communication::general.url',1)}}</label>
-                                <input type="text" name="url" id="url" v-model="url"
-                                       class="form-control @error('url') is-invalid @enderror" required>
-                                @error('url')
-                                <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="notes"
-                                       class="control-label">{{trans_choice('core::general.description',1)}}</label>
-                                <textarea type="text" name="notes" v-model="notes"
-                                          id="notes"
-                                          class="form-control @error('notes') is-invalid @enderror">
-                                </textarea>
-                                @error('notes')
-                                <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="active"
-                                       class="control-label">{{trans_choice('core::general.active',1)}}</label>
-                                <select class="form-control @error('active') is-invalid @enderror" name="active"
-                                        id="active" v-model="active">
+                                <label for="active" class="control-label">{{trans_choice('core::general.active',1)}}</label>
+                                <select class="form-control @error('active') is-invalid @enderror" name="active" id="active">
                                     <option value="0">{{trans_choice('core::general.no',1)}}</option>
-                                    <option value="1">{{trans_choice('core::general.yes',1)}}</option>
+                                    <option value="1" {{ old('active', 1) == 1 ? 'selected' : '' }}>{{trans_choice('core::general.yes',1)}}</option>
                                 </select>
                                 @error('active')
                                 <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                    <strong>{{ $message }}</strong>
+                                </span>
                                 @enderror
                             </div>
                         </div>
@@ -132,17 +84,4 @@
     </section>
 @endsection
 @section('scripts')
-    <script>
-        var app = new Vue({
-            el: "#app",
-            data: {
-                name: "{{old('name')}}",
-                to_name: "{{old('to_name')}}",
-                url: "{{old('url')}}",
-                msg_name: "{{old('msg_name')}}",
-                active: "{{old('active',1)}}",
-                notes: "{{old('notes')}}",
-            }
-        })
-    </script>
 @endsection

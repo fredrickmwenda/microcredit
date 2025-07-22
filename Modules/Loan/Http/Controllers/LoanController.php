@@ -94,7 +94,13 @@ class LoanController extends Controller
             })
             ->when($status, function ($query) use ($status) {
                 $query->where("loans.status", $status);
+            }, function ($query) {
+                // If no status is passed, exclude closed and rejected
+                $query->whereNotIn("loans.status", ['closed', 'rejected']);
             })
+            // ->when($status, function ($query) use ($status) {
+            //     $query->where("loans.status", $status);
+            // })
             ->when($orderBy, function (Builder $query) use ($orderBy, $orderByDir) {
                 $query->orderBy($orderBy, $orderByDir);
             })
@@ -650,6 +656,11 @@ class LoanController extends Controller
         // $users = User::whereHas('roles', function ($query) {
         //     return $query->where('name', '!=', 'client');
         // })->get();
+
+
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->whereIn('name', ['client', 'admin']);
+        })->get();
         
         $charges = [];
         $charges_list = [];
@@ -1623,7 +1634,7 @@ class LoanController extends Controller
 
     public function store_repayment(Request $request, $id)
     {
-
+    
         $request->validate([
             'amount' => ['required', 'numeric'],
             'date' => ['required', 'date'],
@@ -1676,7 +1687,7 @@ class LoanController extends Controller
 
     public function update_repayment(Request $request, $id)
     {
-
+       dd($request->all());
         $request->validate([
             'amount' => ['required', 'numeric'],
             'date' => ['required', 'date'],

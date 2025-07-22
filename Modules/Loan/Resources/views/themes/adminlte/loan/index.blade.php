@@ -147,8 +147,11 @@
                                 </a>
                             </td>
                             <td>
+                                @php
+                                    $client = Modules\Client\Entities\Client::find($key->client_id);
+                                @endphp
                                 <a href="{{url('client/'.$key->client_id.'/show')}}">
-                                    <span>{{$key->client}}</span>
+                                    <span @if($client && $client->isBlacklisted()) style="color:red;" @endif>{{$key->client}}</span>
                                 </a>
                             </td>
                             <td>
@@ -165,40 +168,40 @@
                             </td>
                             <td>
                                 @if($key->status == 'pending')
-                                    <span class="badge badge-warning">{{trans_choice('loan::general.pending_approval', 1)}}</span>
+                                    <span class="bg-warning-subtle text-warning" data-class="bg-warning">{{trans_choice('loan::general.pending_approval', 1)}}</span>
                                 @endif
                                 @if($key->status == 'submitted')
-                                    <span class="badge badge-warning">{{trans_choice('loan::general.pending_approval', 1)}}</span>
+                                    <span class="bg-warning-subtle text-warning" data-class="bg-warning">{{trans_choice('loan::general.pending_approval', 1)}}</span>
                                 @endif
                                 @if($key->status == 'overpaid')
-                                    <span class="badge badge-warning">{{trans_choice('loan::general.overpaid', 1)}}</span>
+                                    <span class="bg-warning-subtle text-warning" data-class="bg-warning">{{trans_choice('loan::general.overpaid', 1)}}</span>
                                 @endif
                                 @if($key->status == 'approved')
-                                    <span class="badge badge-warning">{{trans_choice('loan::general.awaiting_disbursement', 1)}}</span>
+                                    <span class="bg-warning-subtle text-warning" data-class="bg-warning">{{trans_choice('loan::general.awaiting_disbursement', 1)}}</span>
                                 @endif
                                 @if($key->status == 'active')
-                                    <span class="badge badge-info">{{trans_choice('loan::general.active', 1)}}</span>
+                                    <span class="bg-info-subtle text-info" data-class="bg-info">{{trans_choice('loan::general.active', 1)}}</span>
                                 @endif
                                 @if($key->status == 'rejected')
-                                    <span class="badge badge-danger">{{trans_choice('loan::general.rejected', 1)}}</span>
+                                    <span class="bg-danger-subtle text-danger" data-class="bg-danger">{{trans_choice('loan::general.rejected', 1)}}</span>
                                 @endif
                                 @if($key->status == 'withdrawn')
-                                    <span class="badge badge-danger">{{trans_choice('loan::general.withdrawn', 1)}}</span>
+                                    <span class="bg-danger-subtle text-danger" data-class="bg-danger">{{trans_choice('loan::general.withdrawn', 1)}}</span>
                                 @endif
                                 @if($key->status == 'written_off')
-                                    <span class="badge badge-danger">{{trans_choice('loan::general.written_off', 1)}}</span>
+                                    <span class="bg-danger-subtle text-danger" data-class="bg-danger">{{trans_choice('loan::general.written_off', 1)}}</span>
                                 @endif
                                 @if($key->status == 'closed')
-                                    <span class="badge badge-success">{{trans_choice('loan::general.closed', 1)}}</span>
+                                    <span class="bg-success-subtle text-success" data-class="bg-success">{{trans_choice('loan::general.closed', 1)}}</span>
                                 @endif
                                 @if($key->status == 'pending_reschedule')
-                                    <span class="badge badge-warning">{{trans_choice('loan::general.pending_reschedule', 1)}}</span>
+                                    <span  class="bg-warning-subtle text-warning" data-class="bg-warning">{{trans_choice('loan::general.pending_reschedule', 1)}}</span>
                                 @endif
                                 @if($key->status == 'rescheduled')
-                                    <span class="badge badge-info">{{trans_choice('loan::general.rescheduled', 1)}}</span>
+                                    <span class="bg-info-subtle text-info" data-class="bg-info">{{trans_choice('loan::general.rescheduled', 1)}}</span>
                                 @endif
                                 @if($key->status == 'pending_ceo_approval')
-                                    <span class="badge badge-info">Awaiting CEO Approval</span>
+                                    <span class="bg-info-subtle text-info" data-class="bg-info">Awaiting CEO Approval</span>
                                 @endif
                             </td>
 

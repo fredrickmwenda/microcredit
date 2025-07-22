@@ -6,7 +6,7 @@
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
-            <div class="col-sm-6">
+            <div class="col-sm-6"> 
                 <h1>
                     {{ trans_choice('core::general.add',1) }} {{ trans_choice('client::general.client',1) }}
                     <a href="#" onclick="window.history.back()" class="btn btn-outline-light bg-white d-none d-sm-inline-flex">
@@ -288,13 +288,26 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="photo" class="control-label">{{trans_choice('core::general.photo',1)}}</label>
-                            <input type="file" name="photo" id="photo" class="form-control @error('photo') is-invalid @enderror">
-                            @error('photo')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
+                            <label class="control-label">{{trans_choice('core::general.photo',1)}}</label>
+                            <div class="mb-2">
+                                <button type="button" class="btn btn-sm btn-info" id="useWebcamBtn">Use Webcam</button>
+                                <button type="button" class="btn btn-sm btn-secondary" id="useUploadBtn">Upload Photo</button>
+                            </div>
+                            <div id="webcamSection" style="display:none;">
+                                <video id="video" width="320" height="240" autoplay style="border:1px solid #ccc;"></video><br>
+                                <button type="button" class="btn btn-primary btn-sm mt-2" id="snap">Capture Photo</button>
+                                <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+                                <input type="hidden" name="client_photo" id="client_photo">
+                                <img id="preview" style="display:none; margin-top:10px; border:1px solid #ccc; max-width:100%;"/>
+                            </div>
+                            <div id="uploadSection">
+                                <input type="file" name="photo" id="photo" class="form-control @error('photo') is-invalid @enderror">
+                                @error('photo')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
                         </div>
                     </div>
 
@@ -552,44 +565,97 @@
 <script>
     // var randomNumber = Math.random();
 
-    var app = new Vue({
-        el: "#app",
-        data: {
-            branch_id: parseInt("{{old('branch_id')}}"),
-            external_id: "{{old('external_id',$randnum)}}",
-            // external_id: "{{old('external_id')}}",
-            title_id: "{{old('title_id')}}",
-            first_name: "{{old('first_name')}}",
-            last_name: "{{old('last_name')}}",
-            gender: "{{old('gender')}}",
-            marital_status: "{{old('marital_status')}}",
-            country_id: parseInt("{{old('country_id')}}"),
-            mobile: "{{old('mobile')}}",
-            dob: "{{old('dob')}}",
-            loan_officer_id: parseInt("{{old('loan_officer_id')}}"),
-            email: "{{old('email')}}",
-            profession_id: parseInt("{{old('profession_id')}}"),
-            client_type_id: parseInt("{{old('client_type_id',0)}}"),
-            active: "{{old('active',1)}}",
-            address: `{{old('address')}}`,
-            notes: `{{old('notes')}}`,
-            created_date: "{{old('created_date',date('Y-m-d'))}}",
-            place_of_workship: "{{old('place_of_workship')}}",
-            address_type: "{{old('address_type','residential')}}",
-            employment_status: "{{old('employment_status')}}",
-            business_activity: "{{old('business_activity')}}",
-            business_name: "{{old('business_name')}}",
-            business_location: "{{old('business_location')}}",
-            business_address: "{{old('business_address')}}",
-            zip: "{{old('zip')}}",
-            state: "{{old('state')}}",
-            city: "{{old('city')}}",
-            spouse_contact: "{{old('spouse_contact')}}",
-            spouse_name: "{{old('spouse_name')}}",
-            nickname: "{{old('nickname')}}",
-            client_group_id: "{{old('client_group_id')}}",
-            church_membership: false,
+    // var app = new Vue({
+    //     el: "#app",
+    //     data: {
+    //         branch_id: parseInt("{{old('branch_id')}}"),
+    //         external_id: "{{old('external_id',$randnum)}}",
+    //         // external_id: "{{old('external_id')}}",
+    //         title_id: "{{old('title_id')}}",
+    //         first_name: "{{old('first_name')}}",
+    //         last_name: "{{old('last_name')}}",
+    //         gender: "{{old('gender')}}",
+    //         marital_status: "{{old('marital_status')}}",
+    //         country_id: parseInt("{{old('country_id')}}"),
+    //         mobile: "{{old('mobile')}}",
+    //         dob: "{{old('dob')}}",
+    //         loan_officer_id: parseInt("{{old('loan_officer_id')}}"),
+    //         email: "{{old('email')}}",
+    //         profession_id: parseInt("{{old('profession_id')}}"),
+    //         client_type_id: parseInt("{{old('client_type_id',0)}}"),
+    //         active: "{{old('active',1)}}",
+    //         address: `{{old('address')}}`,
+    //         notes: `{{old('notes')}}`,
+    //         created_date: "{{old('created_date',date('Y-m-d'))}}",
+    //         place_of_workship: "{{old('place_of_workship')}}",
+    //         address_type: "{{old('address_type','residential')}}",
+    //         employment_status: "{{old('employment_status')}}",
+    //         business_activity: "{{old('business_activity')}}",
+    //         business_name: "{{old('business_name')}}",
+    //         business_location: "{{old('business_location')}}",
+    //         business_address: "{{old('business_address')}}",
+    //         zip: "{{old('zip')}}",
+    //         state: "{{old('state')}}",
+    //         city: "{{old('city')}}",
+    //         spouse_contact: "{{old('spouse_contact')}}",
+    //         spouse_name: "{{old('spouse_name')}}",
+    //         nickname: "{{old('nickname')}}",
+    //         client_group_id: "{{old('client_group_id')}}",
+    //         church_membership: false,
+    //     }
+    // })
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var webcamSection = document.getElementById('webcamSection');
+        var uploadSection = document.getElementById('uploadSection');
+        var useWebcamBtn = document.getElementById('useWebcamBtn');
+        var useUploadBtn = document.getElementById('useUploadBtn');
+        var video = document.getElementById('video');
+        var snap = document.getElementById('snap');
+        var canvas = document.getElementById('canvas');
+        var preview = document.getElementById('preview');
+        var clientPhoto = document.getElementById('client_photo');
+        var photoInput = document.getElementById('photo');
+
+        useWebcamBtn.addEventListener('click', function() {
+            webcamSection.style.display = '';
+            uploadSection.style.display = 'none';
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function(stream) {
+                        video.srcObject = stream;
+                    })
+                    .catch(function(err) {
+                        alert('Could not access webcam: ' + err);
+                    });
+            } else {
+                alert('Webcam not supported in this browser.');
+            }
+        });
+
+        useUploadBtn.addEventListener('click', function() {
+            webcamSection.style.display = 'none';
+            uploadSection.style.display = '';
+            if (video.srcObject) {
+                let tracks = video.srcObject.getTracks();
+                tracks.forEach(track => track.stop());
+                video.srcObject = null;
+            }
+            clientPhoto.value = '';
+            preview.style.display = 'none';
+        });
+
+        if (snap) {
+            snap.addEventListener('click', function(e) {
+                e.preventDefault();
+                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                var dataURL = canvas.toDataURL('image/png');
+                clientPhoto.value = dataURL;
+                preview.src = dataURL;
+                preview.style.display = 'block';
+            });
         }
-    })
+    });
 </script>
+@parent
 @endsection

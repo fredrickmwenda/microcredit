@@ -81,8 +81,14 @@
                     <thead>
                     <tr>
                         <th>
-                            <a href="{{table_order_link('name')}}">
-                                {{ trans_choice('core::general.name',1) }}
+                            <a href="{{table_order_link('key')}}">
+                                Key
+                            </a>
+                        </th>
+
+                        <th>
+                            <a href="{{table_order_link('sender')}}">
+                                Sender
                             </a>
                         </th>
                         <th>
@@ -97,7 +103,10 @@
                     @foreach($data as $key)
                         <tr>
                             <td>
-                                    <span>{{$key->name}}</span>
+                                    <span>{{$key->key}}</span>
+                            </td>
+                            <td>
+                                    <span>{{$key->sender}}</span>
                             </td>
                             <td>
                                 @if($key->active==1)

@@ -17,12 +17,11 @@ class SmsGatewayController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth','2fa']);
+        $this->middleware(['auth', '2fa']);
         $this->middleware(['permission:communication.sms_gateways.index'])->only(['index', 'show']);
         $this->middleware(['permission:communication.sms_gateways.create'])->only(['create', 'store']);
         $this->middleware(['permission:communication.sms_gateways.edit'])->only(['edit', 'update']);
         $this->middleware(['permission:communication.sms_gateways.destroy'])->only(['destroy']);
-
     }
 
     /**
@@ -43,45 +42,48 @@ class SmsGatewayController extends Controller
             })
             ->paginate($perPage)
             ->appends($request->input());
-        return theme_view('communication::sms_gateway.index',compact('data'));
+        return theme_view('communication::sms_gateway.index', compact('data'));
     }
+
 
     public function get_sms_gateways(Request $request)
     {
-
-
         $query = SmsGateway::query();
-        return DataTables::of($query)->editColumn('description', function ($data) {
-            return '<span data-bs-toggle="tooltip" title="' . $data->description . '">' . Str::words($data->description, 10);
-        })->editColumn('active', function ($data) {
-            if ($data->active == '0') {
-                return '<span class="label label-warning">' . trans_choice('core::general.no', 1) . '</span>';
-            }
-
-            if ($data->active == '1') {
-                return '<span class="label label-success">' . trans_choice('core::general.yes', 1) . '</span>';
-            }
-
-        })->editColumn('id', function ($data) {
-
-            $action = '<a href="' . url('communication/sms_gateway/' . $data->id . '/show') . '" class="btn btn-info">' . $data->id . '</a>';
-
-            return $action;
-        })->editColumn('action', function ($data) {
-            $action = '<div class="btn-group"><button type="button" class="btn btn-info btn-xs dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa fa-navicon"></i></button> <ul class="dropdown-menu dropdown-menu-right" role="menu">';
-            if (Auth::user()->hasPermissionTo('communication.campaigns.edit')) {
-                // $action .= '<li><a href="' . url('communication/campaign/' . $data->id . '/show') . '" class="">' . trans_choice('core::general.detail', 2) . '</a></li>';
-            }
-            if (Auth::user()->hasPermissionTo('communication.sms_gateways.edit') && $data->trigger_type != 'direct') {
-                $action .= '<li><a href="' . url('communication/sms_gateway/' . $data->id . '/edit') . '" class="">' . trans_choice('core::general.edit', 2) . '</a></li>';
-            }
-            if (Auth::user()->hasPermissionTo('communication.sms_gateways.destroy')) {
-                $action .= '<li><a href="' . url('communication/sms_gateway/' . $data->id . '/destroy') . '" class="confirm">' . trans_choice('core::general.delete', 2) . '</a></li>';
-            }
-            $action .= "</ul></li></div>";
-            return $action;
-
-        })->rawColumns(['id', 'description', 'action', 'active'])->make(true);
+        return DataTables::of($query)
+            ->editColumn('key', function ($data) {
+                return '<span data-bs-toggle="tooltip" title="' . $data->key . '">' . Str::limit($data->key, 10) . '</span>';
+            })
+            ->editColumn('sender', function ($data) {
+                return '<span>' . e($data->sender) . '</span>';
+            })
+            ->editColumn('active', function ($data) {
+                if ($data->active == '0') {
+                    return '<span class="label label-warning">' . trans_choice('core::general.no', 1) . '</span>';
+                }
+                if ($data->active == '1') {
+                    return '<span class="label label-success">' . trans_choice('core::general.yes', 1) . '</span>';
+                }
+            })
+            ->editColumn('id', function ($data) {
+                $action = '<a href="' . url('communication/sms_gateway/' . $data->id . '/show') . '" class="btn btn-info">' . $data->id . '</a>';
+                return $action;
+            })
+            ->editColumn('action', function ($data) {
+                $action = '<div class="btn-group"><button type="button" class="btn btn-info btn-xs dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa fa-navicon"></i></button> <ul class="dropdown-menu dropdown-menu-right" role="menu">';
+                if (Auth::user()->hasPermissionTo('communication.campaigns.edit')) {
+                    // $action .= '<li><a href="' . url('communication/campaign/' . $data->id . '/show') . '" class="">' . trans_choice('core::general.detail', 2) . '</a></li>';
+                }
+                if (Auth::user()->hasPermissionTo('communication.sms_gateways.edit') && (!isset($data->trigger_type) || $data->trigger_type != 'direct')) {
+                    $action .= '<li><a href="' . url('communication/sms_gateway/' . $data->id . '/edit') . '" class="">' . trans_choice('core::general.edit', 2) . '</a></li>';
+                }
+                if (Auth::user()->hasPermissionTo('communication.sms_gateways.destroy')) {
+                    $action .= '<li><a href="' . url('communication/sms_gateway/' . $data->id . '/destroy') . '" class="confirm">' . trans_choice('core::general.delete', 2) . '</a></li>';
+                }
+                $action .= "</ul></li></div>";
+                return $action;
+            })
+            ->rawColumns(['id', 'key', 'sender', 'action', 'active'])
+            ->make(true);
     }
 
     /**
@@ -101,20 +103,12 @@ class SmsGatewayController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required'],
-            'to_name' => ['required'],
-            'msg_name' => ['required'],
-            'url' => ['required'],
-            'active' => ['required'],
+            'key' => ['required'],
+            'sender' => ['required'],
         ]);
         $sms_gateway = new SmsGateway();
-        $sms_gateway->created_by_id = Auth::id();
-        $sms_gateway->name = $request->name;
-        $sms_gateway->to_name = $request->to_name;
-        $sms_gateway->msg_name = $request->msg_name;
-        $sms_gateway->url = $request->url;
-        $sms_gateway->notes = $request->notes;
-        $sms_gateway->active = $request->active;
+        $sms_gateway->key = $request->key;
+        $sms_gateway->sender = $request->sender;
         $sms_gateway->save();
         activity()->on($sms_gateway)
             ->withProperties(['id' => $sms_gateway->id])
@@ -154,19 +148,12 @@ class SmsGatewayController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => ['required'],
-            'to_name' => ['required'],
-            'msg_name' => ['required'],
-            'url' => ['required'],
-            'active' => ['required'],
+            'key' => ['required'],
+            'sender' => ['required'],
         ]);
         $sms_gateway = SmsGateway::find($id);
-        $sms_gateway->name = $request->name;
-        $sms_gateway->to_name = $request->to_name;
-        $sms_gateway->msg_name = $request->msg_name;
-        $sms_gateway->url = $request->url;
-        $sms_gateway->notes = $request->notes;
-        $sms_gateway->active = $request->active;
+        $sms_gateway->key = $request->key;
+        $sms_gateway->sender = $request->sender;
         $sms_gateway->save();
         activity()->on($sms_gateway)
             ->withProperties(['id' => $sms_gateway->id])

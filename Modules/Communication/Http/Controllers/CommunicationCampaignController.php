@@ -229,6 +229,35 @@ class CommunicationCampaignController extends Controller
         $communication_campaign->status = $request->status;
         $communication_campaign->description = $request->description;
         $communication_campaign->save();
+        // Arkesel SMS Campaign Integration
+        if ($request->campaign_type == 'sms' && $request->sms_gateway_id) {
+            $smsGateway = \Modules\Communication\Entities\SmsGateway::find($request->sms_gateway_id);
+            if ($smsGateway && $smsGateway->key && $smsGateway->sender) {
+                $arkesel = new \Modules\Client\Drivers\Arkesel($smsGateway->key, $smsGateway->sender);
+                // Build group name (unique per campaign)
+                $groupName = 'campaign_' . $communication_campaign->id;
+                try {
+                    // 1. Create group
+                    $arkesel->createContactGroup($groupName);
+                    // 2. Collect relevant client phone numbers (implement your own logic here)
+                    $clients = \Modules\Client\Entities\Client::whereNotNull('mobile')->pluck('mobile')->map(function($mobile) {
+                                    return '233' . ltrim($mobile, '0');
+                                })->toArray();
+
+                    if (!empty($clients)) {
+                        $arkesel->addContacts($groupName, implode(',', $clients));
+                        // Pass scheduled_date if set
+                        $options = [];
+                        if ($request->trigger_type == 'schedule' && !empty($request->scheduled_date)) {
+                            $options['scheduled_date'] = $request->scheduled_date . (isset($request->scheduled_time) ? ' ' . $request->scheduled_time : '');
+                        }
+                        $arkesel->sendToContactGroup($smsGateway->sender, $request->description, $groupName, $options);
+                    }
+                } catch (\Exception $e) {
+                    \Log::error('Arkesel campaign error: ' . $e->getMessage());
+                }
+            }
+        }
         if ($request->trigger_type == 'direct') {
             ProcessDirectCampaigns::dispatch($communication_campaign);
         }
@@ -344,6 +373,39 @@ class CommunicationCampaignController extends Controller
         $communication_campaign->status = $request->status;
         $communication_campaign->description = $request->description;
         $communication_campaign->save();
+        // Arkesel SMS Campaign Integration (update)
+        if ($request->campaign_type == 'sms' && $request->sms_gateway_id) {
+            $smsGateway = \Modules\Communication\Entities\SmsGateway::find($request->sms_gateway_id);
+            if ($smsGateway && $smsGateway->key && $smsGateway->sender) {
+                $arkesel = new \Modules\Client\Drivers\Arkesel($smsGateway->key, $smsGateway->sender);
+                $groupName = 'campaign_' . $communication_campaign->id;
+                try {
+                    $arkesel->createContactGroup($groupName);
+                    // $clients = []; // e.g. ['233XXXXXXXXX', '233YYYYYYYYY']
+                    // TODO: Populate $clients with relevant client phone numbers for this campaign
+                    // if (!empty($clients)) {
+                    //     $arkesel->addContacts($groupName, implode(',', $clients));
+                    //     $arkesel->sendToContactGroup($smsGateway->sender, $request->description, $groupName);
+                    // }
+                    // Collect relevant client phone numbers (customize as needed)
+                    $clients = \Modules\Client\Entities\Client::whereNotNull('mobile')->pluck('mobile')->map(function($mobile) {
+                        return '233' . ltrim($mobile, '0');
+                    })->toArray();
+
+                    if (!empty($clients)) {
+                        $arkesel->addContacts($groupName, implode(',', $clients));
+                        // Pass scheduled_date if set
+                        $options = [];
+                        if ($request->trigger_type == 'schedule' && !empty($request->scheduled_date)) {
+                            $options['scheduled_date'] = $request->scheduled_date . (isset($request->scheduled_time) ? ' ' . $request->scheduled_time : '');
+                        }
+                        $arkesel->sendToContactGroup($smsGateway->sender, $request->description, $groupName, $options);
+                    }
+                } catch (\Exception $e) {
+                    \Log::error('Arkesel campaign error (update): ' . $e->getMessage());
+                }
+            }
+        }
         activity()->on($communication_campaign)
             ->withProperties(['id' => $communication_campaign->id])
             ->log('Update Communication Campaign');

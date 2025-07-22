@@ -26,35 +26,12 @@
                     </div>
                 @endif
                 <div class="form-group">
-                    <label for="name" class="control-label">{{trans_choice('core::general.name',1)}}</label>
-                    <input type="text" name="name" value="{{ $sms_gateway->name }}" id="name"
-                           class="form-control" required>
+                    <label for="key" class="control-label">API Key</label>
+                    <input type="text" name="key" value="{{ $sms_gateway->key }}" id="key" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="to_name"
-                           class="control-label">{{trans_choice('communication::general.to_name',1)}}</label>
-                    <input type="text" name="to_name" value="{{ $sms_gateway->to_name }}" id="to_name"
-                           class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="msg_name"
-                           class="control-label">{{trans_choice('communication::general.msg_name',1)}}</label>
-                    <input type="text" name="msg_name" value="{{ $sms_gateway->msg_name }}" id="msg_name"
-                           class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="url" class="control-label">{{trans_choice('communication::general.url',1)}}</label>
-                    <input type="text" name="url" value="{{ $sms_gateway->url }}" id="url"
-                           class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="active">{{trans_choice('core::general.active',1)}}</label>
-                    <select class="form-control" name="active" id="active" required>
-                        <option value="1"
-                                @if($sms_gateway->active==1) selected @endif>{{trans_choice('core::general.yes',1)}}</option>
-                        <option value="0"
-                                @if($sms_gateway->active==0) selected @endif>{{trans_choice('core::general.no',1)}}</option>
-                    </select>
+                    <label for="sender" class="control-label">Sender Name</label>
+                    <input type="text" name="sender" value="{{ $sms_gateway->sender }}" id="sender" class="form-control" required>
                 </div>
             </div>
             <!-- /.box-body -->

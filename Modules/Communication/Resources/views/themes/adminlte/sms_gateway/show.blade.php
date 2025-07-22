@@ -1,11 +1,11 @@
 @extends('core::layouts.master')
 @section('title')
-    {{ $sms_gateway->name }}
+    Arkesel
 @endsection
 @section('content')
     <div class="box box-primary">
         <div class="box-header with-border">
-            <h6 class="box-title">{{ $sms_gateway->name }}</h6>
+            <h6 class="box-title">{{ $sms_gateway->key }}</h6>
 
             <div class="heading-elements">
 

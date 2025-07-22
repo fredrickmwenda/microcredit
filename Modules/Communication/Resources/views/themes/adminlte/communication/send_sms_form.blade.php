@@ -41,6 +41,7 @@
                                 <select class="form-control"  @change="onChange($event)" name="client_id"
                                         id="client_id" v-model="client_id" required>
                                     <option value="" selected>Please Select...</option>
+                                    <option value="all" selected>All</option>
                                     @foreach($clients as $key)
                                         <option value="{{$key->id}}">{{$key->first_name . " " .$key->last_name}}</option>
                                     @endforeach
@@ -56,7 +57,7 @@
                                         id="sms_gateway_id" v-model="sms_gateway_id" required>
                                     <option value="" selected>Please Select...</option>
                                     @foreach($smsGateways as $key)
-                                        <option value="{{$key->id}}">{{$key->name}}</option>
+                                        <option value="{{$key->id}}">{{$key->sender}}</option>
                                     @endforeach
                                 </select>
                             </div>

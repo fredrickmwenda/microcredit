@@ -41,7 +41,8 @@
             serverSide: true,
             ajax: '{!! url('communication/sms_gateway/get_sms_gateways') !!}',
             columns: [
-                {data: 'name', name: 'name'},
+                {data: 'key', name: 'key'},
+                {data: 'sender', name: 'sender'},
                 {data: 'active', name: 'active'},
                 {data: 'action', name: 'action',searchable:false,orderable:false},
             ],

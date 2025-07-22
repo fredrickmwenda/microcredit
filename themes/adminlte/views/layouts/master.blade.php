@@ -85,17 +85,26 @@
         </div>
 
     </div>
-    <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
-      <!-- Vendor js -->
-  
-<script src="{{asset('plugins/datatable/jquery.dataTables.min.js')}}"></script>
-<script src="{{ asset('plugins/bootstrap/5.3.3/bootstrap.bundle.min.js')}}"></script>
-    <script src="{{ asset('plugins/select2/select2-4.0.13.min.js') }}"></script>
-    <script src="{{ asset('themes/adminlte/js/custom.js') }}"></script>
-    <!-- Vendor js -->
+    <!-- jQuery first -->
+    <!-- <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script> -->
 
+    <!-- Plugins dependent on jQuery -->
+    <!-- <script src="{{ asset('plugins/select2/select2-4.0.13.min.js') }}"></script> -->
+    <!-- <script src="{{ asset('plugins/bootstrap/5.3.3/bootstrap.bundle.min.js') }}"></script> -->
+    <!-- <script src="{{ asset('plugins/datatable/jquery.dataTables.min.js') }}"></script> -->
 
-    <script src="{{asset('assets/js/app.min.js')}}"></script>
+    <!-- Custom & app scripts -->
+    <!-- <script src="{{ asset('themes/adminlte/js/custom.js') }}"></script> -->
+    <script src="{{ asset('assets/js/app.min.js') }}"></script>
+   
+
+    @php
+    $mixManifest = public_path('mix-manifest.json');
+    @endphp
+    @if (file_exists($mixManifest) && isset(json_decode(file_get_contents($mixManifest), true)['/js/all.js']))
+        <script src="{{ mix('js/all.js') }}"></script>
+    @endif
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var flashModal = document.getElementById('flash-overlay-modal');
@@ -103,9 +112,15 @@
                 var modal = new bootstrap.Modal(flashModal);
                 modal.show();
             }
-                        $('select').select2({
-                width: '100%'
-            });
+   console.log("jQuery version:", $.fn.jquery);
+    console.log("Select2 function:", typeof $.fn.select2);
+
+    if (typeof $.fn.select2 === 'function') {
+        console.log('✅ Select2 is available — initializing');
+        $('select').select2({ width: '100%' });
+    } else {
+        console.warn('❌ Select2 is NOT available');
+    }
             $('.confirm').on('click', function(e) {
                 e.preventDefault();
                 var href = $(this).attr('href');
@@ -124,6 +139,8 @@
                     }
                 })
             });
+
+            
         })
     </script>
     @yield('scripts')

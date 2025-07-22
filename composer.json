@@ -39,6 +39,7 @@
     "spatie/laravel-backup": "^7.8",
     "spatie/laravel-permission": "^6.4",
     "stripe/stripe-php": "^13.13",
+    "variablesign/sms": "^2.1",
     "yajra/laravel-datatables-oracle": "9.*"
   },
   "require-dev": {
