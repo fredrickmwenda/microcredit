@@ -32,7 +32,6 @@ class CommunicationCampaignController extends Controller
         $this->middleware(['permission:communication.campaigns.create'])->only(['create', 'store']);
         $this->middleware(['permission:communication.campaigns.edit'])->only(['edit', 'update']);
         $this->middleware(['permission:communication.campaigns.destroy'])->only(['destroy']);
-
     }
 
     /**
@@ -117,7 +116,6 @@ class CommunicationCampaignController extends Controller
             if ($data->status == 'done') {
                 return '<span class="label label-success">' . trans_choice('communication::general.done', 1) . '</span>';
             }
-
         })->editColumn('id', function ($data) {
 
             $action = '<a href="' . url('communication/campaign/' . $data->id . '/show') . '" class="btn btn-info">' . $data->id . '</a>';
@@ -136,7 +134,6 @@ class CommunicationCampaignController extends Controller
             }
             $action .= "</ul></li></div>";
             return $action;
-
         })->rawColumns(['id', 'description', 'action', 'status'])->make(true);
     }
 
@@ -163,11 +160,13 @@ class CommunicationCampaignController extends Controller
             $branches[$key->id] = $key;
         }
         $users = [];
-               
-        foreach (User::whereDoesntHave('roles', function ($query) {
-             $query->whereIn('name', ['client', 'admin']);
-            // return $query->where('name', '!=', 'client');
-        })->get() as $key) {
+
+        foreach (
+            User::whereDoesntHave('roles', function ($query) {
+                $query->whereIn('name', ['client', 'admin']);
+                // return $query->where('name', '!=', 'client');
+            })->get() as $key
+        ) {
             $users[$key->id] = $key;
         }
         \JavaScript::put([
@@ -188,6 +187,7 @@ class CommunicationCampaignController extends Controller
      */
     public function store(Request $request)
     {
+        //dd($request->all());
         $request->validate([
             'name' => ['required'],
             'sms_gateway_id' => ['required_if:campaign_type,sms'],
@@ -232,6 +232,8 @@ class CommunicationCampaignController extends Controller
         // Arkesel SMS Campaign Integration
         if ($request->campaign_type == 'sms' && $request->sms_gateway_id) {
             $smsGateway = \Modules\Communication\Entities\SmsGateway::find($request->sms_gateway_id);
+            // Get the selected business rule ID
+            $ruleId = $request->communication_campaign_business_rule_id;
             if ($smsGateway && $smsGateway->key && $smsGateway->sender) {
                 $arkesel = new \Modules\Client\Drivers\Arkesel($smsGateway->key, $smsGateway->sender);
                 // Build group name (unique per campaign)
@@ -240,10 +242,182 @@ class CommunicationCampaignController extends Controller
                     // 1. Create group
                     $arkesel->createContactGroup($groupName);
                     // 2. Collect relevant client phone numbers (implement your own logic here)
-                    $clients = \Modules\Client\Entities\Client::whereNotNull('mobile')->pluck('mobile')->map(function($mobile) {
-                                    return '233' . ltrim($mobile, '0');
-                                })->toArray();
 
+                    $clients = collect();
+
+                    switch ($ruleId) {
+                        case 1: // Active Clients
+                            $clients = \Modules\Client\Entities\Client::where('status', 'active')
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 2: // Prospective Clients (Active, never had a loan)
+                            $clients = \Modules\Client\Entities\Client::where('status', 'active')
+                                ->whereDoesntHave('loans')
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 3: // Active Loan Clients
+                            $clients = \Modules\Client\Entities\Client::whereHas('loans', function ($q) {
+                                $q->where('status', 'active');
+                            })
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 4: // Loans in arrears between X and Y days
+                            $clients = \Modules\Client\Entities\Client::whereHas('loans', function ($q) use ($from_x, $to_y) {
+                                $q->where('status', 'overdue')
+                                    ->whereBetween('days_overdue', [$from_x, $to_y]);
+                            })
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 5: // Loans disbursed to clients in last X to Y days
+                            $clients = \Modules\Client\Entities\Client::whereHas('loans', function ($q) use ($from_x, $to_y) {
+                                $q->where('status', 'disbursed')
+                                    ->whereBetween('disbursed_date', [
+                                        now()->subDays($to_y)->toDateString(),
+                                        now()->subDays($from_x)->toDateString()
+                                    ]);
+                            })
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 6: // Loan payments due between X and Y days
+                            $clients = \Modules\Client\Entities\Client::whereHas('loans.installments', function ($q) use ($from_x, $to_y) {
+                                $q->where('paid', false)
+                                    ->whereBetween('due_date', [
+                                        now()->addDays($from_x)->toDateString(),
+                                        now()->addDays($to_y)->toDateString()
+                                    ]);
+                            })
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 7: // Dormant Prospects (no loan, entered > 3 months ago)
+                            $clients = \Modules\Client\Entities\Client::whereDoesntHave('loans')
+                                ->where('created_at', '<', now()->subMonths(3))
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 8: // Loan Payments Due (Overdue Loans) - Not implemented, placeholder Finds clients with overdue loans and at least one unpaid installment due between X and Y days from today.
+                            // All clients with overdue loans (status 'overdue') and an unpaid installment due between X and Y days from today
+                            $clients = \Modules\Client\Entities\Client::whereHas('loans', function ($q) use ($from_x, $to_y) {
+                                $q->where('status', 'overdue')
+                                    ->whereHas('repayment_schedules', function ($q2) use ($from_x, $to_y) {
+                                        $q2->where('paid', false)
+                                            ->whereBetween('due_date', [
+                                                now()->addDays($from_x)->toDateString(),
+                                                now()->addDays($to_y)->toDateString()
+                                            ]);
+                                    });
+                            })
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 9: // Loan Payments Received (Active Loans) - Not implemented, placeholder
+                            // All clients with active loans who made a repayment in the last X to Y days
+                            $clients = \Modules\Client\Entities\Client::whereHas('loans', function ($q) use ($from_x, $to_y) {
+                                $q->where('status', 'active')
+                                    ->whereHas('transactions', function ($q2) use ($from_x, $to_y) {
+                                        $q2->where('loan_transaction_type_id', 2) // 2 = Repayment
+                                            ->whereBetween('created_on', [
+                                                now()->subDays($to_y)->toDateString(),
+                                                now()->subDays($from_x)->toDateString()
+                                            ]);
+                                    });
+                            })
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 10: // Loan Payments Received (Overdue Loans) - Not implemented, placeholder
+                            // All clients with overdue loans (in arrears X-Y days) who made a repayment in the last X to Y days
+                            $clients = \Modules\Client\Entities\Client::whereHas('loans', function ($q) use ($from_x, $to_y, $overdue_x, $overdue_y) {
+                                $q->where('status', 'overdue')
+                                    ->whereBetween('days_overdue', [$overdue_x, $overdue_y])
+                                    ->whereHas('transactions', function ($q2) use ($from_x, $to_y) {
+                                        $q2->where('loan_transaction_type_id', 2) // 2 = Repayment
+                                            ->whereBetween('created_on', [
+                                                now()->subDays($to_y)->toDateString(),
+                                                now()->subDays($from_x)->toDateString()
+                                            ]);
+                                    });
+                            })
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 11: // Happy Birthday (active clients with birthday today)
+                            $clients = \Modules\Client\Entities\Client::where('status', 'active')
+                                ->whereMonth('dob', now()->month)
+                                ->whereDay('dob', now()->day)
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 12: // Loan Fully Repaid in last X to Y days
+                            $clients = \Modules\Client\Entities\Client::whereHas('loans', function ($q) use ($from_x, $to_y) {
+                                $q->whereIn('status', ['closed', 'overpaid'])
+                                    ->whereBetween('closed_date', [
+                                        now()->subDays($to_y)->toDateString(),
+                                        now()->subDays($from_x)->toDateString()
+                                    ]);
+                            })
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 13: // Loans Outstanding after final instalment date
+                            $clients = \Modules\Client\Entities\Client::whereHas('loans', function ($q) use ($from_x, $to_y) {
+                                $q->where('status', 'active')
+                                    ->where('outstanding_balance', '>', 0)
+                                    ->whereBetween('final_instalment_date', [
+                                        now()->subDays($to_y)->toDateString(),
+                                        now()->subDays($from_x)->toDateString()
+                                    ]);
+                            })
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 14: // Past Loan Clients (no current loan, finished repaying in last X to Y days)
+                            $clients = \Modules\Client\Entities\Client::whereDoesntHave('loans', function ($q) {
+                                $q->where('status', 'active');
+                            })
+                                ->whereHas('loans', function ($q) use ($from_x, $to_y) {
+                                    $q->whereIn('status', ['closed', 'overpaid'])
+                                        ->whereBetween('closed_date', [
+                                            now()->subDays($to_y)->toDateString(),
+                                            now()->subDays($from_x)->toDateString()
+                                        ]);
+                                })
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        // Triggers (15 and above) are handled by events, not here
+
+                        default:
+                            // Fallback: all clients with mobile
+                            $clients = \Modules\Client\Entities\Client::whereNotNull('mobile')->pluck('mobile');
+                            break;
+                    }
+
+                    // Format numbers as needed
+                    $clients = $clients->map(function ($mobile) {
+                        return '233' . ltrim($mobile, '0');
+                    })->toArray();
+                    // Remove duplicates
+                    $clients = array_unique($clients);
                     if (!empty($clients)) {
                         $arkesel->addContacts($groupName, implode(',', $clients));
                         // Pass scheduled_date if set
@@ -307,10 +481,12 @@ class CommunicationCampaignController extends Controller
             $branches[$key->id] = $key;
         }
         $users = [];
-        foreach (User::whereDoesntHave('roles', function ($query) {
-             $query->whereIn('name', ['client', 'admin']);
-            // return $query->where('name', '!=', 'client');
-        })->get() as $key) {
+        foreach (
+            User::whereDoesntHave('roles', function ($query) {
+                $query->whereIn('name', ['client', 'admin']);
+                // return $query->where('name', '!=', 'client');
+            })->get() as $key
+        ) {
             $users[$key->id] = $key;
         }
         \JavaScript::put([
@@ -388,7 +564,177 @@ class CommunicationCampaignController extends Controller
                     //     $arkesel->sendToContactGroup($smsGateway->sender, $request->description, $groupName);
                     // }
                     // Collect relevant client phone numbers (customize as needed)
-                    $clients = \Modules\Client\Entities\Client::whereNotNull('mobile')->pluck('mobile')->map(function($mobile) {
+                    $clients = collect();
+
+                    switch ($ruleId) {
+                        case 1: // Active Clients
+                            $clients = \Modules\Client\Entities\Client::where('status', 'active')
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 2: // Prospective Clients (Active, never had a loan)
+                            $clients = \Modules\Client\Entities\Client::where('status', 'active')
+                                ->whereDoesntHave('loans')
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 3: // Active Loan Clients
+                            $clients = \Modules\Client\Entities\Client::whereHas('loans', function ($q) {
+                                $q->where('status', 'active');
+                            })
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 4: // Loans in arrears between X and Y days
+                            $clients = \Modules\Client\Entities\Client::whereHas('loans', function ($q) use ($from_x, $to_y) {
+                                $q->where('status', 'overdue')
+                                    ->whereBetween('days_overdue', [$from_x, $to_y]);
+                            })
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 5: // Loans disbursed to clients in last X to Y days
+                            $clients = \Modules\Client\Entities\Client::whereHas('loans', function ($q) use ($from_x, $to_y) {
+                                $q->where('status', 'disbursed')
+                                    ->whereBetween('disbursed_date', [
+                                        now()->subDays($to_y)->toDateString(),
+                                        now()->subDays($from_x)->toDateString()
+                                    ]);
+                            })
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 6: // Loan payments due between X and Y days
+                            $clients = \Modules\Client\Entities\Client::whereHas('loans.installments', function ($q) use ($from_x, $to_y) {
+                                $q->where('paid', false)
+                                    ->whereBetween('due_date', [
+                                        now()->addDays($from_x)->toDateString(),
+                                        now()->addDays($to_y)->toDateString()
+                                    ]);
+                            })
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 7: // Dormant Prospects (no loan, entered > 3 months ago)
+                            $clients = \Modules\Client\Entities\Client::whereDoesntHave('loans')
+                                ->where('created_at', '<', now()->subMonths(3))
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 8: // Loan Payments Due (Overdue Loans) - Not implemented, placeholder Finds clients with overdue loans and at least one unpaid installment due between X and Y days from today.
+                            // All clients with overdue loans (status 'overdue') and an unpaid installment due between X and Y days from today
+                            $clients = \Modules\Client\Entities\Client::whereHas('loans', function ($q) use ($from_x, $to_y) {
+                                $q->where('status', 'overdue')
+                                    ->whereHas('repayment_schedules', function ($q2) use ($from_x, $to_y) {
+                                        $q2->where('paid', false)
+                                            ->whereBetween('due_date', [
+                                                now()->addDays($from_x)->toDateString(),
+                                                now()->addDays($to_y)->toDateString()
+                                            ]);
+                                    });
+                            })
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 9: // Loan Payments Received (Active Loans) - Not implemented, placeholder
+                            // All clients with active loans who made a repayment in the last X to Y days
+                            $clients = \Modules\Client\Entities\Client::whereHas('loans', function ($q) use ($from_x, $to_y) {
+                                $q->where('status', 'active')
+                                    ->whereHas('transactions', function ($q2) use ($from_x, $to_y) {
+                                        $q2->where('loan_transaction_type_id', 2) // 2 = Repayment
+                                            ->whereBetween('created_on', [
+                                                now()->subDays($to_y)->toDateString(),
+                                                now()->subDays($from_x)->toDateString()
+                                            ]);
+                                    });
+                            })
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 10: // Loan Payments Received (Overdue Loans) - Not implemented, placeholder
+                            // All clients with overdue loans (in arrears X-Y days) who made a repayment in the last X to Y days
+                            $clients = \Modules\Client\Entities\Client::whereHas('loans', function ($q) use ($from_x, $to_y, $overdue_x, $overdue_y) {
+                                $q->where('status', 'overdue')
+                                    ->whereBetween('days_overdue', [$overdue_x, $overdue_y])
+                                    ->whereHas('transactions', function ($q2) use ($from_x, $to_y) {
+                                        $q2->where('loan_transaction_type_id', 2) // 2 = Repayment
+                                            ->whereBetween('created_on', [
+                                                now()->subDays($to_y)->toDateString(),
+                                                now()->subDays($from_x)->toDateString()
+                                            ]);
+                                    });
+                            })
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 11: // Happy Birthday (active clients with birthday today)
+                            $clients = \Modules\Client\Entities\Client::where('status', 'active')
+                                ->whereMonth('dob', now()->month)
+                                ->whereDay('dob', now()->day)
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 12: // Loan Fully Repaid in last X to Y days
+                            $clients = \Modules\Client\Entities\Client::whereHas('loans', function ($q) use ($from_x, $to_y) {
+                                $q->whereIn('status', ['closed', 'overpaid'])
+                                    ->whereBetween('closed_date', [
+                                        now()->subDays($to_y)->toDateString(),
+                                        now()->subDays($from_x)->toDateString()
+                                    ]);
+                            })
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 13: // Loans Outstanding after final instalment date
+                            $clients = \Modules\Client\Entities\Client::whereHas('loans', function ($q) use ($from_x, $to_y) {
+                                $q->where('status', 'active')
+                                    ->where('outstanding_balance', '>', 0)
+                                    ->whereBetween('final_instalment_date', [
+                                        now()->subDays($to_y)->toDateString(),
+                                        now()->subDays($from_x)->toDateString()
+                                    ]);
+                            })
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        case 14: // Past Loan Clients (no current loan, finished repaying in last X to Y days)
+                            $clients = \Modules\Client\Entities\Client::whereDoesntHave('loans', function ($q) {
+                                $q->where('status', 'active');
+                            })
+                                ->whereHas('loans', function ($q) use ($from_x, $to_y) {
+                                    $q->whereIn('status', ['closed', 'overpaid'])
+                                        ->whereBetween('closed_date', [
+                                            now()->subDays($to_y)->toDateString(),
+                                            now()->subDays($from_x)->toDateString()
+                                        ]);
+                                })
+                                ->whereNotNull('mobile')
+                                ->pluck('mobile');
+                            break;
+
+                        // Triggers (15 and above) are handled by events, not here
+
+                        default:
+                            // Fallback: all clients with mobile
+                            $clients = \Modules\Client\Entities\Client::whereNotNull('mobile')->pluck('mobile');
+                            break;
+                    }
+
+                    // Format numbers as needed
+                    $clients = $clients->map(function ($mobile) {
                         return '233' . ltrim($mobile, '0');
                     })->toArray();
 

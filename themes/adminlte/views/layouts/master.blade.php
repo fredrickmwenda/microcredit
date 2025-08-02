@@ -75,6 +75,15 @@
                         <div class="row">
                             <div class="col-md-12">
                                 @include('core::partials.flash.message')
+                                @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </section>
@@ -86,7 +95,7 @@
 
     </div>
     <!-- jQuery first -->
-    <!-- <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script> -->
+  <!--<script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>-->
 
     <!-- Plugins dependent on jQuery -->
     <!-- <script src="{{ asset('plugins/select2/select2-4.0.13.min.js') }}"></script> -->
@@ -95,7 +104,7 @@
 
     <!-- Custom & app scripts -->
     <!-- <script src="{{ asset('themes/adminlte/js/custom.js') }}"></script> -->
-    <script src="{{ asset('assets/js/app.min.js') }}"></script>
+    <!-- <script src="{{ asset('assets/js/app.min.js') }}"></script> -->
    
 
     @php
@@ -142,6 +151,16 @@
 
             
         })
+
+        // setup fullscreen toggle
+        document.getElementById('fullscreen-button').addEventListener('click', function(event) {
+            event.preventDefault();
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                document.documentElement.requestFullscreen();
+            }
+        });
     </script>
     @yield('scripts')
 </body>

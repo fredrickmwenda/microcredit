@@ -209,7 +209,7 @@
 
             <!-- Full Screen settings -->
             <li class="d-none d-md-inline-block">
-                <a class="nav-link" href="" data-bs-toggle="fullscreen">
+                <a class="nav-link" href="" data-bs-toggle="fullscreen" id="fullscreen-button"> >
                     <i class="ri-fullscreen-line fs-22"></i>
                 </a>
             </li>

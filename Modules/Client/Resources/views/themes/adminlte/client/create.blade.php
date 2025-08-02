@@ -2,6 +2,18 @@
 @section('title')
 {{ trans_choice('core::general.add',1) }} {{ trans_choice('client::general.client',1) }}
 @endsection
+@section('styles')
+<style>
+.invalid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: red        ;
+}
+</style>
+
+@stop
 @section('content')
 <section class="content-header">
     <div class="container-fluid">
@@ -215,8 +227,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="dob" class="control-label">{{trans_choice('core::general.dob',1)}}</label>
-                            <flat-pickr v-model="dob" class="form-control  @error('dob') is-invalid @enderror" name="dob" required>
-                            </flat-pickr>
+                            <input type="date" name="dob" id="dob" v-model="dob" class="form-control @error('dob') is-invalid @enderror" required>
                             @error('dob')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -293,6 +304,7 @@
                                 <button type="button" class="btn btn-sm btn-info" id="useWebcamBtn">Use Webcam</button>
                                 <button type="button" class="btn btn-sm btn-secondary" id="useUploadBtn">Upload Photo</button>
                             </div>
+                             
                             <div id="webcamSection" style="display:none;">
                                 <video id="video" width="320" height="240" autoplay style="border:1px solid #ccc;"></video><br>
                                 <button type="button" class="btn btn-primary btn-sm mt-2" id="snap">Capture Photo</button>
@@ -498,8 +510,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="created_date" class="control-label">{{trans_choice('core::general.submitted_on',1)}}</label>
-                            <flat-pickr v-model="created_date" class="form-control  @error('created_date') is-invalid @enderror" name="created_date" required>
-                            </flat-pickr>
+                            <input type="date" name="created_date" id="created_date" v-model="created_date" class="form-control @error('created_date') is-invalid @enderror" required>
                             @error('created_date')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -565,45 +576,45 @@
 <script>
     // var randomNumber = Math.random();
 
-    // var app = new Vue({
-    //     el: "#app",
-    //     data: {
-    //         branch_id: parseInt("{{old('branch_id')}}"),
-    //         external_id: "{{old('external_id',$randnum)}}",
-    //         // external_id: "{{old('external_id')}}",
-    //         title_id: "{{old('title_id')}}",
-    //         first_name: "{{old('first_name')}}",
-    //         last_name: "{{old('last_name')}}",
-    //         gender: "{{old('gender')}}",
-    //         marital_status: "{{old('marital_status')}}",
-    //         country_id: parseInt("{{old('country_id')}}"),
-    //         mobile: "{{old('mobile')}}",
-    //         dob: "{{old('dob')}}",
-    //         loan_officer_id: parseInt("{{old('loan_officer_id')}}"),
-    //         email: "{{old('email')}}",
-    //         profession_id: parseInt("{{old('profession_id')}}"),
-    //         client_type_id: parseInt("{{old('client_type_id',0)}}"),
-    //         active: "{{old('active',1)}}",
-    //         address: `{{old('address')}}`,
-    //         notes: `{{old('notes')}}`,
-    //         created_date: "{{old('created_date',date('Y-m-d'))}}",
-    //         place_of_workship: "{{old('place_of_workship')}}",
-    //         address_type: "{{old('address_type','residential')}}",
-    //         employment_status: "{{old('employment_status')}}",
-    //         business_activity: "{{old('business_activity')}}",
-    //         business_name: "{{old('business_name')}}",
-    //         business_location: "{{old('business_location')}}",
-    //         business_address: "{{old('business_address')}}",
-    //         zip: "{{old('zip')}}",
-    //         state: "{{old('state')}}",
-    //         city: "{{old('city')}}",
-    //         spouse_contact: "{{old('spouse_contact')}}",
-    //         spouse_name: "{{old('spouse_name')}}",
-    //         nickname: "{{old('nickname')}}",
-    //         client_group_id: "{{old('client_group_id')}}",
-    //         church_membership: false,
-    //     }
-    // })
+    var app = new Vue({
+        el: "#app",
+        data: {
+            branch_id: parseInt("{{old('branch_id')}}"),
+            external_id: "{{old('external_id',$randnum)}}",
+            // external_id: "{{old('external_id')}}",
+            title_id: "{{old('title_id')}}",
+            first_name: "{{old('first_name')}}",
+            last_name: "{{old('last_name')}}",
+            gender: "{{old('gender')}}",
+            marital_status: "{{old('marital_status')}}",
+            country_id: parseInt("{{old('country_id')}}"),
+            mobile: "{{old('mobile')}}",
+            dob: "{{old('dob')}}",
+            loan_officer_id: parseInt("{{old('loan_officer_id')}}"),
+            email: "{{old('email')}}",
+            profession_id: parseInt("{{old('profession_id')}}"),
+            client_type_id: parseInt("{{old('client_type_id',0)}}"),
+            active: "{{old('active',1)}}",
+            address: `{{old('address')}}`,
+            notes: `{{old('notes')}}`,
+            created_date: "{{old('created_date',date('Y-m-d'))}}",
+            place_of_workship: "{{old('place_of_workship')}}",
+            address_type: "{{old('address_type','residential')}}",
+            employment_status: "{{old('employment_status')}}",
+            business_activity: "{{old('business_activity')}}",
+            business_name: "{{old('business_name')}}",
+            business_location: "{{old('business_location')}}",
+            business_address: "{{old('business_address')}}",
+            zip: "{{old('zip')}}",
+            state: "{{old('state')}}",
+            city: "{{old('city')}}",
+            spouse_contact: "{{old('spouse_contact')}}",
+            spouse_name: "{{old('spouse_name')}}",
+            nickname: "{{old('nickname')}}",
+            client_group_id: "{{old('client_group_id')}}",
+            church_membership: false,
+        }
+    })
 
     document.addEventListener('DOMContentLoaded', function() {
         var webcamSection = document.getElementById('webcamSection');
@@ -653,6 +664,15 @@
                 clientPhoto.value = dataURL;
                 preview.src = dataURL;
                 preview.style.display = 'block';
+                // Log the dataURL to the console for debugging
+                console.log('Webcam photo captured and attached as base64:', dataURL);
+                // Hide webcam and stop video stream
+                webcamSection.style.display = 'none';
+                if (video.srcObject) {
+                    let tracks = video.srcObject.getTracks();
+                    tracks.forEach(track => track.stop());
+                    video.srcObject = null;
+                }
             });
         }
     });

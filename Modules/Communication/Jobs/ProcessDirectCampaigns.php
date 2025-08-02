@@ -15,6 +15,7 @@ use Modules\Communication\Entities\CommunicationCampaign;
 use Modules\Loan\Entities\Loan;
 use Modules\Loan\Entities\LoanRepaymentSchedule;
 use Modules\Setting\Entities\Setting;
+use Modules\Client\Drivers\Arkesel;
 
 class ProcessDirectCampaigns implements ShouldQueue
 {
@@ -60,7 +61,19 @@ class ProcessDirectCampaigns implements ShouldQueue
                 if ($communication_campaign->campaign_type == 'sms') {
                     if (!empty($client->mobile)) {
                         $description = template_replace_tags(["body" => $communication_campaign->description, "client_id" => $client->id]);
-                        send_sms($client->mobile, $description, $communication_campaign->sms_gateway_id);
+                        try {
+                            $smsGateway = $communication_campaign->sms_gateway_id
+                                ? \Modules\Communication\Entities\SmsGateway::find($communication_campaign->sms_gateway_id)
+                                : null;
+                            $arkesel = $smsGateway
+                                ? new Arkesel($smsGateway->key, $smsGateway->sender)
+                                : new Arkesel();
+                            // Format mobile number as needed, e.g. '233' . ltrim($client->mobile, '0')
+                            $formattedMobile = '233' . ltrim($client->mobile, '0');
+                            $arkesel->send($description, [$formattedMobile]);
+                        } catch (\Exception $e) {
+                            \Log::error('Arkesel SMS error: ' . $e->getMessage());
+                        }
                         //log sms
                         log_campaign([
                             'client_id' => $client->id,
@@ -104,7 +117,19 @@ class ProcessDirectCampaigns implements ShouldQueue
                 if ($communication_campaign->campaign_type == 'sms') {
                     if (!empty($client->mobile)) {
                         $description = template_replace_tags(["body" => $communication_campaign->description, "client_id" => $client->id]);
-                        send_sms($client->mobile, $description, $communication_campaign->sms_gateway_id);
+                        try {
+                            $smsGateway = $communication_campaign->sms_gateway_id
+                                ? \Modules\Communication\Entities\SmsGateway::find($communication_campaign->sms_gateway_id)
+                                : null;
+                            $arkesel = $smsGateway
+                                ? new Arkesel($smsGateway->key, $smsGateway->sender)
+                                : new Arkesel();
+                            // Format mobile number as needed, e.g. '233' . ltrim($client->mobile, '0')
+                            $formattedMobile = '233' . ltrim($client->mobile, '0');
+                            $arkesel->send($description, [$formattedMobile]);
+                        } catch (\Exception $e) {
+                            \Log::error('Arkesel SMS error: ' . $e->getMessage());
+                        }
                         //log sms
                         log_campaign([
                             'client_id' => $client->id,
@@ -150,7 +175,19 @@ class ProcessDirectCampaigns implements ShouldQueue
                 if ($communication_campaign->campaign_type == 'sms') {
                     if (!empty($client->mobile)) {
                         $description = template_replace_tags(["body" => $communication_campaign->description, "client_id" => $client->id]);
-                        send_sms($client->mobile, $description, $communication_campaign->sms_gateway_id);
+                        try {
+                            $smsGateway = $communication_campaign->sms_gateway_id
+                                ? \Modules\Communication\Entities\SmsGateway::find($communication_campaign->sms_gateway_id)
+                                : null;
+                            $arkesel = $smsGateway
+                                ? new Arkesel($smsGateway->key, $smsGateway->sender)
+                                : new Arkesel();
+                            // Format mobile number as needed, e.g. '233' . ltrim($client->mobile, '0')
+                            $formattedMobile = '233' . ltrim($client->mobile, '0');
+                            $arkesel->send($description, [$formattedMobile]);
+                        } catch (\Exception $e) {
+                            \Log::error('Arkesel SMS error: ' . $e->getMessage());
+                        }
                         //log sms
                         log_campaign([
                             'client_id' => $client->id,
@@ -198,7 +235,19 @@ class ProcessDirectCampaigns implements ShouldQueue
                 if ($communication_campaign->campaign_type == 'sms') {
                     if (!empty($loan->mobile)) {
                         $description = template_replace_tags(["body" => $communication_campaign->description, "loan_id" => $loan->id, "client_id" => $loan->client_id]);
-                        send_sms($loan->mobile, $description, $communication_campaign->sms_gateway_id);
+                        try {
+    $smsGateway = $communication_campaign->sms_gateway_id
+        ? \Modules\Communication\Entities\SmsGateway::find($communication_campaign->sms_gateway_id)
+        : null;
+    $arkesel = $smsGateway
+        ? new Arkesel($smsGateway->key, $smsGateway->sender)
+        : new Arkesel();
+    // Format mobile number as needed, e.g. '233' . ltrim($client->mobile, '0')
+    $formattedMobile = '233' . ltrim($client->mobile, '0');
+    $arkesel->send($description, [$formattedMobile]);
+} catch (\Exception $e) {
+    \Log::error('Arkesel SMS error: ' . $e->getMessage());
+}
                         //log sms
                         log_campaign([
                             'client_id' => $loan->client_id,
@@ -216,7 +265,7 @@ class ProcessDirectCampaigns implements ShouldQueue
                         $description = template_replace_tags(["body" => $communication_campaign->description, "loan_id" => $loan->id, "client_id" => $loan->client_id]);
                         $email = $loan->email;
                         $subject = $communication_campaign->subject;
-                        $attachments=[];
+                        $attachments = [];
                         if ($attachment_type == '1') {
                             //loan schedule
                             $loan = Loan::find($loan->id);
@@ -226,10 +275,9 @@ class ProcessDirectCampaigns implements ShouldQueue
                                     "file_path" => $pdf->output(),
                                     "file_name" => trans_choice('loan::general.loan', 1) . ' ' . trans_choice('loan::general.schedule', 1) . ".pdf",
                                     "extra_args" => ['mime' => 'application/pdf']
-                                ]
-                            ;
+                                ];
                         }
-                        Mail::to($email)->send(new SendBasicEmail($subject, $description,$attachments));
+                        Mail::to($email)->send(new SendBasicEmail($subject, $description, $attachments));
                         //log sms
                         log_campaign([
                             'client_id' => $loan->client_id,
@@ -257,7 +305,19 @@ class ProcessDirectCampaigns implements ShouldQueue
                 if ($communication_campaign->campaign_type == 'sms') {
                     if (!empty($loan->mobile)) {
                         $description = template_replace_tags(["body" => $communication_campaign->description, "loan_id" => $loan->id, "client_id" => $loan->client_id]);
-                        send_sms($loan->mobile, $description, $communication_campaign->sms_gateway_id);
+                        try {
+    $smsGateway = $communication_campaign->sms_gateway_id
+        ? \Modules\Communication\Entities\SmsGateway::find($communication_campaign->sms_gateway_id)
+        : null;
+    $arkesel = $smsGateway
+        ? new Arkesel($smsGateway->key, $smsGateway->sender)
+        : new Arkesel();
+    // Format mobile number as needed, e.g. '233' . ltrim($client->mobile, '0')
+    $formattedMobile = '233' . ltrim($client->mobile, '0');
+    $arkesel->send($description, [$formattedMobile]);
+} catch (\Exception $e) {
+    \Log::error('Arkesel SMS error: ' . $e->getMessage());
+}
                         //log sms
                         log_campaign([
                             'client_id' => $loan->client_id,
@@ -275,7 +335,7 @@ class ProcessDirectCampaigns implements ShouldQueue
                         $description = template_replace_tags(["body" => $communication_campaign->description, "loan_id" => $loan->id, "client_id" => $loan->client_id]);
                         $email = $loan->email;
                         $subject = $communication_campaign->subject;
-                        $attachments=[];
+                        $attachments = [];
                         if ($attachment_type == '1') {
                             //loan schedule
                             $loan = Loan::find($loan->id);
@@ -285,10 +345,9 @@ class ProcessDirectCampaigns implements ShouldQueue
                                     "file_path" => $pdf->output(),
                                     "file_name" => trans_choice('loan::general.loan', 1) . ' ' . trans_choice('loan::general.schedule', 1) . ".pdf",
                                     "extra_args" => ['mime' => 'application/pdf']
-                                ]
-                            ;
+                                ];
                         }
-                        Mail::to($email)->send(new SendBasicEmail($subject, $description,$attachments));
+                        Mail::to($email)->send(new SendBasicEmail($subject, $description, $attachments));
 
                         //log sms
                         log_campaign([
@@ -317,7 +376,19 @@ class ProcessDirectCampaigns implements ShouldQueue
                 if ($communication_campaign->campaign_type == 'sms') {
                     if (!empty($loan->mobile)) {
                         $description = template_replace_tags(["body" => $communication_campaign->description, "loan_id" => $loan->id, "client_id" => $loan->client_id, "loan_repayment_schedule_id" => $loan->loan_repayment_schedule_id]);
-                        send_sms($loan->mobile, $description, $communication_campaign->sms_gateway_id);
+                        try {
+    $smsGateway = $communication_campaign->sms_gateway_id
+        ? \Modules\Communication\Entities\SmsGateway::find($communication_campaign->sms_gateway_id)
+        : null;
+    $arkesel = $smsGateway
+        ? new Arkesel($smsGateway->key, $smsGateway->sender)
+        : new Arkesel();
+    // Format mobile number as needed, e.g. '233' . ltrim($client->mobile, '0')
+    $formattedMobile = '233' . ltrim($client->mobile, '0');
+    $arkesel->send($description, [$formattedMobile]);
+} catch (\Exception $e) {
+    \Log::error('Arkesel SMS error: ' . $e->getMessage());
+}
                         //log sms
                         log_campaign([
                             'client_id' => $loan->client_id,
@@ -335,7 +406,7 @@ class ProcessDirectCampaigns implements ShouldQueue
                         $description = template_replace_tags(["body" => $communication_campaign->description, "loan_id" => $loan->id, "client_id" => $loan->client_id]);
                         $email = $loan->email;
                         $subject = $communication_campaign->subject;
-                        $attachments=[];
+                        $attachments = [];
                         if ($attachment_type == '1') {
                             //loan schedule
                             $loan = Loan::find($loan->id);
@@ -345,10 +416,9 @@ class ProcessDirectCampaigns implements ShouldQueue
                                     "file_path" => $pdf->output(),
                                     "file_name" => trans_choice('loan::general.loan', 1) . ' ' . trans_choice('loan::general.schedule', 1) . ".pdf",
                                     "extra_args" => ['mime' => 'application/pdf']
-                                ]
-                            ;
+                                ];
                         }
-                        Mail::to($email)->send(new SendBasicEmail($subject, $description,$attachments));
+                        Mail::to($email)->send(new SendBasicEmail($subject, $description, $attachments));
                         //log sms
                         log_campaign([
                             'client_id' => $loan->client_id,

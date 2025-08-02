@@ -168,7 +168,7 @@
                                         id="sms_gateway_id" v-bind:required="campaign_type=='sms'">
                                     <option></option>
                                     <option v-for="sms_gateway in sms_gateways" v-bind:value="sms_gateway.id">
-                                        @{{ sms_gateway.name }}
+                                        @{{ sms_gateway.sender }}
                                     </option>
                                 </select>
                                 @error('sms_gateway_id')

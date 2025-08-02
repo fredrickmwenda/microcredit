@@ -222,84 +222,106 @@ class CommunicationController extends Controller
         return theme_view('communication::communication.send_sms_form', compact('clients', 'smsGateways'));
     }
 
-    public function processSmsSend(Request $request)
-    {
-       
-        $client_id = $request->client_id;
-        $sms_gateway_id = $request->sms_gateway_id;
-        
 
-        // Use Arkesel gateway (first active one)
-        $arkesel = new \Modules\Client\Drivers\Arkesel();
+public function processSmsSend(Request $request)
+{
+    $client_id = $request->client_id;
+    $sms_gateway_id = $request->sms_gateway_id;
 
-        if ($client_id === "all") {
-            $clients = \Modules\Client\Entities\Client::all();
-            $mobiles = [];
-            foreach ($clients as $client) {
-                if ($client->mobile) {
-                    // $mobiles[] = $client->mobile;
-                    $formattedMobile = '233' . ltrim($client->mobile, '0');
-                    $mobiles[] = $formattedMobile;
-                    // Log each SMS sent
-                    $sms = [
-                        'sms_gateway_id' => $sms_gateway_id,
-                        'client_id' => $client->id,
-                        'text_body' => $request->sms,
-                        'send_to' => $client->mobile
-                    ];
-                    $smsLog = CommunicationLog::create($sms);
-                }
+    // Use Arkesel gateway (first active one)
+    $arkesel = new \Modules\Client\Drivers\Arkesel();
 
-                // Log activity for each SMS
+    if ($client_id === "all") {
+        $clients = \Modules\Client\Entities\Client::all();
+        $mobiles = [];
+        $smsLogs = [];
+        foreach ($clients as $client) {
+            if ($client->mobile) {
+                $formattedMobile = '233' . ltrim($client->mobile, '0');
+                $mobiles[] = $formattedMobile;
+                $sms = [
+                    'sms_gateway_id' => $sms_gateway_id,
+                    'client_id' => $client->id,
+                    'text_body' => $request->sms,
+                    'send_to' => $formattedMobile
+                ];
+                $smsLog = CommunicationLog::create($sms);
+                $smsLogs[] = $smsLog;
+
                 activity()->on($smsLog)
                     ->withProperties(['id' => $smsLog->id])
                     ->log('Process and Send Sms');
             }
-            try {
-                $response = $arkesel->send($request->sms, $mobiles);
-                // Optionally update all logs with status/response
-                CommunicationLog::whereIn('client_id', $clients->pluck('id'))->latest()->take(count($mobiles))->update([
-                    'status' => 'delivered',
-                    'response' => $response,
-                ]);
-            } catch (\Exception $e) {
-                \Modules\Communication\Entities\CommunicationLog::whereIn('client_id', $clients->pluck('id'))->latest()->take(count($mobiles))->update([
-                    'status' => 'failed',
-                    'response' => $e->getMessage(),
-                ]);
-            }
-        } else {
-            $mobile = Client::where('id', $client_id)->first()->mobile;
-              $formattedMobile = '233' . ltrim($mobile, '0');
-              
-            $sms = [
-                'sms_gateway_id' => $sms_gateway_id,
-                'client_id' => $client_id,
-                'text_body' => $request->sms,
-                'send_to' => $formattedMobile
-            ];
-            $smsLog = CommunicationLog::create($sms);
+        }
+        try {
+            $response = $arkesel->send($request->sms, $mobiles);
+            $responseData = json_decode($response, true);
 
-            try {
-                $response = $arkesel->send($request->sms, [$formattedMobile]);
+            if (isset($responseData['status']) && $responseData['status'] === 'error') {
+                // Update all logs as failed
+                foreach ($smsLogs as $log) {
+                    $log->status = 'failed';
+                    $log->response = $responseData['message'] ?? 'Unknown error';
+                    $log->save();
+                }
+                \flash('SMS sending failed: ' . ($responseData['message'] ?? 'Unknown error'))->error()->important();
+            } else {
+                // Update all logs as delivered
+                foreach ($smsLogs as $log) {
+                    $log->status = 'delivered';
+                    $log->response = $response;
+                    $log->save();
+                }
+                \flash(trans_choice("core::general.successfully_saved", 1))->success()->important();
+            }
+        } catch (\Exception $e) {
+            foreach ($smsLogs as $log) {
+                $log->status = 'failed';
+                $log->response = $e->getMessage();
+                $log->save();
+            }
+            \flash('SMS sending failed: ' . $e->getMessage())->error()->important();
+        }
+    } else {
+        $mobile = Client::where('id', $client_id)->first()->mobile;
+        $formattedMobile = '233' . ltrim($mobile, '0');
+        $sms = [
+            'sms_gateway_id' => $sms_gateway_id,
+            'client_id' => $client_id,
+            'text_body' => $request->sms,
+            'send_to' => $formattedMobile
+        ];
+        $smsLog = CommunicationLog::create($sms);
+
+        try {
+            $response = $arkesel->send($request->sms, [$formattedMobile]);
+            $responseData = json_decode($response, true);
+
+            if (isset($responseData['status']) && $responseData['status'] === 'error') {
+                $smsLog->status = 'failed';
+                $smsLog->response = $responseData['message'] ?? 'Unknown error';
+                $smsLog->save();
+                \flash('SMS sending failed: ' . ($responseData['message'] ?? 'Unknown error'))->error()->important();
+            } else {
                 $smsLog->status = 'delivered';
                 $smsLog->response = $response;
                 $smsLog->save();
-            } catch (\Exception $e) {
-                $smsLog->status = 'failed';
-                $smsLog->response = $e->getMessage();
-                $smsLog->save();
+                \flash(trans_choice("core::general.successfully_saved", 1))->success()->important();
             }
-
-            // Log activity for single SMS
-            activity()->on($smsLog)
-                ->withProperties(['id' => $smsLog->id])
-                ->log('Process and Send Sms');
+        } catch (\Exception $e) {
+            $smsLog->status = 'failed';
+            $smsLog->response = $e->getMessage();
+            $smsLog->save();
+            \flash('SMS sending failed: ' . $e->getMessage())->error()->important();
         }
 
-        \flash(trans_choice("core::general.successfully_saved", 1))->success()->important();
-        return redirect('communication/all_sms');
+        activity()->on($smsLog)
+            ->withProperties(['id' => $smsLog->id])
+            ->log('Process and Send Sms');
     }
+
+    return redirect('communication/all_sms');
+}
 
 
     public function sendSms(Request $request)

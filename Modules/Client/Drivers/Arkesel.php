@@ -65,8 +65,14 @@ class Arkesel
         $response = curl_exec($curl);
         $error = curl_error($curl);
         curl_close($curl);
+        \Log::info('Arkesel send response: ' . $response);
         if ($error) {
             throw new \Exception('Arkesel SMS Error: ' . $error);
+        }
+        // Handle Arkesel API error in response
+        $responseData = json_decode($response, true);
+        if (isset($responseData['status']) && $responseData['status'] === 'error') {
+            throw new \Exception('Arkesel API Error: ' . ($responseData['message'] ?? 'Unknown error'));
         }
         return $response;
     }

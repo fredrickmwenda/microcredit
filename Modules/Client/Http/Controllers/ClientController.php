@@ -727,6 +727,7 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
+        info($request->all());
         $request->validate([
             'first_name' => ['required'],
             'last_name' => ['required'],
@@ -781,6 +782,20 @@ class ClientController extends Controller
         if ($request->hasFile('photo')) {
             $file_name = $request->file('photo')->store('public/uploads/clients');
             $client->photo = basename($file_name);
+        } elseif ($request->filled('client_photo')) {
+            // Handle webcam base64 image
+            $data = $request->input('client_photo');
+            if (preg_match('/^data:image\/(png|jpg|jpeg);base64,/', $data)) {
+                $data = preg_replace('/^data:image\/(png|jpg|jpeg);base64,/', '', $data);
+                $data = str_replace(' ', '+', $data);
+                $imageData = base64_decode($data);
+                $extension = 'png'; // Default to png
+                if (strpos($request->input('client_photo'), 'jpeg') !== false) $extension = 'jpg';
+                $filename = 'webcam_' . uniqid() . '.' . $extension;
+                $path = storage_path('app/public/uploads/clients/' . $filename);
+                file_put_contents($path, $imageData);
+                $client->photo = $filename;
+            }
         }
         $client->save();
         if($client->status == "active"){
@@ -882,6 +897,24 @@ class ClientController extends Controller
                 Storage::delete('public/uploads/clients/' . $client->photo);
             }
             $client->photo = basename($file_name);
+        } elseif ($request->filled('client_photo')) {
+            // Handle webcam base64 image
+            $data = $request->input('client_photo');
+            if (preg_match('/^data:image\/(png|jpg|jpeg);base64,/', $data)) {
+                $data = preg_replace('/^data:image\/(png|jpg|jpeg);base64,/', '', $data);
+                $data = str_replace(' ', '+', $data);
+                $imageData = base64_decode($data);
+                $extension = 'png'; // Default to png
+                if (strpos($request->input('client_photo'), 'jpeg') !== false) $extension = 'jpg';
+                $filename = 'webcam_' . uniqid() . '.' . $extension;
+                $path = storage_path('app/public/uploads/clients/' . $filename);
+                file_put_contents($path, $imageData);
+                // Delete previous photo if exists
+                if ($client->photo) {
+                    Storage::delete('public/uploads/clients/' . $client->photo);
+                }
+                $client->photo = $filename;
+            }
         }
         $client->save();
         if($client->status == "active" && $previous_status != "active"){
