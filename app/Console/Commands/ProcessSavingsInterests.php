@@ -3,12 +3,11 @@
 namespace App\Console\Commands;
 
 use App\Helpers\GeneralHelper;
-use App\Models\JournalEntry;
-use App\Models\Saving;
-use App\Models\SavingTransaction;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Modules\Accounting\Entities\JournalEntry;
+use Modules\Savings\Entities\Savings;
 
 class ProcessSavingsInterests extends Command
 {
@@ -94,13 +93,13 @@ class ProcessSavingsInterests extends Command
                     if ($total_balance >= $savings->minimum_balance) {
                         //calculate interest
                         $interest = $total_balance * ($savings->interest_rate / (100 * 365));
-                        $savings_to_save = Saving::find($savings->id);
+                        $savings_to_save = Savings::find($savings->id);
                         $savings_to_save->interest_earned = $savings->interest_earned + $interest;
                         $savings_to_save->next_interest_calculation_date = Carbon::tomorrow()->format("Y-m-d");
                         $savings_to_save->last_interest_calculation_date = Carbon::today()->format("Y-m-d");
                         $savings_to_save->save();
                     } else {
-                        $savings_to_save = Saving::find($savings->id);
+                        $savings_to_save = Savings::find($savings->id);
                         $savings_to_save->next_interest_calculation_date = Carbon::tomorrow()->format("Y-m-d");
                         $savings_to_save->last_interest_calculation_date = Carbon::today()->format("Y-m-d");
                         $savings_to_save->save();
@@ -142,7 +141,7 @@ class ProcessSavingsInterests extends Command
                             $total_days = $total_days + 1;
                         }
                     }
-                    $savings_to_save = Saving::find($savings->id);
+                    $savings_to_save = Savings::find($savings->id);
                     $savings_to_save->interest_earned = $savings->interest_earned + $interest;
                     $savings_to_save->next_interest_calculation_date = $next_interest_calculation_date;
                     $savings_to_save->last_interest_calculation_date = Carbon::today()->format("Y-m-d");
@@ -165,14 +164,14 @@ class ProcessSavingsInterests extends Command
                     }
                     if ($total_balance >= $savings->minimum_balance) {
                         //calculate interest
-                        $savings_to_save = Saving::find($savings->id);
+                        $savings_to_save = Savings::find($savings->id);
                         $interest = $total_balance * ($savings->interest_rate / (100 * 365));
                         $savings_to_save->interest_earned = $savings->interest_earned + $interest;
                         $savings_to_save->next_interest_calculation_date = Carbon::tomorrow()->format("Y-m-d");
                         $savings_to_save->last_interest_calculation_date = Carbon::today()->format("Y-m-d");
                         $savings_to_save->save();
                     } else {
-                        $savings_to_save = Saving::find($savings->id);
+                        $savings_to_save = Savings::find($savings->id);
                         $savings_to_save->next_interest_calculation_date = Carbon::tomorrow()->format("Y-m-d");
                         $savings_to_save->last_interest_calculation_date = Carbon::today()->format("Y-m-d");
                         $savings_to_save->save();
@@ -220,7 +219,7 @@ class ProcessSavingsInterests extends Command
                             $interest = $interest + ($average_balance * $total_days * $savings->interest_rate / (100 * 365));
                         }
                     }
-                    $savings_to_save = Saving::find($savings->id);
+                    $savings_to_save = Savings::find($savings->id);
                     $savings_to_save->interest_earned = $savings->interest_earned + $interest;
                     $savings_to_save->next_interest_calculation_date = $next_interest_calculation_date;
                     $savings_to_save->last_interest_calculation_date = Carbon::today()->format("Y-m-d");
@@ -279,7 +278,7 @@ class ProcessSavingsInterests extends Command
                     $journal->save();
                 }
             }
-            $savings = Saving::find($key->id);
+            $savings = Savings::find($key->id);
             if ($key->interest_posting_period == "monthly") {
                 $savings->next_interest_posting_date = Carbon::parse("last day of " . Carbon::today()->addMonthsNoOverflow(1)->format("M"))->format("Y-m-d");
             }

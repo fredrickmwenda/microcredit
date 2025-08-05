@@ -10,8 +10,6 @@ use Modules\Communication\Entities\CommunicationCampaign;
 use Modules\Loan\Entities\Loan;
 use Modules\Loan\Entities\LoanRepaymentSchedule;
 use Modules\Setting\Entities\Setting;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
 use PDF;
 
 class ProcessScheduledCampaigns extends Command
@@ -21,7 +19,7 @@ class ProcessScheduledCampaigns extends Command
      *
      * @var string
      */
-    protected $name = 'campaigns:process';
+    protected $name = 'communication:process-scheduled-campaigns';
 
     /**
      * The console command description.
@@ -75,7 +73,20 @@ class ProcessScheduledCampaigns extends Command
                     if ($key->campaign_type == 'sms') {
                         if (!empty($client->mobile)) {
                             $description = template_replace_tags(["body" => $key->description, "client_id" => $client->id]);
-                            send_sms($client->mobile, $description, $key->sms_gateway_id);
+                            //send_sms($client->mobile, $description, $key->sms_gateway_id);
+                            try {
+                                $smsGateway = $key->sms_gateway_id
+                                    ? \Modules\Communication\Entities\SmsGateway::find($key->sms_gateway_id)
+                                    : null;
+                                $arkesel = $smsGateway
+                                    ? new \Modules\Client\Drivers\Arkesel($smsGateway->key, $smsGateway->sender)
+                                    : new \Modules\Client\Drivers\Arkesel();
+                                $formattedMobile = '233' . ltrim($client->mobile, '0');
+                                $response = $arkesel->send($description, [$formattedMobile]);
+                            } catch (\Exception $e) {
+                                $response = $e->getMessage();
+                                \Log::error('Arkesel SMS error: ' . $response);
+                            }
                             //log sms
                             log_campaign([
                                 'client_id' => $client->id,
@@ -124,7 +135,20 @@ class ProcessScheduledCampaigns extends Command
                     if ($key->campaign_type == 'sms') {
                         if (!empty($client->mobile)) {
                             $description = template_replace_tags(["body" => $key->description, "client_id" => $client->id]);
-                            send_sms($client->mobile, $description, $key->sms_gateway_id);
+                            //send_sms($client->mobile, $description, $key->sms_gateway_id);
+                            try {
+                                $smsGateway = $key->sms_gateway_id
+                                    ? \Modules\Communication\Entities\SmsGateway::find($key->sms_gateway_id)
+                                    : null;
+                                $arkesel = $smsGateway
+                                    ? new \Modules\Client\Drivers\Arkesel($smsGateway->key, $smsGateway->sender)
+                                    : new \Modules\Client\Drivers\Arkesel();
+                                $formattedMobile = '233' . ltrim($client->mobile, '0');
+                                $response = $arkesel->send($description, [$formattedMobile]);
+                            } catch (\Exception $e) {
+                                $response = $e->getMessage();
+                                \Log::error('Arkesel SMS error: ' . $response);
+                            }
                             //log sms
                             log_campaign([
                                 'client_id' => $client->id,
@@ -175,7 +199,20 @@ class ProcessScheduledCampaigns extends Command
                     if ($key->campaign_type == 'sms') {
                         if (!empty($client->mobile)) {
                             $description = template_replace_tags(["body" => $key->description, "client_id" => $client->id]);
-                            send_sms($client->mobile, $description, $key->sms_gateway_id);
+                           // send_sms($client->mobile, $description, $key->sms_gateway_id);         
+                           try {
+                                $smsGateway = $key->sms_gateway_id
+                                    ? \Modules\Communication\Entities\SmsGateway::find($key->sms_gateway_id)
+                                    : null;
+                                $arkesel = $smsGateway
+                                    ? new \Modules\Client\Drivers\Arkesel($smsGateway->key, $smsGateway->sender)
+                                    : new \Modules\Client\Drivers\Arkesel();
+                                $formattedMobile = '233' . ltrim($client->mobile, '0');
+                                $response = $arkesel->send($description, [$formattedMobile]);
+                            } catch (\Exception $e) {
+                                $response = $e->getMessage();
+                                \Log::error('Arkesel SMS error: ' . $response);
+                            }
                             //log sms
                             log_campaign([
                                 'client_id' => $client->id,
@@ -228,7 +265,20 @@ class ProcessScheduledCampaigns extends Command
                     if ($key->campaign_type == 'sms') {
                         if (!empty($loan->mobile)) {
                             $description = template_replace_tags(["body" => $key->description, "loan_id" => $loan->id, "client_id" => $loan->client_id]);
-                            send_sms($loan->mobile, $description, $key->sms_gateway_id);
+                            //send_sms($loan->mobile, $description, $key->sms_gateway_id);
+                                                        try {
+                                $smsGateway = $key->sms_gateway_id
+                                    ? \Modules\Communication\Entities\SmsGateway::find($key->sms_gateway_id)
+                                    : null;
+                                $arkesel = $smsGateway
+                                    ? new \Modules\Client\Drivers\Arkesel($smsGateway->key, $smsGateway->sender)
+                                    : new \Modules\Client\Drivers\Arkesel();
+                                $formattedMobile = '233' . ltrim($loan->mobile, '0');
+                                $response = $arkesel->send($description, [$formattedMobile]);
+                            } catch (\Exception $e) {
+                                $response = $e->getMessage();
+                                \Log::error('Arkesel SMS error: ' . $response);
+                            }
                             //log sms
                             log_campaign([
                                 'client_id' => $loan->client_id,
@@ -255,9 +305,11 @@ class ProcessScheduledCampaigns extends Command
                                     //loan schedule
                                     $loan = Loan::find($loan->id);
                                     $pdf = PDF::loadView('loan::loan_schedule.pdf', compact('loan'))->setPaper('a4', 'landscape');
-                                    $message->attachData($pdf->output(),
+                                    $message->attachData(
+                                        $pdf->output(),
                                         trans_choice('loan::general.loan', 1) . ' ' . trans_choice('loan::general.schedule', 1) . ".pdf",
-                                        ['mime' => 'application/pdf']);
+                                        ['mime' => 'application/pdf']
+                                    );
                                 }
                             });
                             //log sms
@@ -287,7 +339,20 @@ class ProcessScheduledCampaigns extends Command
                     if ($key->campaign_type == 'sms') {
                         if (!empty($loan->mobile)) {
                             $description = template_replace_tags(["body" => $key->description, "loan_id" => $loan->id, "client_id" => $loan->client_id]);
-                            send_sms($loan->mobile, $description, $key->sms_gateway_id);
+                            //send_sms($loan->mobile, $description, $key->sms_gateway_id);
+                            try {
+                                $smsGateway = $key->sms_gateway_id
+                                    ? \Modules\Communication\Entities\SmsGateway::find($key->sms_gateway_id)
+                                    : null;
+                                $arkesel = $smsGateway
+                                    ? new \Modules\Client\Drivers\Arkesel($smsGateway->key, $smsGateway->sender)
+                                    : new \Modules\Client\Drivers\Arkesel();
+                                $formattedMobile = '233' . ltrim($loan->mobile, '0');
+                                $response = $arkesel->send($description, [$formattedMobile]);
+                            } catch (\Exception $e) {
+                                $response = $e->getMessage();
+                                \Log::error('Arkesel SMS error: ' . $response);
+                            }
                             //log sms
                             log_campaign([
                                 'client_id' => $loan->client_id,
@@ -314,9 +379,11 @@ class ProcessScheduledCampaigns extends Command
                                     //loan schedule
                                     $loan = Loan::find($loan->id);
                                     $pdf = PDF::loadView('loan::loan_schedule.pdf', compact('loan'))->setPaper('a4', 'landscape');
-                                    $message->attachData($pdf->output(),
+                                    $message->attachData(
+                                        $pdf->output(),
                                         trans_choice('loan::general.loan', 1) . ' ' . trans_choice('loan::general.schedule', 1) . ".pdf",
-                                        ['mime' => 'application/pdf']);
+                                        ['mime' => 'application/pdf']
+                                    );
                                 }
                             });
                             //log sms
@@ -346,7 +413,20 @@ class ProcessScheduledCampaigns extends Command
                     if ($key->campaign_type == 'sms') {
                         if (!empty($loan->mobile)) {
                             $description = template_replace_tags(["body" => $key->description, "loan_id" => $loan->id, "client_id" => $loan->client_id, "loan_repayment_schedule_id" => $loan->loan_repayment_schedule_id]);
-                            send_sms($loan->mobile, $description, $key->sms_gateway_id);
+                            //send_sms($loan->mobile, $description, $key->sms_gateway_id);
+                            try {
+                                $smsGateway = $key->sms_gateway_id
+                                    ? \Modules\Communication\Entities\SmsGateway::find($key->sms_gateway_id)
+                                    : null;
+                                $arkesel = $smsGateway
+                                    ? new \Modules\Client\Drivers\Arkesel($smsGateway->key, $smsGateway->sender)
+                                    : new \Modules\Client\Drivers\Arkesel();
+                                $formattedMobile = '233' . ltrim($loan->mobile, '0');
+                                $response = $arkesel->send($description, [$formattedMobile]);
+                            } catch (\Exception $e) {
+                                $response = $e->getMessage();
+                                \Log::error('Arkesel SMS error: ' . $response);
+                            }
                             //log sms
                             log_campaign([
                                 'client_id' => $loan->client_id,
@@ -373,9 +453,11 @@ class ProcessScheduledCampaigns extends Command
                                     //loan schedule
                                     $loan = Loan::find($loan->id);
                                     $pdf = PDF::loadView('loan::loan_schedule.pdf', compact('loan'))->setPaper('a4', 'landscape');
-                                    $message->attachData($pdf->output(),
+                                    $message->attachData(
+                                        $pdf->output(),
                                         trans_choice('loan::general.loan', 1) . ' ' . trans_choice('loan::general.schedule', 1) . ".pdf",
-                                        ['mime' => 'application/pdf']);
+                                        ['mime' => 'application/pdf']
+                                    );
                                 }
                             });
                             //log sms
@@ -399,11 +481,7 @@ class ProcessScheduledCampaigns extends Command
                 $key->scheduled_last_run_date = Carbon::now()->format("Y-m-d");
                 $key->save();
             }
-
         }
         $this->info("Schedule ran successfully");
-
     }
-
-
 }

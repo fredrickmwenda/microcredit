@@ -2,15 +2,12 @@
 
 namespace App\Console\Commands;
 
-use App\Helpers\GeneralHelper;
-use App\Models\Email;
-use App\Models\LoanSchedule;
-use App\Models\Setting;
-use App\Models\Sms;
+
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Modules\Setting\Entities\Setting;
 
 class ProcessReminders extends Command
 {
@@ -19,7 +16,7 @@ class ProcessReminders extends Command
      *
      * @var string
      */
-    protected $signature = 'reminders:send';
+    protected $signature = 'reminders:process';
 
     /**
      * The console command description.
@@ -54,8 +51,10 @@ class ProcessReminders extends Command
 
                     //check if borrower has email
                     if (!empty($schedule->email)) {
-                        $body = Setting::where('setting_key',
-                            'loan_payment_reminder_email_template')->first()->setting_value;
+                        $body = Setting::where(
+                            'setting_key',
+                            'loan_payment_reminder_email_template'
+                        )->first()->setting_value;
                         $body = str_replace('{borrowerTitle}', $schedule->title, $body);
                         $body = str_replace('{borrowerFirstName}', $schedule->first_name, $body);
                         $body = str_replace('{borrowerLastName}', $schedule->last_name, $body);
@@ -65,31 +64,49 @@ class ProcessReminders extends Command
                         $body = str_replace('{borrowerPhone}', $schedule->phone, $body);
                         $body = str_replace('{borrowerEmail}', $schedule->email, $body);
                         $body = str_replace('{loanNumber}', $schedule->loan_id, $body);
-                        $body = str_replace('{paymentAmount}',
+                        $body = str_replace(
+                            '{paymentAmount}',
                             round(($schedule->principal + $schedule->interest + $schedule->fees + $schedule->penalty) - ($schedule->principal_paid + $schedule->interest_paid + $schedule->penalty_paid + $schedule->fees_paid),
-                                2), $body);
+                                2
+                            ),
+                            $body
+                        );
                         $body = str_replace('{paymentDate}', $schedule->due_date, $body);
                         $body = str_replace('{loanPayments}', $schedule->payments, $body);
-                        $body = str_replace('{loanDue}',
-                            round($schedule->total_principal - $schedule->total_principal_waived + $schedule->total_interest - $schedule->total_interest_waived + $schedule->total_fees - $schedule->total_fees_waived + $schedule->total_penalty - $schedule->total_penalty_waived, 2), $body);
-                        $body = str_replace('{loanBalance}',
-                            round($schedule->total_principal - $schedule->total_principal_waived + $schedule->total_interest - $schedule->total_interest_waived + $schedule->total_fees - $schedule->total_fees_waived + $schedule->total_penalty - $schedule->total_penalty_waived - $schedule->payments,
-                                2), $body);
+                        $body = str_replace(
+                            '{loanDue}',
+                            round($schedule->total_principal - $schedule->total_principal_waived + $schedule->total_interest - $schedule->total_interest_waived + $schedule->total_fees - $schedule->total_fees_waived + $schedule->total_penalty - $schedule->total_penalty_waived, 2),
+                            $body
+                        );
+                        $body = str_replace(
+                            '{loanBalance}',
+                            round(
+                                $schedule->total_principal - $schedule->total_principal_waived + $schedule->total_interest - $schedule->total_interest_waived + $schedule->total_fees - $schedule->total_fees_waived + $schedule->total_penalty - $schedule->total_penalty_waived - $schedule->payments,
+                                2
+                            ),
+                            $body
+                        );
                         Mail::send([], [], function ($message) use ($schedule, $body) {
-                            $message->from(Setting::where('setting_key', 'company_email')->first()->setting_value,
-                                Setting::where('setting_key', 'company_name')->first()->setting_value);
+                            $message->from(
+                                Setting::where('setting_key', 'company_email')->first()->setting_value,
+                                Setting::where('setting_key', 'company_name')->first()->setting_value
+                            );
                             $message->to($schedule->email);
                             $headers = $message->getHeaders();
                             $message->setContentType('text/html');
                             $message->setBody($body);
-                            $message->setSubject(Setting::where('setting_key',
-                                'loan_payment_reminder_subject')->first()->setting_value);
+                            $message->setSubject(Setting::where(
+                                'setting_key',
+                                'loan_payment_reminder_subject'
+                            )->first()->setting_value);
                         });
                         $mail = new Email();
                         //$mail->user_id = Sentinel::getUser()->id;
                         $mail->message = $body;
-                        $mail->subject = Setting::where('setting_key',
-                            'loan_payment_reminder_subject')->first()->setting_value;
+                        $mail->subject = Setting::where(
+                            'setting_key',
+                            'loan_payment_reminder_subject'
+                        )->first()->setting_value;
                         $mail->recipients = 1;
                         $mail->send_to = $schedule->first_name . ' ' . $schedule->last_name . '(' . $schedule->unique_number . ')';
                         $mail->save();
@@ -105,8 +122,10 @@ class ProcessReminders extends Command
 
                     //check if borrower has mobile
                     if (!empty($schedule->mobile)) {
-                        $body = Setting::where('setting_key',
-                            'loan_payment_reminder_email_template')->first()->setting_value;
+                        $body = Setting::where(
+                            'setting_key',
+                            'loan_payment_reminder_email_template'
+                        )->first()->setting_value;
                         $body = str_replace('{borrowerTitle}', $schedule->title, $body);
                         $body = str_replace('{borrowerFirstName}', $schedule->first_name, $body);
                         $body = str_replace('{borrowerLastName}', $schedule->last_name, $body);
@@ -116,26 +135,50 @@ class ProcessReminders extends Command
                         $body = str_replace('{borrowerPhone}', $schedule->phone, $body);
                         $body = str_replace('{borrowerEmail}', $schedule->email, $body);
                         $body = str_replace('{loanNumber}', $schedule->loan_id, $body);
-                        $body = str_replace('{paymentAmount}',
+                        $body = str_replace(
+                            '{paymentAmount}',
                             round(($schedule->principal + $schedule->interest + $schedule->fees + $schedule->penalty) - ($schedule->principal_paid + $schedule->interest_paid + $schedule->penalty_paid + $schedule->fees_paid),
-                                2), $body);
+                                2
+                            ),
+                            $body
+                        );
                         $body = str_replace('{paymentDate}', $schedule->due_date, $body);
                         $body = str_replace('{loanPayments}', $schedule->payments, $body);
-                        $body = str_replace('{loanDue}',
-                            round($schedule->total_principal - $schedule->total_principal_waived + $schedule->total_interest - $schedule->total_interest_waived + $schedule->total_fees - $schedule->total_fees_waived + $schedule->total_penalty - $schedule->total_penalty_waived, 2), $body);
-                        $body = str_replace('{loanBalance}',
-                            round($schedule->total_principal - $schedule->total_principal_waived + $schedule->total_interest - $schedule->total_interest_waived + $schedule->total_fees - $schedule->total_fees_waived + $schedule->total_penalty - $schedule->total_penalty_waived - $schedule->payments,
-                                2), $body);
+                        $body = str_replace(
+                            '{loanDue}',
+                            round($schedule->total_principal - $schedule->total_principal_waived + $schedule->total_interest - $schedule->total_interest_waived + $schedule->total_fees - $schedule->total_fees_waived + $schedule->total_penalty - $schedule->total_penalty_waived, 2),
+                            $body
+                        );
+                        $body = str_replace(
+                            '{loanBalance}',
+                            round(
+                                $schedule->total_principal - $schedule->total_principal_waived + $schedule->total_interest - $schedule->total_interest_waived + $schedule->total_fees - $schedule->total_fees_waived + $schedule->total_penalty - $schedule->total_penalty_waived - $schedule->payments,
+                                2
+                            ),
+                            $body
+                        );
                         $body = strip_tags($body);
                         $active_sms = Setting::where('setting_key', 'active_sms')->first()->setting_value;
-                        GeneralHelper::send_sms($schedule->mobile, $body);
-                        $sms = new Sms();
-                        //$sms->user_id = Sentinel::getUser()->id;
-                        $sms->message = $body;
-                        $sms->gateway = $active_sms;
-                        $sms->recipients = 1;
-                        $sms->send_to = $schedule->first_name . ' ' . $schedule->last_name . '(' . $schedule->unique_number . ')';
-                        $sms->save();
+                        //Handle send_sms here
+                        //GeneralHelper::send_sms($schedule->mobile, $body);
+                        try {
+                            $smsGateway = \Modules\Communication\Entities\SmsGateway::first();
+                            $arkesel = $smsGateway
+                                ? new \Modules\Client\Drivers\Arkesel($smsGateway->key, $smsGateway->sender)
+                                : new \Modules\Client\Drivers\Arkesel();
+                            $formattedMobile = '233' . ltrim($schedule->mobile, '0');
+                            $response = $arkesel->send($body, [$formattedMobile]);
+                        } catch (\Exception $e) {
+                            $response = $e->getMessage();
+                            \Log::error('Arkesel SMS error: ' . $response);
+                        }
+                        // $sms = new Sms();
+                        // //$sms->user_id = Sentinel::getUser()->id;
+                        // $sms->message = $body;
+                        // $sms->gateway = $active_sms;
+                        // $sms->recipients = 1;
+                        // $sms->send_to = $schedule->first_name . ' ' . $schedule->last_name . '(' . $schedule->unique_number . ')';
+                        // $sms->save();
                     }
                 }
             }
@@ -149,8 +192,10 @@ class ProcessReminders extends Command
 
                     //check if borrower has email
                     if (!empty($schedule->email)) {
-                        $body = Setting::where('setting_key',
-                            'missed_payment_email_template')->first()->setting_value;
+                        $body = Setting::where(
+                            'setting_key',
+                            'missed_payment_email_template'
+                        )->first()->setting_value;
                         $body = str_replace('{borrowerTitle}', $schedule->title, $body);
                         $body = str_replace('{borrowerFirstName}', $schedule->first_name, $body);
                         $body = str_replace('{borrowerLastName}', $schedule->last_name, $body);
@@ -160,31 +205,49 @@ class ProcessReminders extends Command
                         $body = str_replace('{borrowerPhone}', $schedule->phone, $body);
                         $body = str_replace('{borrowerEmail}', $schedule->email, $body);
                         $body = str_replace('{loanNumber}', $schedule->loan_id, $body);
-                        $body = str_replace('{paymentAmount}',
+                        $body = str_replace(
+                            '{paymentAmount}',
                             round(($schedule->principal + $schedule->interest + $schedule->fees + $schedule->penalty) - ($schedule->principal_paid + $schedule->interest_paid + $schedule->penalty_paid + $schedule->fees_paid),
-                                2), $body);
+                                2
+                            ),
+                            $body
+                        );
                         $body = str_replace('{paymentDate}', $schedule->due_date, $body);
                         $body = str_replace('{loanPayments}', $schedule->payments, $body);
-                        $body = str_replace('{loanDue}',
-                            round($schedule->total_principal - $schedule->total_principal_waived + $schedule->total_interest - $schedule->total_interest_waived + $schedule->total_fees - $schedule->total_fees_waived + $schedule->total_penalty - $schedule->total_penalty_waived, 2), $body);
-                        $body = str_replace('{loanBalance}',
-                            round($schedule->total_principal - $schedule->total_principal_waived + $schedule->total_interest - $schedule->total_interest_waived + $schedule->total_fees - $schedule->total_fees_waived + $schedule->total_penalty - $schedule->total_penalty_waived - $schedule->payments,
-                                2), $body);
+                        $body = str_replace(
+                            '{loanDue}',
+                            round($schedule->total_principal - $schedule->total_principal_waived + $schedule->total_interest - $schedule->total_interest_waived + $schedule->total_fees - $schedule->total_fees_waived + $schedule->total_penalty - $schedule->total_penalty_waived, 2),
+                            $body
+                        );
+                        $body = str_replace(
+                            '{loanBalance}',
+                            round(
+                                $schedule->total_principal - $schedule->total_principal_waived + $schedule->total_interest - $schedule->total_interest_waived + $schedule->total_fees - $schedule->total_fees_waived + $schedule->total_penalty - $schedule->total_penalty_waived - $schedule->payments,
+                                2
+                            ),
+                            $body
+                        );
                         Mail::send([], [], function ($message) use ($schedule, $body) {
-                            $message->from(Setting::where('setting_key', 'company_email')->first()->setting_value,
-                                Setting::where('setting_key', 'company_name')->first()->setting_value);
+                            $message->from(
+                                Setting::where('setting_key', 'company_email')->first()->setting_value,
+                                Setting::where('setting_key', 'company_name')->first()->setting_value
+                            );
                             $message->to($schedule->email);
                             $headers = $message->getHeaders();
                             $message->setContentType('text/html');
                             $message->setBody($body);
-                            $message->setSubject(Setting::where('setting_key',
-                                'missed_payment_email_subject')->first()->setting_value);
+                            $message->setSubject(Setting::where(
+                                'setting_key',
+                                'missed_payment_email_subject'
+                            )->first()->setting_value);
                         });
                         $mail = new Email();
                         //$mail->user_id = Sentinel::getUser()->id;
                         $mail->message = $body;
-                        $mail->subject = Setting::where('setting_key',
-                            'missed_payment_email_subject')->first()->setting_value;
+                        $mail->subject = Setting::where(
+                            'setting_key',
+                            'missed_payment_email_subject'
+                        )->first()->setting_value;
                         $mail->recipients = 1;
                         $mail->send_to = $schedule->first_name . ' ' . $schedule->last_name . '(' . $schedule->unique_number . ')';
                         $mail->save();
@@ -200,8 +263,10 @@ class ProcessReminders extends Command
 
                     //check if borrower has email
                     if (!empty($schedule->mobile)) {
-                        $body = Setting::where('setting_key',
-                            'missed_payment_sms_template')->first()->setting_value;
+                        $body = Setting::where(
+                            'setting_key',
+                            'missed_payment_sms_template'
+                        )->first()->setting_value;
                         $body = str_replace('{borrowerTitle}', $schedule->title, $body);
                         $body = str_replace('{borrowerFirstName}', $schedule->first_name, $body);
                         $body = str_replace('{borrowerLastName}', $schedule->last_name, $body);
@@ -211,19 +276,43 @@ class ProcessReminders extends Command
                         $body = str_replace('{borrowerPhone}', $schedule->phone, $body);
                         $body = str_replace('{borrowerEmail}', $schedule->email, $body);
                         $body = str_replace('{loanNumber}', $schedule->loan_id, $body);
-                        $body = str_replace('{paymentAmount}',
+                        $body = str_replace(
+                            '{paymentAmount}',
                             round(($schedule->principal + $schedule->interest + $schedule->fees + $schedule->penalty) - ($schedule->principal_paid + $schedule->interest_paid + $schedule->penalty_paid + $schedule->fees_paid),
-                                2), $body);
+                                2
+                            ),
+                            $body
+                        );
                         $body = str_replace('{paymentDate}', $schedule->due_date, $body);
                         $body = str_replace('{loanPayments}', $schedule->payments, $body);
-                        $body = str_replace('{loanDue}',
-                            round($schedule->total_principal - $schedule->total_principal_waived + $schedule->total_interest - $schedule->total_interest_waived + $schedule->total_fees - $schedule->total_fees_waived + $schedule->total_penalty - $schedule->total_penalty_waived, 2), $body);
-                        $body = str_replace('{loanBalance}',
-                            round($schedule->total_principal - $schedule->total_principal_waived + $schedule->total_interest - $schedule->total_interest_waived + $schedule->total_fees - $schedule->total_fees_waived + $schedule->total_penalty - $schedule->total_penalty_waived - $schedule->payments,
-                                2), $body);
+                        $body = str_replace(
+                            '{loanDue}',
+                            round($schedule->total_principal - $schedule->total_principal_waived + $schedule->total_interest - $schedule->total_interest_waived + $schedule->total_fees - $schedule->total_fees_waived + $schedule->total_penalty - $schedule->total_penalty_waived, 2),
+                            $body
+                        );
+                        $body = str_replace(
+                            '{loanBalance}',
+                            round(
+                                $schedule->total_principal - $schedule->total_principal_waived + $schedule->total_interest - $schedule->total_interest_waived + $schedule->total_fees - $schedule->total_fees_waived + $schedule->total_penalty - $schedule->total_penalty_waived - $schedule->payments,
+                                2
+                            ),
+                            $body
+                        );
                         $body = strip_tags($body);
                         $active_sms = Setting::where('setting_key', 'active_sms')->first()->setting_value;
-                        GeneralHelper::send_sms($schedule->mobile, $body);
+                        //Handle send_sms here
+                        //GeneralHelper::send_sms($schedule->mobile, $body);
+                        try {
+                            $smsGateway = \Modules\Communication\Entities\SmsGateway::first();
+                            $arkesel = $smsGateway
+                                ? new \Modules\Client\Drivers\Arkesel($smsGateway->key, $smsGateway->sender)
+                                : new \Modules\Client\Drivers\Arkesel();
+                            $formattedMobile = '233' . ltrim($schedule->mobile, '0');
+                            $response = $arkesel->send($body, [$formattedMobile]);
+                        } catch (\Exception $e) {
+                            $response = $e->getMessage();
+                            \Log::error('Arkesel SMS error: ' . $response);
+                        }
                         $sms = new Sms();
                         //$sms->user_id = Sentinel::getUser()->id;
                         $sms->message = $body;

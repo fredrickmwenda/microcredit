@@ -4,14 +4,12 @@ namespace Modules\Loan\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Modules\Loan\Entities\Loan;
 use Modules\Loan\Entities\LoanLinkedCharge;
 use Modules\Loan\Entities\LoanTransaction;
 use Modules\Loan\Events\TransactionUpdated;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
+
 
 class ProcessPenalties extends Command
 {
@@ -20,7 +18,7 @@ class ProcessPenalties extends Command
      *
      * @var string
      */
-    protected $name = 'loan_penalties:process';
+    protected $name = 'loan:penalties-process';
 
     /**
      * The console command description.

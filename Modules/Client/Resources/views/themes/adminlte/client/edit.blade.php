@@ -255,6 +255,19 @@
                         </div>
                     </div>
 
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Signature Pad</label>
+                            <input type="file" name="signature_pad" id="signature_pad" class="form-control @error('signature_pad') is-invalid @enderror">
+                                @error('signature_pad')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            
+                        </div>
+                    </div>
+
                     <div class="col-md-6" v-if="client_type_id =='2'">
                         <div class="form-group">
                             <label for="client_group_id" class="control-label">{{trans_choice('client::general.group',1)}}</label>

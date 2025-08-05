@@ -48,7 +48,7 @@ class LoanStatusChangedCampaigns implements ShouldQueue
         if ($loan->status == 'approved' && $previous_status == 'submitted') {
             $communication_campaign_business_rule_id = 17;
         }
-        if ($loan->status == 'active' && $previous_status=='approved') {
+        if ($loan->status == 'active' && $previous_status == 'approved') {
             $communication_campaign_business_rule_id = 18;
         }
         if ($loan->status == 'rescheduled') {
@@ -57,7 +57,7 @@ class LoanStatusChangedCampaigns implements ShouldQueue
         if ($loan->status == 'closed' && $previous_status == 'active') {
             $communication_campaign_business_rule_id = 20;
         }
-        if($loan_transaction_id != 0){
+        if ($loan_transaction_id != 0) {
             $communication_campaign_business_rule_id = 31;
         }
         //->where('loan_product_id', $loan->loan_product_id)
@@ -65,8 +65,22 @@ class LoanStatusChangedCampaigns implements ShouldQueue
         foreach ($campaigns as $key) {
             if ($key->campaign_type == 'sms') {
                 if (!empty($loan->client->mobile)) {
-                    $description = template_replace_tags(["body" => $key->description, "client_id" => $loan->client_id, "loan_id" => $loan->id,"loan_transaction_id" => $loan_transaction_id]);
-                    $response = send_sms($loan->client->mobile, $description, $key->sms_gateway_id);
+                    $description = template_replace_tags(["body" => $key->description, "client_id" => $loan->client_id, "loan_id" => $loan->id, "loan_transaction_id" => $loan_transaction_id]);
+                    //Handle send_sms here
+                    try {
+                        $smsGateway = $key->sms_gateway_id
+                            ? \Modules\Communication\Entities\SmsGateway::find($key->sms_gateway_id)
+                            : null;
+                        $arkesel = $smsGateway
+                            ? new \Modules\Client\Drivers\Arkesel($smsGateway->key, $smsGateway->sender)
+                            : new \Modules\Client\Drivers\Arkesel();
+                        $formattedMobile = '233' . ltrim($loan->client->mobile, '0');
+                        $response = $arkesel->send($description, [$formattedMobile]);
+                    } catch (\Exception $e) {
+                        $response = $e->getMessage();
+                        \Log::error('Arkesel SMS error: ' . $response);
+                    }
+                    // $response = send_sms($loan->client->mobile, $description, $key->sms_gateway_id);
                     //log sms
                     log_campaign([
                         'created_by_id' => Auth::id(),
@@ -94,9 +108,11 @@ class LoanStatusChangedCampaigns implements ShouldQueue
                         if ($attachment_type == '1') {
                             //loan schedule
                             $pdf = PDF::loadView('loan::loan_schedule.pdf', compact('loan'))->setPaper('a4', 'landscape');
-                            $message->attachData($pdf->output(),
+                            $message->attachData(
+                                $pdf->output(),
                                 trans_choice('loan::general.loan', 1) . ' ' . trans_choice('loan::general.schedule', 1) . ".pdf",
-                                ['mime' => 'application/pdf']);
+                                ['mime' => 'application/pdf']
+                            );
                         }
                     });
                     //log sms

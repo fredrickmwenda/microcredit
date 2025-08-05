@@ -53,12 +53,26 @@
                                      alt="User profile picture">
                             @endif
                         </div>
+
+
                         <h3 class="profile-username text-center">
                             @if(!empty($client->title))
                                 {{$client->title->name}}
                             @endif
                             {{$client->name}}
                         </h3>
+                        <div class="text-center">
+                            @if(!empty($client->signature_pad))
+                                <a href="{{asset('uploads/clients/'.$client->signature_pad)}}"
+                                   class="fancybox">
+                                    <img
+                                            class="profile-user-img img-fluid img-circle"
+                                            src="{{asset('uploads/clients/'.$client->signature_pad)}}"
+                                            alt="Client Signature Pad">
+                                </a>
+                            
+                            @endif
+                        </div>
                         @if(!empty($client->profession->name))
                             <p class="text-muted text-center">{{$client->profession->name}}</p>
                         @endif

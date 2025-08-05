@@ -28,6 +28,32 @@ class Kernel extends ConsoleKernel
         $schedule->command('events:recur')->daily();
         //$schedule->command('penalties:process')->daily();
         $schedule->command('savings:interest')->daily();
+        $schedule->command('loan:close-zero-balance')
+            ->daily()
+            ->appendOutputTo(storage_path('logs/scheduler.log'));
+        //process scheduled campai9gns 
+        //campaigns:process
+        $schedule->command('communication:process-scheduled-campaigns')
+            ->daily()
+            ->appendOutputTo(storage_path('logs/scheduler.log'));
+
+        //processing penalties on due loans       
+        $schedule->command('loan:penalties-process')
+            ->daily()
+            ->appendOutputTo(storage_path('logs/scheduler.log'));
+        $schedule->command('savings:process_interest')
+            ->daily()
+            ->appendOutputTo(storage_path('logs/scheduler.log'));
+
+        $schedule->command('savings:calculate_interest')
+            ->daily()
+            ->appendOutputTo(storage_path('logs/scheduler.log'));
+        
+        //process reminders
+        $schedule->command('reminders:process')
+            ->daily()
+            ->appendOutputTo(storage_path('logs/scheduler.log'));
+            
     }
 
     /**

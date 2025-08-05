@@ -41,7 +41,6 @@ class ClientController extends Controller
         $this->middleware(['permission:client.clients.user.create'])->only(['store_user', 'create_user']);
         $this->middleware(['permission:client.clients.user.destroy'])->only(['destroy_user']);
         $this->middleware(['permission:client.clients.activate'])->only(['change_status']);
-
     }
 
     /**
@@ -77,11 +76,11 @@ class ClientController extends Controller
             ->when($client_group_id, function ($query) use ($client_group_id) {
                 $query->where('clients.client_group_id', $client_group_id);
             });
-        
+
         $data = $data->selectRaw("branches.name branch,concat(users.first_name,' ',users.last_name) staff,clients.id,client_group_id,client_groups.name client_group_name,clients.loan_officer_id,clients.first_name,clients.last_name,clients.gender,clients.mobile,clients.email,clients.external_id,clients.status")
             ->paginate($perPage)
             ->appends($request->input());
-        return theme_view('client::client.index', compact('data','client_groups'));
+        return theme_view('client::client.index', compact('data', 'client_groups'));
     }
 
     public function get_clients(Request $request)
@@ -110,10 +109,8 @@ class ClientController extends Controller
             return $action;
         })->editColumn('id', function ($data) {
             return '<a href="' . url('client/' . $data->id . '/show') . '">' . $data->id . '</a>';
-
         })->editColumn('name', function ($data) {
             return '<a href="' . url('client/' . $data->id . '/show') . '">' . $data->name . '</a>';
-
         })->editColumn('gender', function ($data) {
             if ($data->gender == "male") {
                 return trans_choice('core::general.male', 1);
@@ -159,56 +156,54 @@ class ClientController extends Controller
             ->when($status, function ($query) use ($status) {
                 $query->where('status', $status);
             })->get();
-        
+
         $data = array();
-        foreach($dormant_clients as $key=>$client){
+        foreach ($dormant_clients as $key => $client) {
             $clientLastLoanTransaction = DB::table('loans')
-                ->leftJoin("loan_transactions","loans.id","loan_transactions.loan_id")
+                ->leftJoin("loan_transactions", "loans.id", "loan_transactions.loan_id")
                 ->selectRaw("loan_transactions.id,loan_transactions.name,loan_transactions.amount,loan_transactions.debit,loan_transactions.credit,loan_transactions.submitted_on")
-                ->where("loan_transactions.id","!=",null)
-                ->where("loans.client_id","=",$client->id)
-                ->orderBy("loan_transactions.submitted_on",'desc')
+                ->where("loan_transactions.id", "!=", null)
+                ->where("loans.client_id", "=", $client->id)
+                ->orderBy("loan_transactions.submitted_on", 'desc')
                 ->first();
             $clientLastSavingTransaction = DB::table('savings')
-                ->leftJoin("savings_transactions","savings.id","savings_transactions.savings_id")
+                ->leftJoin("savings_transactions", "savings.id", "savings_transactions.savings_id")
                 ->selectRaw("savings_transactions.id,savings_transactions.name,savings_transactions.amount,savings_transactions.debit,savings_transactions.credit,savings_transactions.submitted_on")
-                ->where("savings_transactions.id","!=",null)
-                ->where("savings_transactions.id","!=",null)
-                ->where("savings.client_id","=",$client->id)
-                ->orderBy("savings_transactions.submitted_on",'desc')
+                ->where("savings_transactions.id", "!=", null)
+                ->where("savings_transactions.id", "!=", null)
+                ->where("savings.client_id", "=", $client->id)
+                ->orderBy("savings_transactions.submitted_on", 'desc')
                 ->first();
             $clientLastShareTransaction = DB::table('shares')
-                ->leftJoin("share_transactions","shares.id","share_transactions.share_id")
+                ->leftJoin("share_transactions", "shares.id", "share_transactions.share_id")
                 ->selectRaw("share_transactions.id,share_transactions.name,share_transactions.amount,share_transactions.debit,share_transactions.credit,share_transactions.submitted_on")
-                ->where("share_transactions.id","!=",null)
-                ->where("shares.client_id","=",$client->id)
-                ->orderBy("share_transactions.submitted_on",'desc')
+                ->where("share_transactions.id", "!=", null)
+                ->where("shares.client_id", "=", $client->id)
+                ->orderBy("share_transactions.submitted_on", 'desc')
                 ->first();
             $dormant_clients[$key]->last_transaction_date = $clientLastSavingTransaction ? $clientLastSavingTransaction->submitted_on : 'N/A';
             $dormant_clients[$key]->amount = $clientLastSavingTransaction ? $clientLastSavingTransaction->amount : 'N/A';
             $dormant_clients[$key]->transaction_name = $clientLastSavingTransaction ? $clientLastSavingTransaction->name : "N/A";
-            if($clientLastSavingTransaction){
-                $now = time(); 
+            if ($clientLastSavingTransaction) {
+                $now = time();
                 $your_date = strtotime($dormant_clients[$key]->last_transaction_date);
                 $dateDiff = $now - $your_date;
                 $dormant_clients[$key]->dormant_duration = round($dateDiff / (60 * 60 * 24));
-            }
-            else{
+            } else {
                 $dormant_clients[$key]->dormant_duration = "N/A";
             }
 
-            if($dormant_duration == ""){
-                array_push($data,$dormant_clients[$key]);
-            }
-            elseif($dormant_duration == "N/A" && $dormant_clients[$key]->dormant_duration == "N/A"){
-                array_push($data,$dormant_clients[$key]);
-            }elseif($dormant_duration == 30 && $dormant_clients[$key]->dormant_duration > 30){
-                array_push($data,$dormant_clients[$key]);
-            }elseif($dormant_duration == 60 && $dormant_clients[$key]->dormant_duration > 60){
-                array_push($data,$dormant_clients[$key]);
-            }elseif($dormant_duration == 90 && $dormant_clients[$key]->dormant_duration > 90){
-                array_push($data,$dormant_clients[$key]);
-            }else{
+            if ($dormant_duration == "") {
+                array_push($data, $dormant_clients[$key]);
+            } elseif ($dormant_duration == "N/A" && $dormant_clients[$key]->dormant_duration == "N/A") {
+                array_push($data, $dormant_clients[$key]);
+            } elseif ($dormant_duration == 30 && $dormant_clients[$key]->dormant_duration > 30) {
+                array_push($data, $dormant_clients[$key]);
+            } elseif ($dormant_duration == 60 && $dormant_clients[$key]->dormant_duration > 60) {
+                array_push($data, $dormant_clients[$key]);
+            } elseif ($dormant_duration == 90 && $dormant_clients[$key]->dormant_duration > 90) {
+                array_push($data, $dormant_clients[$key]);
+            } else {
                 //array_push($data,$dormant_clients[$key]);
             }
         }
@@ -216,10 +211,10 @@ class ClientController extends Controller
         //$dormant_clients = $dormant_clients->paginate($perPage)
         //    ->appends($request->input());
         //return $clientsData;
-        return theme_view('client::client.dormant_clients', compact('dormant_clients','dormant_duration'));
+        return theme_view('client::client.dormant_clients', compact('dormant_clients', 'dormant_duration'));
     }
 
-   
+
 
     public function getClientTotalDepositReport(Request $request)
     {
@@ -247,16 +242,14 @@ class ClientController extends Controller
                     $query->whereDate('savings_transactions.submitted_on', '>=', $start_date);
                 })
                 ->when($end_date, function ($query) use ($end_date) {
-                    $query->whereDate('savings_transactions.submitted_on', '<=',$end_date);
+                    $query->whereDate('savings_transactions.submitted_on', '<=', $end_date);
                 })
                 ->groupBy('savings_transactions.submitted_on');
 
             return DataTables::of($query)->editColumn('id', function ($data) {
                 return '<a href="' . url('client/' . $data->id . '/show') . '">' . $data->id . '</a>';
-
             })->editColumn('name', function ($data) {
                 return '<a href="' . url('client/' . $data->id . '/show') . '">' . $data->name . '</a>';
-
             })->editColumn('status', function ($data) {
                 if ($data->status == "pending") {
                     return trans_choice('core::general.pending', 1);
@@ -278,7 +271,7 @@ class ClientController extends Controller
 
         $client_groups = ClientGroup::all();
         $clients = Client::all();
-        return theme_view('client::client.client_deposit_report', compact('client_groups','clients'));
+        return theme_view('client::client.client_deposit_report', compact('client_groups', 'clients'));
     }
 
     public function getClientBalanceReport(Request $request)
@@ -305,10 +298,10 @@ class ClientController extends Controller
                     $query->where('clients.id', $client_id);
                 })->get();
 
-            foreach($queryClients as $key=>$client){
+            foreach ($queryClients as $key => $client) {
 
                 $savingBalance = DB::table("savings")
-                    ->leftJoin("savings_transactions","savings.id","savings_transactions.savings_id")
+                    ->leftJoin("savings_transactions", "savings.id", "savings_transactions.savings_id")
                     ->selectRaw("COALESCE(sum(savings_transactions.debit),0) saving_debit, COALESCE(sum(savings_transactions.credit),0) saving_credit,
                     savings_transactions.savings_id, (COALESCE(sum(savings_transactions.credit),0) - COALESCE(sum(savings_transactions.debit),0)) saving_balance,savings.client_id")
                     ->where("savings.client_id", $client->id)
@@ -316,30 +309,30 @@ class ClientController extends Controller
                         $query->whereDate('savings_transactions.submitted_on', '>=', $start_date);
                     })
                     ->when($end_date, function ($query) use ($end_date) {
-                        $query->whereDate('savings_transactions.submitted_on', '<=',$end_date);
+                        $query->whereDate('savings_transactions.submitted_on', '<=', $end_date);
                     })
                     ->groupBy('savings.client_id')->first();
-                $queryClients[$key]->saving_balance = $savingBalance != null ? number_format($savingBalance->saving_balance,2) : 0.00;
+                $queryClients[$key]->saving_balance = $savingBalance != null ? number_format($savingBalance->saving_balance, 2) : 0.00;
 
 
                 //not applicable there are many conditions
-                
+
                 $loanBalance = DB::table("loans")
-                    ->leftJoin("loan_transactions","loans.id","loan_transactions.loan_id")
+                    ->leftJoin("loan_transactions", "loans.id", "loan_transactions.loan_id")
                     ->selectRaw("COALESCE(sum(loan_transactions.debit),0) loan_debit, COALESCE(sum(loan_transactions.credit),0) loan_credit,
                     loan_transactions.loan_id, (COALESCE(sum(loan_transactions.debit),0) - COALESCE(sum(loan_transactions.credit),0)) loan_balance,loans.client_id,
                     loan_transactions.loan_transaction_type_id")
                     ->where("loans.client_id", $client->id)
-                    ->whereIn("loan_transactions.loan_transaction_type_id", [1,2,4,6,8,9,10,11])
+                    ->whereIn("loan_transactions.loan_transaction_type_id", [1, 2, 4, 6, 8, 9, 10, 11])
                     ->when($start_date, function ($query) use ($start_date) {
                         $query->whereDate('loan_transactions.submitted_on', '>=', $start_date);
                     })
                     ->when($end_date, function ($query) use ($end_date) {
-                        $query->whereDate('loan_transactions.submitted_on', '<=',$end_date);
+                        $query->whereDate('loan_transactions.submitted_on', '<=', $end_date);
                     })
                     ->groupBy('loans.client_id')->first();
-                $queryClients[$key]->loan_balance = $loanBalance != null ? number_format($loanBalance->loan_balance,2) : 0.00;
-                
+                $queryClients[$key]->loan_balance = $loanBalance != null ? number_format($loanBalance->loan_balance, 2) : 0.00;
+
                 /*$data = DB::table("loans")
                         ->leftJoin("clients", "clients.id", "loans.client_id")
                         ->leftJoin("loan_repayment_schedules", "loan_repayment_schedules.loan_id", "loans.id")
@@ -360,123 +353,125 @@ class ClientController extends Controller
                 }else{
                     $queryClients[$key]->loan_balance = 0.00;
                 }*/
-
             }
 
             return DataTables::of($queryClients)->editColumn('id', function ($data) {
                 return '<a href="' . url('client/' . $data->id . '/show') . '">' . $data->id . '</a>';
-
             })->editColumn('name', function ($data) {
                 return '<a href="' . url('client/' . $data->id . '/show') . '">' . $data->name . '</a>';
-
             })
-            ->editColumn('branch', function ($data) {
-                return '<a href="' . url('branch/' . $data->branch_id . '/show') . '">' . $data->branch . '</a>';
-    
-            })->editColumn('status', function ($data) {
-                if ($data->status == "pending") {
-                    return trans_choice('core::general.pending', 1);
-                }
-                if ($data->status == "active") {
-                    return trans_choice('core::general.active', 1);
-                }
-                if ($data->status == "inactive") {
-                    return trans_choice('core::general.inactive', 1);
-                }
-                if ($data->gender == "deceased") {
-                    return trans_choice('client::general.deceased', 1);
-                }
-                if ($data->gender == "unspecified") {
-                    return trans_choice('core::general.unspecified', 1);
-                }
-            })->rawColumns(['id', 'name', 'action','branch'])->make(true);
+                ->editColumn('branch', function ($data) {
+                    return '<a href="' . url('branch/' . $data->branch_id . '/show') . '">' . $data->branch . '</a>';
+                })->editColumn('status', function ($data) {
+                    if ($data->status == "pending") {
+                        return trans_choice('core::general.pending', 1);
+                    }
+                    if ($data->status == "active") {
+                        return trans_choice('core::general.active', 1);
+                    }
+                    if ($data->status == "inactive") {
+                        return trans_choice('core::general.inactive', 1);
+                    }
+                    if ($data->gender == "deceased") {
+                        return trans_choice('client::general.deceased', 1);
+                    }
+                    if ($data->gender == "unspecified") {
+                        return trans_choice('core::general.unspecified', 1);
+                    }
+                })->rawColumns(['id', 'name', 'action', 'branch'])->make(true);
         }
         $branches = Branch::all();
         $client_groups = ClientGroup::all();
         $clients = Client::all();
-        return theme_view('client::client.client_balance_report', compact('client_groups','clients','branches'));
+        return theme_view('client::client.client_balance_report', compact('client_groups', 'clients', 'branches'));
     }
 
-    public function getClientInfo(Request $request){
+    public function getClientInfo(Request $request)
+    {
         $client_id = $request->client_id;
         $client = Client::with('loan_officer')->find($client_id);
         return json_encode($client);
     }
 
-    public function getClientStatement(Request $request){
+    public function getClientStatement(Request $request)
+    {
         $branches = Branch::all();
         $client_groups = ClientGroup::all();
         $clients = Client::all();
-        return theme_view('client::client.client_balance_statement', compact('client_groups','clients','branches'));
+        return theme_view('client::client.client_balance_statement', compact('client_groups', 'clients', 'branches'));
     }
 
-    public function getSavingOpeningBalance($client_id,$end_date){
+    public function getSavingOpeningBalance($client_id, $end_date)
+    {
         $openingBalance = DB::table("savings")
-        ->leftJoin("savings_transactions","savings.id","savings_transactions.savings_id")
-        ->selectRaw("COALESCE(sum(savings_transactions.debit),0) saving_debit, COALESCE(sum(savings_transactions.credit),0) saving_credit,
+            ->leftJoin("savings_transactions", "savings.id", "savings_transactions.savings_id")
+            ->selectRaw("COALESCE(sum(savings_transactions.debit),0) saving_debit, COALESCE(sum(savings_transactions.credit),0) saving_credit,
         savings_transactions.savings_id, (COALESCE(sum(savings_transactions.credit),0) - COALESCE(sum(savings_transactions.debit),0)) saving_balance,savings.client_id")
-        ->where("savings.client_id", $client_id)
-        ->when($end_date, function ($query) use ($end_date) {
-            $query->whereDate('savings_transactions.submitted_on', '<',$end_date);
-        })
-        ->groupBy('savings.client_id')->first();
+            ->where("savings.client_id", $client_id)
+            ->when($end_date, function ($query) use ($end_date) {
+                $query->whereDate('savings_transactions.submitted_on', '<', $end_date);
+            })
+            ->groupBy('savings.client_id')->first();
 
         return $openingBalance != null ? $openingBalance->saving_balance : 0.00;
     }
 
-    public function getSavingClosingBalance($client_id,$end_date){
+    public function getSavingClosingBalance($client_id, $end_date)
+    {
         $closingBalance = DB::table("savings")
-        ->leftJoin("savings_transactions","savings.id","savings_transactions.savings_id")
-        ->selectRaw("COALESCE(sum(savings_transactions.debit),0) saving_debit, COALESCE(sum(savings_transactions.credit),0) saving_credit,
+            ->leftJoin("savings_transactions", "savings.id", "savings_transactions.savings_id")
+            ->selectRaw("COALESCE(sum(savings_transactions.debit),0) saving_debit, COALESCE(sum(savings_transactions.credit),0) saving_credit,
         savings_transactions.savings_id, (COALESCE(sum(savings_transactions.credit),0) - COALESCE(sum(savings_transactions.debit),0)) saving_balance,savings.client_id")
-        ->where("savings.client_id", $client_id)
-        ->when($end_date, function ($query) use ($end_date) {
-            $query->whereDate('savings_transactions.submitted_on', '<=',$end_date);
-        })
-        ->groupBy('savings.client_id')->first();
-        
+            ->where("savings.client_id", $client_id)
+            ->when($end_date, function ($query) use ($end_date) {
+                $query->whereDate('savings_transactions.submitted_on', '<=', $end_date);
+            })
+            ->groupBy('savings.client_id')->first();
+
         return $closingBalance != null ? $closingBalance->saving_balance : 0.00;
     }
 
-    public function getClientSavingSummery(Request $request){
+    public function getClientSavingSummery(Request $request)
+    {
         $start_date = $request->start_date;
         $end_date = $request->end_date;
         $client_id = $request->client_id;
-        $openingBalance = $this->getSavingOpeningBalance($client_id,$start_date);
-        $closingBalance = $this->getSavingClosingBalance($client_id,$end_date);
+        $openingBalance = $this->getSavingOpeningBalance($client_id, $start_date);
+        $closingBalance = $this->getSavingClosingBalance($client_id, $end_date);
 
         $transactions = DB::table("savings")
-        ->leftJoin("savings_transactions","savings.id","savings_transactions.savings_id")
-        ->selectRaw("COALESCE(sum(savings_transactions.debit),0) saving_debit, COALESCE(sum(savings_transactions.credit),0) saving_credit,
+            ->leftJoin("savings_transactions", "savings.id", "savings_transactions.savings_id")
+            ->selectRaw("COALESCE(sum(savings_transactions.debit),0) saving_debit, COALESCE(sum(savings_transactions.credit),0) saving_credit,
         savings_transactions.savings_id, (COALESCE(sum(savings_transactions.credit),0) - COALESCE(sum(savings_transactions.debit),0)) saving_balance,savings.client_id,savings_transactions.submitted_on")
-        ->where("savings.client_id", $client_id)
-        ->when($start_date, function ($query) use ($start_date) {
-            $query->whereDate('savings_transactions.submitted_on', '>=',$start_date);
-        })
-        ->when($end_date, function ($query) use ($end_date) {
-            $query->whereDate('savings_transactions.submitted_on', '<=',$end_date);
-        })
-        ->groupBy('savings.client_id')->first();
+            ->where("savings.client_id", $client_id)
+            ->when($start_date, function ($query) use ($start_date) {
+                $query->whereDate('savings_transactions.submitted_on', '>=', $start_date);
+            })
+            ->when($end_date, function ($query) use ($end_date) {
+                $query->whereDate('savings_transactions.submitted_on', '<=', $end_date);
+            })
+            ->groupBy('savings.client_id')->first();
 
         $totalDebit = $transactions != null ? $transactions->saving_debit : 0;
         $totalCredit = $transactions != null ? $transactions->saving_credit : 0;
-        $summery["openingBalance"]=number_format($openingBalance ,2);
-        $summery["closingBalance"]=number_format($closingBalance ,2);
-        $summery["totalDebit"]=number_format($totalDebit ,2);
-        $summery["totalCredit"]=number_format($totalCredit ,2);
+        $summery["openingBalance"] = number_format($openingBalance, 2);
+        $summery["closingBalance"] = number_format($closingBalance, 2);
+        $summery["totalDebit"] = number_format($totalDebit, 2);
+        $summery["totalCredit"] = number_format($totalCredit, 2);
         return json_encode($summery);
     }
 
-    public function getClientSavingStatement(Request $request){
+    public function getClientSavingStatement(Request $request)
+    {
         if ($request->ajax()) {
             $start_date = $request->start_date;
             $end_date = $request->end_date;
             $client_id = $request->client_id;
             $branch_id = $request->branch_id;
-            $openingBalance = $this->getSavingOpeningBalance($client_id,$start_date);
-            $closingBalance = $this->getSavingClosingBalance($client_id,$end_date);
+            $openingBalance = $this->getSavingOpeningBalance($client_id, $start_date);
+            $closingBalance = $this->getSavingClosingBalance($client_id, $end_date);
 
-            
+
             $openingTrx = (object)[
                 "id" => "",
                 "saving_debit" => "",
@@ -504,122 +499,126 @@ class ClientController extends Controller
             $statements = array();
 
             $savingTransactions = DB::table("savings")
-                    ->leftJoin("savings_products","savings.savings_product_id","savings_products.id")
-                    ->leftJoin("savings_transactions","savings.id","savings_transactions.savings_id")
-                    ->leftJoin("savings_transaction_types","savings_transactions.savings_transaction_type_id","savings_transaction_types.id")
-                    ->selectRaw("savings_transactions.id,COALESCE(savings_transactions.debit,0) saving_debit, COALESCE(savings_transactions.credit,0) saving_credit,
+                ->leftJoin("savings_products", "savings.savings_product_id", "savings_products.id")
+                ->leftJoin("savings_transactions", "savings.id", "savings_transactions.savings_id")
+                ->leftJoin("savings_transaction_types", "savings_transactions.savings_transaction_type_id", "savings_transaction_types.id")
+                ->selectRaw("savings_transactions.id,COALESCE(savings_transactions.debit,0) saving_debit, COALESCE(savings_transactions.credit,0) saving_credit,
                     savings_transactions.submitted_on transaction_date,savings_transactions.savings_id,savings.client_id,
                     savings_products.name savings_product_name, savings_transaction_types.name savings_transaction_type_name")
-                    ->where("savings.client_id", $client_id)
-                    ->when($start_date, function ($query) use ($start_date) {
-                        $query->whereDate('savings_transactions.submitted_on', '>=', $start_date);
-                    })
-                    ->when($end_date, function ($query) use ($end_date) {
-                        $query->whereDate('savings_transactions.submitted_on', '<=',$end_date);
-                    })->get();
+                ->where("savings.client_id", $client_id)
+                ->when($start_date, function ($query) use ($start_date) {
+                    $query->whereDate('savings_transactions.submitted_on', '>=', $start_date);
+                })
+                ->when($end_date, function ($query) use ($end_date) {
+                    $query->whereDate('savings_transactions.submitted_on', '<=', $end_date);
+                })->get();
 
-            array_push($statements,$openingTrx);
-            foreach($savingTransactions as $key=>$trx){
-                if($trx->saving_debit !=0){
+            array_push($statements, $openingTrx);
+            foreach ($savingTransactions as $key => $trx) {
+                if ($trx->saving_debit != 0) {
                     $openingBalance = $openingBalance - $trx->saving_debit;
                 }
-                if($trx->saving_credit !=0){
+                if ($trx->saving_credit != 0) {
                     $openingBalance = $openingBalance + $trx->saving_credit;
                 }
                 $savingTransactions[$key]->balance = $openingBalance;
-                array_push($statements,$savingTransactions[$key]);
+                array_push($statements, $savingTransactions[$key]);
             }
-            array_push($statements,$closingTrx);
+            array_push($statements, $closingTrx);
 
             return DataTables::of($statements)->editColumn('savings_id', function ($data) {
                 return '<a href="' . url('saving/' . $data->savings_id . '/show') . '">' . $data->savings_id . '</a>';
             })->editColumn('saving_debit', function ($data) {
-                return $data->saving_debit != "" ? number_format($data->saving_debit,2) : $data->saving_debit;
+                return $data->saving_debit != "" ? number_format($data->saving_debit, 2) : $data->saving_debit;
             })->editColumn('saving_credit', function ($data) {
-                return $data->saving_credit != "" ? number_format($data->saving_credit,2) : $data->saving_credit;
+                return $data->saving_credit != "" ? number_format($data->saving_credit, 2) : $data->saving_credit;
             })->editColumn('balance', function ($data) {
-                return number_format($data->balance,2);
+                return number_format($data->balance, 2);
             })
-            ->editColumn('action', function ($data) {
-                if($data->saving_debit == ""){
-                    return "";
-                }
-                $action = '<a href="' . url('savings/transaction/' . $data->id . '/show') . '" class="btn btn-info"><i class="ri-eye-fill"></i>' . trans_choice('general.detail', 2) . '</a>';
-                return $action;
-            })->rawColumns(['savings_id', 'savings_transaction_type_name', 'savings_product_name','action'])->make(true);
+                ->editColumn('action', function ($data) {
+                    if ($data->saving_debit == "") {
+                        return "";
+                    }
+                    $action = '<a href="' . url('savings/transaction/' . $data->id . '/show') . '" class="btn btn-info"><i class="ri-eye-fill"></i>' . trans_choice('general.detail', 2) . '</a>';
+                    return $action;
+                })->rawColumns(['savings_id', 'savings_transaction_type_name', 'savings_product_name', 'action'])->make(true);
         }
     }
 
-    public function getLoanOpeningBalance($client_id,$end_date){
+    public function getLoanOpeningBalance($client_id, $end_date)
+    {
         $openingBalance = DB::table("loans")
-        ->leftJoin("loan_transactions","loans.id","loan_transactions.loan_id")
-        ->selectRaw("COALESCE(sum(loan_transactions.debit),0) loan_debit, COALESCE(sum(loan_transactions.credit),0) loan_credit,
+            ->leftJoin("loan_transactions", "loans.id", "loan_transactions.loan_id")
+            ->selectRaw("COALESCE(sum(loan_transactions.debit),0) loan_debit, COALESCE(sum(loan_transactions.credit),0) loan_credit,
         loan_transactions.loan_id, (COALESCE(sum(loan_transactions.debit),0) - COALESCE(sum(loan_transactions.credit),0)) loan_balance,loans.client_id")
-        ->where("loans.client_id", $client_id)
-        ->whereIn("loan_transactions.loan_transaction_type_id", [1,2,4,6,8,9,10,11])
-        ->when($end_date, function ($query) use ($end_date) {
-            $query->whereDate('loan_transactions.submitted_on', '<',$end_date);
-        })
-        ->groupBy('loans.client_id')->first();
+            ->where("loans.client_id", $client_id)
+            ->whereIn("loan_transactions.loan_transaction_type_id", [1, 2, 4, 6, 8, 9, 10, 11])
+            ->when($end_date, function ($query) use ($end_date) {
+                $query->whereDate('loan_transactions.submitted_on', '<', $end_date);
+            })
+            ->groupBy('loans.client_id')->first();
 
         return $openingBalance != null ? $openingBalance->loan_balance : 0.00;
     }
 
-    public function getLoanClosingBalance($client_id,$end_date){
+    public function getLoanClosingBalance($client_id, $end_date)
+    {
         $closingBalance = DB::table("loans")
-        ->leftJoin("loan_transactions","loans.id","loan_transactions.loan_id")
-        ->selectRaw("COALESCE(sum(loan_transactions.debit),0) loan_debit, COALESCE(sum(loan_transactions.credit),0) loan_credit,
+            ->leftJoin("loan_transactions", "loans.id", "loan_transactions.loan_id")
+            ->selectRaw("COALESCE(sum(loan_transactions.debit),0) loan_debit, COALESCE(sum(loan_transactions.credit),0) loan_credit,
         loan_transactions.loan_id, (COALESCE(sum(loan_transactions.debit),0) - COALESCE(sum(loan_transactions.credit),0)) loan_balance,loans.client_id")
-        ->where("loans.client_id", $client_id)
-        ->whereIn("loan_transactions.loan_transaction_type_id", [1,2,4,6,8,9,10,11])
-        ->when($end_date, function ($query) use ($end_date) {
-            $query->whereDate('loan_transactions.submitted_on', '<=',$end_date);
-        })
-        ->groupBy('loans.client_id')->first();
-        
+            ->where("loans.client_id", $client_id)
+            ->whereIn("loan_transactions.loan_transaction_type_id", [1, 2, 4, 6, 8, 9, 10, 11])
+            ->when($end_date, function ($query) use ($end_date) {
+                $query->whereDate('loan_transactions.submitted_on', '<=', $end_date);
+            })
+            ->groupBy('loans.client_id')->first();
+
         return $closingBalance != null ? $closingBalance->loan_balance : 0.00;
     }
 
-    public function getClientLoanSummery(Request $request){
+    public function getClientLoanSummery(Request $request)
+    {
         $start_date = $request->start_date;
         $end_date = $request->end_date;
         $client_id = $request->client_id;
-        $openingBalance = $this->getLoanOpeningBalance($client_id,$start_date);
-        $closingBalance = $this->getLoanClosingBalance($client_id,$end_date);
+        $openingBalance = $this->getLoanOpeningBalance($client_id, $start_date);
+        $closingBalance = $this->getLoanClosingBalance($client_id, $end_date);
 
         $transactions = DB::table("loans")
-        ->leftJoin("loan_transactions","loans.id","loan_transactions.loan_id")
-        ->selectRaw("COALESCE(sum(loan_transactions.debit),0) loan_debit, COALESCE(sum(loan_transactions.credit),0) loan_credit,
+            ->leftJoin("loan_transactions", "loans.id", "loan_transactions.loan_id")
+            ->selectRaw("COALESCE(sum(loan_transactions.debit),0) loan_debit, COALESCE(sum(loan_transactions.credit),0) loan_credit,
         loan_transactions.loan_id, (COALESCE(sum(loan_transactions.credit),0) - COALESCE(sum(loan_transactions.debit),0)) loan_balance,loans.client_id")
-        ->where("loans.client_id", $client_id)
-        ->whereIn("loan_transactions.loan_transaction_type_id", [1,2,4,6,8,9,10,11])
-        ->when($start_date, function ($query) use ($start_date) {
-            $query->whereDate('loan_transactions.submitted_on', '>=',$start_date);
-        })
-        ->when($end_date, function ($query) use ($end_date) {
-            $query->whereDate('loan_transactions.submitted_on', '<=',$end_date);
-        })
-        ->groupBy('loans.client_id')->first();
+            ->where("loans.client_id", $client_id)
+            ->whereIn("loan_transactions.loan_transaction_type_id", [1, 2, 4, 6, 8, 9, 10, 11])
+            ->when($start_date, function ($query) use ($start_date) {
+                $query->whereDate('loan_transactions.submitted_on', '>=', $start_date);
+            })
+            ->when($end_date, function ($query) use ($end_date) {
+                $query->whereDate('loan_transactions.submitted_on', '<=', $end_date);
+            })
+            ->groupBy('loans.client_id')->first();
 
         $totalDebit = $transactions != null ? $transactions->loan_debit : 0;
         $totalCredit = $transactions != null ? $transactions->loan_credit : 0;
-        $summery["openingBalance"]=number_format($openingBalance ,2);
-        $summery["closingBalance"]=number_format($closingBalance ,2);
-        $summery["totalDebit"]=number_format($totalDebit ,2);
-        $summery["totalCredit"]=number_format($totalCredit ,2);
+        $summery["openingBalance"] = number_format($openingBalance, 2);
+        $summery["closingBalance"] = number_format($closingBalance, 2);
+        $summery["totalDebit"] = number_format($totalDebit, 2);
+        $summery["totalCredit"] = number_format($totalCredit, 2);
         return json_encode($summery);
     }
 
-    public function getClientLoanStatement(Request $request){
+    public function getClientLoanStatement(Request $request)
+    {
         if ($request->ajax()) {
             $start_date = $request->start_date;
             $end_date = $request->end_date;
             $client_id = $request->client_id;
             $branch_id = $request->branch_id;
-            $openingBalance = $this->getLoanOpeningBalance($client_id,$start_date);
-            $closingBalance = $this->getLoanClosingBalance($client_id,$end_date);
+            $openingBalance = $this->getLoanOpeningBalance($client_id, $start_date);
+            $closingBalance = $this->getLoanClosingBalance($client_id, $end_date);
 
-            
+
             $openingTrx = (object)[
                 "id" => "",
                 "loan_debit" => "",
@@ -647,50 +646,50 @@ class ClientController extends Controller
             $statements = array();
 
             $loanTransactions = DB::table("loans")
-                    ->leftJoin("loan_products","loans.loan_product_id","loan_products.id")
-                    ->leftJoin("loan_transactions","loans.id","loan_transactions.loan_id")
-                    ->leftJoin("loan_transaction_types","loan_transactions.loan_transaction_type_id","loan_transaction_types.id")
-                    ->selectRaw("loan_transactions.id,COALESCE(loan_transactions.debit,0) loan_debit, COALESCE(loan_transactions.credit,0) loan_credit,
+                ->leftJoin("loan_products", "loans.loan_product_id", "loan_products.id")
+                ->leftJoin("loan_transactions", "loans.id", "loan_transactions.loan_id")
+                ->leftJoin("loan_transaction_types", "loan_transactions.loan_transaction_type_id", "loan_transaction_types.id")
+                ->selectRaw("loan_transactions.id,COALESCE(loan_transactions.debit,0) loan_debit, COALESCE(loan_transactions.credit,0) loan_credit,
                     loan_transactions.submitted_on transaction_date,loan_transactions.loan_id,loans.client_id,
                     loan_products.name loan_product_name, loan_transaction_types.name loan_transaction_type_name")
-                    ->where("loans.client_id", $client_id)
-                    ->whereIn("loan_transactions.loan_transaction_type_id", [1,2,4,6,8,9,10,11])
-                    ->when($start_date, function ($query) use ($start_date) {
-                        $query->whereDate('loan_transactions.submitted_on', '>=', $start_date);
-                    })
-                    ->when($end_date, function ($query) use ($end_date) {
-                        $query->whereDate('loan_transactions.submitted_on', '<=',$end_date);
-                    })->get();
+                ->where("loans.client_id", $client_id)
+                ->whereIn("loan_transactions.loan_transaction_type_id", [1, 2, 4, 6, 8, 9, 10, 11])
+                ->when($start_date, function ($query) use ($start_date) {
+                    $query->whereDate('loan_transactions.submitted_on', '>=', $start_date);
+                })
+                ->when($end_date, function ($query) use ($end_date) {
+                    $query->whereDate('loan_transactions.submitted_on', '<=', $end_date);
+                })->get();
 
-            array_push($statements,$openingTrx);
-            foreach($loanTransactions as $key=>$trx){
-                if($trx->loan_debit !=0){
+            array_push($statements, $openingTrx);
+            foreach ($loanTransactions as $key => $trx) {
+                if ($trx->loan_debit != 0) {
                     $openingBalance = $openingBalance + $trx->loan_debit;
                 }
-                if($trx->loan_credit !=0){
+                if ($trx->loan_credit != 0) {
                     $openingBalance = $openingBalance - $trx->loan_credit;
                 }
                 $loanTransactions[$key]->balance = $openingBalance;
-                array_push($statements,$loanTransactions[$key]);
+                array_push($statements, $loanTransactions[$key]);
             }
-            array_push($statements,$closingTrx);
+            array_push($statements, $closingTrx);
 
             return DataTables::of($statements)->editColumn('loan_id', function ($data) {
                 return '<a href="' . url('loan/' . $data->loan_id . '/show') . '">' . $data->loan_id . '</a>';
             })->editColumn('loan_debit', function ($data) {
-                return $data->loan_debit != "" ? number_format($data->loan_debit,2) : $data->loan_debit;
+                return $data->loan_debit != "" ? number_format($data->loan_debit, 2) : $data->loan_debit;
             })->editColumn('loan_credit', function ($data) {
-                return $data->loan_credit != "" ? number_format($data->loan_credit,2) : $data->loan_credit;
+                return $data->loan_credit != "" ? number_format($data->loan_credit, 2) : $data->loan_credit;
             })->editColumn('balance', function ($data) {
-                return number_format($data->balance,2);
+                return number_format($data->balance, 2);
             })
-            ->editColumn('action', function ($data) {
-                if($data->loan_debit == ""){
-                    return "";
-                }
-                $action = '<a href="' . url('loan/transaction/' . $data->id . '/show') . '" class="btn btn-info"><i class="ri-eye-fill"></i>' . trans_choice('general.detail', 2) . '</a>';
-                return $action;
-            })->rawColumns(['loan_id', 'loan_transaction_type_name', 'loan_product_name','action'])->make(true);
+                ->editColumn('action', function ($data) {
+                    if ($data->loan_debit == "") {
+                        return "";
+                    }
+                    $action = '<a href="' . url('loan/transaction/' . $data->id . '/show') . '" class="btn btn-info"><i class="ri-eye-fill"></i>' . trans_choice('general.detail', 2) . '</a>';
+                    return $action;
+                })->rawColumns(['loan_id', 'loan_transaction_type_name', 'loan_product_name', 'action'])->make(true);
         }
     }
 
@@ -714,10 +713,9 @@ class ClientController extends Controller
 
         $branches = Branch::all();
         $countries = Country::all();
-        $randnum = rand(1111111111,9999999999);
+        $randnum = rand(1111111111, 9999999999);
         $custom_fields = CustomField::where('category', 'add_client')->where('active', 1)->get();
-        return theme_view('client::client.create', compact('titles', 'professions', 'client_types', 'client_groups','users', 'branches', 'countries', 'custom_fields','randnum'));
-
+        return theme_view('client::client.create', compact('titles', 'professions', 'client_types', 'client_groups', 'users', 'branches', 'countries', 'custom_fields', 'randnum'));
     }
 
     /**
@@ -733,7 +731,7 @@ class ClientController extends Controller
             'last_name' => ['required'],
             'gender' => ['required'],
             'branch_id' => ['required'],
-            'email' => ['nullable','email', 'max:255'],
+            'email' => ['nullable', 'email', 'max:255'],
             'dob' => ['required', 'date'],
             'created_date' => ['required', 'date'],
             'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png'],
@@ -762,13 +760,13 @@ class ClientController extends Controller
 
         $request->dob ? $client->dob = $request->dob : '';
 
-        $client->place_of_workship      = $request->place_of_workship ;
-        $client->address_type           = $request->address_type ;
-        $client->employment_status      = $request->employment_status ;
-        $client->business_activity      = $request->business_activity ;
-        $client->business_name          = $request->business_name ;
-        $client->business_location      = $request->business_location ;
-        $client->business_address       = $request->business_address ;
+        $client->place_of_workship      = $request->place_of_workship;
+        $client->address_type           = $request->address_type;
+        $client->employment_status      = $request->employment_status;
+        $client->business_activity      = $request->business_activity;
+        $client->business_name          = $request->business_name;
+        $client->business_location      = $request->business_location;
+        $client->business_address       = $request->business_address;
 
         // $client->mobile = $request->mobile;
         // $client->church = $request->church;
@@ -778,7 +776,11 @@ class ClientController extends Controller
         $client->city = $request->city;
         $client->zip = $request->zip;
         $client->client_group_id = $request->client_group_id;
-
+        if ($request->hasFile('signature_pad')) {
+            $signature_file_name = $request->file('signature_pad')->store('public/uploads/clients');
+            //check if we had a file before
+            $client->signature_pad = basename($signature_file_name);
+        }
         if ($request->hasFile('photo')) {
             $file_name = $request->file('photo')->store('public/uploads/clients');
             $client->photo = basename($file_name);
@@ -798,8 +800,8 @@ class ClientController extends Controller
             }
         }
         $client->save();
-        if($client->status == "active"){
-            $this->processSmsClientOpenAccount(1,$client->id);
+        if ($client->status == "active") {
+            $this->processSmsClientOpenAccount(1, $client->id);
         }
         custom_fields_save_form('add_client', $request, $client->id);
         activity()->on($client)
@@ -839,7 +841,7 @@ class ClientController extends Controller
         $countries = Country::all();
         $client_groups = ClientGroup::all();
         $custom_fields = CustomField::where('category', 'add_client')->where('active', 1)->get();
-        return theme_view('client::client.edit', compact('client', 'titles', 'professions', 'client_types', 'client_groups','users', 'branches', 'countries', 'custom_fields'));
+        return theme_view('client::client.edit', compact('client', 'titles', 'professions', 'client_types', 'client_groups', 'users', 'branches', 'countries', 'custom_fields'));
     }
 
     /**
@@ -854,7 +856,7 @@ class ClientController extends Controller
             'first_name' => ['required'],
             'last_name' => ['required'],
             'gender' => ['required'],
-            'email' => ['nullable','email', 'max:255'],
+            'email' => ['nullable', 'email', 'max:255'],
             'dob' => ['required', 'date'],
             'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png'],
         ]);
@@ -876,20 +878,27 @@ class ClientController extends Controller
         $client->marital_status = $request->marital_status;
         $request->dob ? $client->dob = $request->dob : '';
 
-        $client->place_of_workship  = $request->place_of_workship ;
-        $client->address_type       = $request->address_type ;
-        $client->employment_status  = $request->employment_status ;
-        $client->business_activity  = $request->business_activity ;
-        $client->business_name      = $request->business_name ;
-        $client->business_location  = $request->business_location ;
-        $client->business_address   = $request->business_address ;
+        $client->place_of_workship  = $request->place_of_workship;
+        $client->address_type       = $request->address_type;
+        $client->employment_status  = $request->employment_status;
+        $client->business_activity  = $request->business_activity;
+        $client->business_name      = $request->business_name;
+        $client->business_location  = $request->business_location;
+        $client->business_address   = $request->business_address;
 
         $client->state = $request->state;
         $client->city = $request->city;
         $client->zip = $request->zip;
         $client->client_group_id = $request->client_group_id;
 
-
+        if ($request->hasFile('signature_pad')) {
+            $signature_file_name = $request->file('signature_pad')->store('public/uploads/clients');
+            //check if we had a file before
+            if ($client->signature_pad) {
+                Storage::delete('public/uploads/clients/' . $client->signature_pad);
+            }
+            $client->signature_pad = basename($signature_file_name);
+        }
         if ($request->hasFile('photo')) {
             $file_name = $request->file('photo')->store('public/uploads/clients');
             //check if we had a file before
@@ -917,8 +926,8 @@ class ClientController extends Controller
             }
         }
         $client->save();
-        if($client->status == "active" && $previous_status != "active"){
-            $this->processSmsClientOpenAccount(1,$client->id);
+        if ($client->status == "active" && $previous_status != "active") {
+            $this->processSmsClientOpenAccount(1, $client->id);
         }
         custom_fields_save_form('add_client', $request, $client->id);
         activity()->on($client)
@@ -1030,13 +1039,13 @@ class ClientController extends Controller
 
     public function clientFileExportImport()
     {
-       //return view('file-import');
-       return theme_view('client::client.client_import');
+        //return view('file-import');
+        return theme_view('client::client.client_import');
     }
-   
-    public function clientExcelImport(Request $request) 
+
+    public function clientExcelImport(Request $request)
     {
-        if(!$request->hasFile('file')){
+        if (!$request->hasFile('file')) {
             \flash("File Not Selected")->success()->important();
             return redirect()->back();
         }
@@ -1047,10 +1056,11 @@ class ClientController extends Controller
     }
 
 
-    public function processSmsClientOpenAccount($sms_gateway_id,$client_id){
-        $client = Client::where('id',$client_id)->first();
-        $mobile = Client::where('id',$client_id)->first()->mobile;
-        $message = $client->first_name . " ". $client->last_name . ", Your Account is Activated";
+    public function processSmsClientOpenAccount($sms_gateway_id, $client_id)
+    {
+        $client = Client::where('id', $client_id)->first();
+        $mobile = Client::where('id', $client_id)->first()->mobile;
+        $message = $client->first_name . " " . $client->last_name . ", Your Account is Activated";
         $sms = [
             'sms_gateway_id' => $sms_gateway_id,
             'client_id' => $client_id,
@@ -1058,13 +1068,27 @@ class ClientController extends Controller
             'send_to' => $mobile
         ];
         $sms = CommunicationLog::create($sms);
-        if($sms_gateway_id == 1){
-            $sms_body= $message;
-            $response = $this->send_sms_old($sms_gateway_id,$mobile, $sms_body);
-            if(strpos($response, '1701') !== false){
-                $sms->status = 'delivered';
-            } else{
-                $sms->status = 'failed';
+        if ($sms_gateway_id == 1) {
+            $sms_body = $message;
+            //$response = $this->send_sms_old($sms_gateway_id,$mobile, $sms_body);
+            // if(strpos($response, '1701') !== false){
+            //     $sms->status = 'delivered';
+            // } else{
+            //     $sms->status = 'failed';
+            // }
+            //handle send_sms here
+            try {
+                $smsGateway = $sms_gateway_id
+                    ? \Modules\Communication\Entities\SmsGateway::find($sms_gateway_id)
+                    : null;
+                $arkesel = $smsGateway
+                    ? new \Modules\Client\Drivers\Arkesel($smsGateway->key, $smsGateway->sender)
+                    : new \Modules\Client\Drivers\Arkesel();
+                $formattedMobile = '233' . ltrim($mobile, '0');
+                $response = $arkesel->send($sms_body, [$formattedMobile]);
+            } catch (\Exception $e) {
+                $response = $e->getMessage();
+                \Log::error('Arkesel SMS error: ' . $response);
             }
             $sms->response = $response;
             $sms->save();
@@ -1075,38 +1099,39 @@ class ClientController extends Controller
         return;
     }
 
-    public function send_sms_old($sms_gateway_id,$to, $msg)
+    public function send_sms_old($sms_gateway_id, $to, $msg)
     {
-        if($sms_gateway_id == 1){
-                $sms_gateway_id = 1;
-                $active_sms = SmsGateway::find($sms_gateway_id);
-                $append = "&";
-                $append .= $active_sms->to_name . "=" . $to;
-                $append .= "&" . $active_sms->msg_name . "=" . urlencode($msg);
-                $url = $active_sms->url . $append;
-                $endpoint = $active_sms->url;
-                $params = array($active_sms->key_one => $active_sms->key_one_description,
-                                $active_sms->key_two => $active_sms->key_two_description,
-                                'type'=> 0,
-                                'dlr'=> 1,
-                                $active_sms->key_three => $active_sms->key_three_description,
-                                $active_sms->to_name => $to,
-                                $active_sms->msg_name => $msg);
-                $url = $endpoint . '?' . http_build_query($params);
-                //return $url;
-                //send sms here
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $url);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_VERBOSE, true);
-                $curl_scraped_page = curl_exec($ch);
-                curl_close($ch);
-                return $curl_scraped_page;
+        if ($sms_gateway_id == 1) {
+            $sms_gateway_id = 1;
+            $active_sms = SmsGateway::find($sms_gateway_id);
+            $append = "&";
+            $append .= $active_sms->to_name . "=" . $to;
+            $append .= "&" . $active_sms->msg_name . "=" . urlencode($msg);
+            $url = $active_sms->url . $append;
+            $endpoint = $active_sms->url;
+            $params = array(
+                $active_sms->key_one => $active_sms->key_one_description,
+                $active_sms->key_two => $active_sms->key_two_description,
+                'type' => 0,
+                'dlr' => 1,
+                $active_sms->key_three => $active_sms->key_three_description,
+                $active_sms->to_name => $to,
+                $active_sms->msg_name => $msg
+            );
+            $url = $endpoint . '?' . http_build_query($params);
+            //return $url;
+            //send sms here
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_VERBOSE, true);
+            $curl_scraped_page = curl_exec($ch);
+            curl_close($ch);
+            return $curl_scraped_page;
         }
-
     }
 
-        public function blacklist(Request $request, $id)
+    public function blacklist(Request $request, $id)
     {
         $request->validate([
             'reason' => 'required|string',
@@ -1142,5 +1167,4 @@ class ClientController extends Controller
         \flash('Client successfully unblacklisted')->success()->important();
         return redirect()->back();
     }
-
 }

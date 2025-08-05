@@ -14,7 +14,6 @@ use Modules\Communication\Emails\SendBasicEmail;
 use Modules\Communication\Entities\CommunicationCampaign;
 use Modules\Loan\Entities\Loan;
 use Modules\Loan\Entities\LoanRepaymentSchedule;
-use Modules\Setting\Entities\Setting;
 use Modules\Client\Drivers\Arkesel;
 
 class ProcessDirectCampaigns implements ShouldQueue
@@ -236,18 +235,18 @@ class ProcessDirectCampaigns implements ShouldQueue
                     if (!empty($loan->mobile)) {
                         $description = template_replace_tags(["body" => $communication_campaign->description, "loan_id" => $loan->id, "client_id" => $loan->client_id]);
                         try {
-    $smsGateway = $communication_campaign->sms_gateway_id
-        ? \Modules\Communication\Entities\SmsGateway::find($communication_campaign->sms_gateway_id)
-        : null;
-    $arkesel = $smsGateway
-        ? new Arkesel($smsGateway->key, $smsGateway->sender)
-        : new Arkesel();
-    // Format mobile number as needed, e.g. '233' . ltrim($client->mobile, '0')
-    $formattedMobile = '233' . ltrim($client->mobile, '0');
-    $arkesel->send($description, [$formattedMobile]);
-} catch (\Exception $e) {
-    \Log::error('Arkesel SMS error: ' . $e->getMessage());
-}
+                            $smsGateway = $communication_campaign->sms_gateway_id
+                                ? \Modules\Communication\Entities\SmsGateway::find($communication_campaign->sms_gateway_id)
+                                : null;
+                            $arkesel = $smsGateway
+                                ? new Arkesel($smsGateway->key, $smsGateway->sender)
+                                : new Arkesel();
+                            // Format mobile number as needed, e.g. '233' . ltrim($client->mobile, '0')
+                            $formattedMobile = '233' . ltrim($client->mobile, '0');
+                            $arkesel->send($description, [$formattedMobile]);
+                        } catch (\Exception $e) {
+                            \Log::error('Arkesel SMS error: ' . $e->getMessage());
+                        }
                         //log sms
                         log_campaign([
                             'client_id' => $loan->client_id,
@@ -306,18 +305,18 @@ class ProcessDirectCampaigns implements ShouldQueue
                     if (!empty($loan->mobile)) {
                         $description = template_replace_tags(["body" => $communication_campaign->description, "loan_id" => $loan->id, "client_id" => $loan->client_id]);
                         try {
-    $smsGateway = $communication_campaign->sms_gateway_id
-        ? \Modules\Communication\Entities\SmsGateway::find($communication_campaign->sms_gateway_id)
-        : null;
-    $arkesel = $smsGateway
-        ? new Arkesel($smsGateway->key, $smsGateway->sender)
-        : new Arkesel();
-    // Format mobile number as needed, e.g. '233' . ltrim($client->mobile, '0')
-    $formattedMobile = '233' . ltrim($client->mobile, '0');
-    $arkesel->send($description, [$formattedMobile]);
-} catch (\Exception $e) {
-    \Log::error('Arkesel SMS error: ' . $e->getMessage());
-}
+                            $smsGateway = $communication_campaign->sms_gateway_id
+                                ? \Modules\Communication\Entities\SmsGateway::find($communication_campaign->sms_gateway_id)
+                                : null;
+                            $arkesel = $smsGateway
+                                ? new Arkesel($smsGateway->key, $smsGateway->sender)
+                                : new Arkesel();
+                            // Format mobile number as needed, e.g. '233' . ltrim($client->mobile, '0')
+                            $formattedMobile = '233' . ltrim($client->mobile, '0');
+                            $arkesel->send($description, [$formattedMobile]);
+                        } catch (\Exception $e) {
+                            \Log::error('Arkesel SMS error: ' . $e->getMessage());
+                        }
                         //log sms
                         log_campaign([
                             'client_id' => $loan->client_id,
@@ -377,18 +376,18 @@ class ProcessDirectCampaigns implements ShouldQueue
                     if (!empty($loan->mobile)) {
                         $description = template_replace_tags(["body" => $communication_campaign->description, "loan_id" => $loan->id, "client_id" => $loan->client_id, "loan_repayment_schedule_id" => $loan->loan_repayment_schedule_id]);
                         try {
-    $smsGateway = $communication_campaign->sms_gateway_id
-        ? \Modules\Communication\Entities\SmsGateway::find($communication_campaign->sms_gateway_id)
-        : null;
-    $arkesel = $smsGateway
-        ? new Arkesel($smsGateway->key, $smsGateway->sender)
-        : new Arkesel();
-    // Format mobile number as needed, e.g. '233' . ltrim($client->mobile, '0')
-    $formattedMobile = '233' . ltrim($client->mobile, '0');
-    $arkesel->send($description, [$formattedMobile]);
-} catch (\Exception $e) {
-    \Log::error('Arkesel SMS error: ' . $e->getMessage());
-}
+                            $smsGateway = $communication_campaign->sms_gateway_id
+                                ? \Modules\Communication\Entities\SmsGateway::find($communication_campaign->sms_gateway_id)
+                                : null;
+                            $arkesel = $smsGateway
+                                ? new Arkesel($smsGateway->key, $smsGateway->sender)
+                                : new Arkesel();
+                            // Format mobile number as needed, e.g. '233' . ltrim($client->mobile, '0')
+                            $formattedMobile = '233' . ltrim($client->mobile, '0');
+                            $arkesel->send($description, [$formattedMobile]);
+                        } catch (\Exception $e) {
+                            \Log::error('Arkesel SMS error: ' . $e->getMessage());
+                        }
                         //log sms
                         log_campaign([
                             'client_id' => $loan->client_id,

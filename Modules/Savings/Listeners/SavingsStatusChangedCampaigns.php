@@ -70,8 +70,21 @@ class SavingsStatusChangedCampaigns implements ShouldQueue
         foreach ($campaigns as $key) {
             if ($key->campaign_type == 'sms') {
                 if (!empty($savings->client->mobile)) {
-                    $description = template_replace_tags(["body" => $key->description, "client_id" => $savings->client_id, "savings_id" => $savings->id,"savings_transaction_id"=> $savings_transaction_id]);
-                    $response = send_sms($savings->client->mobile, $description, $key->sms_gateway_id);
+                    $description = template_replace_tags(["body" => $key->description, "client_id" => $savings->client_id, "savings_id" => $savings->id, "savings_transaction_id" => $savings_transaction_id]);
+                    //Handle send_sms here
+                    try {
+                        $smsGateway = $key->sms_gateway_id
+                            ? \Modules\Communication\Entities\SmsGateway::find($key->sms_gateway_id)
+                            : null;
+                        $arkesel = $smsGateway
+                            ? new \Modules\Client\Drivers\Arkesel($smsGateway->key, $smsGateway->sender)
+                            : new \Modules\Client\Drivers\Arkesel();
+                        $formattedMobile = '233' . ltrim($savings->client->mobile, '0');
+                        $response = $arkesel->send($description, [$formattedMobile]);
+                    } catch (\Exception $e) {
+                        $response = $e->getMessage();
+                        \Log::error('Arkesel SMS error: ' . $response);
+                    }
                     //log sms
                     log_campaign([
                         'created_by_id' => Auth::id(),

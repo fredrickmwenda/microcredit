@@ -8,18 +8,14 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use Laracasts\Flash\Flash;
 use Modules\Branch\Entities\Branch;
 use Modules\Communication\Entities\CommunicationCampaign;
 use Modules\Communication\Entities\CommunicationCampaignAttachmentType;
 use Modules\Communication\Entities\CommunicationCampaignBusinessRule;
 use Modules\Communication\Entities\SmsGateway;
 use Modules\Communication\Jobs\ProcessDirectCampaigns;
-use Modules\Loan\Entities\Loan;
 use Modules\Loan\Entities\LoanProduct;
-use Modules\Setting\Entities\Setting;
 use Modules\User\Entities\User;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -229,6 +225,13 @@ class CommunicationCampaignController extends Controller
         $communication_campaign->status = $request->status;
         $communication_campaign->description = $request->description;
         $communication_campaign->save();
+        $from_x = $request->from_x;
+        $to_y = $request->to_y;
+        $overdue_x = $request->overdue_x;           
+        $overdue_y = $request->overdue_y;
+         if ($request->trigger_type == 'direct') {
+            ProcessDirectCampaigns::dispatch($communication_campaign);
+        }
         // Arkesel SMS Campaign Integration
         if ($request->campaign_type == 'sms' && $request->sms_gateway_id) {
             $smsGateway = \Modules\Communication\Entities\SmsGateway::find($request->sms_gateway_id);
@@ -418,6 +421,8 @@ class CommunicationCampaignController extends Controller
                     })->toArray();
                     // Remove duplicates
                     $clients = array_unique($clients);
+                    //log clients
+                    info( 'Arkesel campaign clients: ' . implode(',', $clients));
                     if (!empty($clients)) {
                         $arkesel->addContacts($groupName, implode(',', $clients));
                         // Pass scheduled_date if set
@@ -432,9 +437,7 @@ class CommunicationCampaignController extends Controller
                 }
             }
         }
-        if ($request->trigger_type == 'direct') {
-            ProcessDirectCampaigns::dispatch($communication_campaign);
-        }
+
         activity()->on($communication_campaign)
             ->withProperties(['id' => $communication_campaign->id])
             ->log('Create Communication Campaign');
@@ -549,9 +552,14 @@ class CommunicationCampaignController extends Controller
         $communication_campaign->status = $request->status;
         $communication_campaign->description = $request->description;
         $communication_campaign->save();
+        $from_x = $request->from_x;
+        $to_y = $request->to_y;
+        $overdue_x = $request->overdue_x;           
+        $overdue_y = $request->overdue_y;
         // Arkesel SMS Campaign Integration (update)
         if ($request->campaign_type == 'sms' && $request->sms_gateway_id) {
             $smsGateway = \Modules\Communication\Entities\SmsGateway::find($request->sms_gateway_id);
+            $ruleId = $request->communication_campaign_business_rule_id;
             if ($smsGateway && $smsGateway->key && $smsGateway->sender) {
                 $arkesel = new \Modules\Client\Drivers\Arkesel($smsGateway->key, $smsGateway->sender);
                 $groupName = 'campaign_' . $communication_campaign->id;
@@ -737,6 +745,10 @@ class CommunicationCampaignController extends Controller
                     $clients = $clients->map(function ($mobile) {
                         return '233' . ltrim($mobile, '0');
                     })->toArray();
+                    // Remove duplicates
+                    $clients = array_unique($clients);
+
+                    info('Arkesel campaign update: ' . $groupName . ' - ' . implode(',', $clients));
 
                     if (!empty($clients)) {
                         $arkesel->addContacts($groupName, implode(',', $clients));

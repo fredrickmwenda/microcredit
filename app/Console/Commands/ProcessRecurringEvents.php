@@ -2,11 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Models\CustomFieldMeta;
-use App\Models\Expense;
-use App\Models\Payroll;
-use App\Models\PayrollMeta;
 use Illuminate\Console\Command;
+use Modules\CustomField\Entities\CustomFieldMeta;
+use Modules\Expense\Entities\Expense;
+use Modules\Payroll\Entities\Payroll;
 
 class ProcessRecurringEvents extends Command
 {
