@@ -87,7 +87,12 @@ class SavingsController extends Controller
             })
             ->when($orderBy, function (Builder $query) use ($orderBy, $orderByDir) {
                 $query->orderBy($orderBy, $orderByDir);
+            }, function (Builder $query) {
+                $query->orderBy('savings.created_at', 'desc'); // Default latest-first order
             })
+            // ->when($orderBy, function (Builder $query) use ($orderBy, $orderByDir) {
+            //     $query->orderBy($orderBy, $orderByDir);
+            // })
             ->selectRaw("concat(clients.first_name,' ',clients.last_name) client,concat(users.first_name,' ',users.last_name) savings_officer,savings.savings_officer_id,savings.branch_id,savings.id,savings.client_id,savings.interest_rate,savings.activated_on_date,savings_products.name savings_product,savings.status,savings.decimals,savings.account_number,branches.name branch, (COALESCE(SUM(savings_transactions.credit),0)-COALESCE(SUM(savings_transactions.debit),0)) balance")
             ->groupBy("savings.id")
             ->paginate($perPage)

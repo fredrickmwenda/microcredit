@@ -98,12 +98,14 @@ class LoanController extends Controller
                 // If no status is passed, exclude closed and rejected
                 $query->whereNotIn("loans.status", ['closed', 'rejected']);
             })
-            // ->when($status, function ($query) use ($status) {
-            //     $query->where("loans.status", $status);
-            // })
             ->when($orderBy, function (Builder $query) use ($orderBy, $orderByDir) {
                 $query->orderBy($orderBy, $orderByDir);
+            }, function (Builder $query) {
+                $query->orderBy('loans.created_at', 'desc'); // Default latest-first order
             })
+            // ->when($orderBy, function (Builder $query) use ($orderBy, $orderByDir) {
+            //     $query->orderBy($orderBy, $orderByDir);
+            // })
             ->selectRaw("concat(clients.first_name,' ',clients.last_name) client,concat(users.first_name,' ',users.last_name) loan_officer,loans.loan_officer_id,loans.id,loans.branch_id,loans.client_id,loans.applied_amount,loans.principal,loans.disbursed_on_date,loans.expected_maturity_date,loan_products.name loan_product,loans.status,loans.decimals,branches.name branch, SUM(loan_repayment_schedules.principal) total_principal, SUM(loan_repayment_schedules.principal_written_off_derived) principal_written_off_derived, SUM(loan_repayment_schedules.principal_repaid_derived) principal_repaid_derived, SUM(loan_repayment_schedules.interest) total_interest, SUM(loan_repayment_schedules.interest_waived_derived) interest_waived_derived,SUM(loan_repayment_schedules.interest_written_off_derived) interest_written_off_derived,  SUM(loan_repayment_schedules.interest_repaid_derived) interest_repaid_derived,SUM(loan_repayment_schedules.fees) total_fees, SUM(loan_repayment_schedules.fees_waived_derived) fees_waived_derived, SUM(loan_repayment_schedules.fees_written_off_derived) fees_written_off_derived, SUM(loan_repayment_schedules.fees_repaid_derived) fees_repaid_derived,SUM(loan_repayment_schedules.penalties) total_penalties, SUM(loan_repayment_schedules.penalties_waived_derived) penalties_waived_derived, SUM(loan_repayment_schedules.penalties_written_off_derived) penalties_written_off_derived, SUM(loan_repayment_schedules.penalties_repaid_derived) penalties_repaid_derived")
             ->groupBy("loans.id")
             ->paginate($perPage)
@@ -661,7 +663,7 @@ class LoanController extends Controller
         $users = User::whereDoesntHave('roles', function ($query) {
             $query->whereIn('name', ['client', 'admin']);
         })->get();
-        
+
         $charges = [];
         $charges_list = [];
         $temp_charges = [];
@@ -872,7 +874,7 @@ class LoanController extends Controller
             Notification::send(User::whereHas('roles', function ($query) {
                 $query->where('name', 'CEO');
             })->first(), new LoanApprovalNotification($loan, 'pending_ceo_approval'));
-            
+
 
             $loan->status = Loan::STATUS_PENDING_CEO_APPROVAL;
             $loan->approved_by_user_id = Auth::id();
@@ -883,7 +885,6 @@ class LoanController extends Controller
             $loan_history->user = Auth::user()->first_name . ' ' . Auth::user()->last_name;
             $loan_history->action = 'Loan Approved by LOAN OFFICER and passed to CEO';
             $loan_history->save();
-            
         }
 
 
@@ -1634,7 +1635,7 @@ class LoanController extends Controller
 
     public function store_repayment(Request $request, $id)
     {
-    
+
         $request->validate([
             'amount' => ['required', 'numeric'],
             'date' => ['required', 'date'],
@@ -1670,7 +1671,7 @@ class LoanController extends Controller
         //fire transaction updated event
         event(new TransactionUpdated($loan));
         $previous_status = '';
-                // Check if loan should be closed
+        // Check if loan should be closed
         $this->closeZeroBalanceLoan($loan);
         event(new LoanStatusChanged($loan, $previous_status, $loan_transaction->id));
         \flash(trans_choice("core::general.successfully_saved", 1))->success()->important();
@@ -1687,7 +1688,7 @@ class LoanController extends Controller
 
     public function update_repayment(Request $request, $id)
     {
-       dd($request->all());
+        dd($request->all());
         $request->validate([
             'amount' => ['required', 'numeric'],
             'date' => ['required', 'date'],
@@ -2323,33 +2324,31 @@ class LoanController extends Controller
     }
 
     private function closeZeroBalanceLoan(Loan $loan)
-{
-    // Calculate total remaining balance across all schedules
-    $total_remaining = LoanRepaymentSchedule::where('loan_id', $loan->id)
-        ->sum(DB::raw('(principal-principal_repaid_derived-principal_written_off_derived) + 
+    {
+        // Calculate total remaining balance across all schedules
+        $total_remaining = LoanRepaymentSchedule::where('loan_id', $loan->id)
+            ->sum(DB::raw('(principal-principal_repaid_derived-principal_written_off_derived) + 
                       (interest-interest_repaid_derived-interest_written_off_derived-interest_waived_derived) + 
                       (fees-fees_repaid_derived-fees_written_off_derived-fees_waived_derived) + 
                       (penalties-penalties_repaid_derived-penalties_written_off_derived-penalties_waived_derived)'));
 
-    if ($total_remaining <= 0) {
-        $previous_status = $loan->status;
-        $loan->status = 'closed';
-        $loan->closed_on_date = date("Y-m-d");
-        $loan->closed_notes = 'Loan closed automatically after full repayment';
-        $loan->save();
+        if ($total_remaining <= 0) {
+            $previous_status = $loan->status;
+            $loan->status = 'closed';
+            $loan->closed_on_date = date("Y-m-d");
+            $loan->closed_notes = 'Loan closed automatically after full repayment';
+            $loan->save();
 
-        // Record the history
-        $loan_history = new LoanHistory();
-        $loan_history->loan_id = $loan->id;
-        $loan_history->created_by_id = Auth::id();
-        $loan_history->user = Auth::user()->first_name . ' ' . Auth::user()->last_name;
-        $loan_history->action = 'Loan Closed';
-        $loan_history->save();
+            // Record the history
+            $loan_history = new LoanHistory();
+            $loan_history->loan_id = $loan->id;
+            $loan_history->created_by_id = Auth::id();
+            $loan_history->user = Auth::user()->first_name . ' ' . Auth::user()->last_name;
+            $loan_history->action = 'Loan Closed';
+            $loan_history->save();
 
-        // Fire loan status changed event
-        event(new LoanStatusChanged($loan, $previous_status));
+            // Fire loan status changed event
+            event(new LoanStatusChanged($loan, $previous_status));
+        }
     }
-
-}
-
 }
