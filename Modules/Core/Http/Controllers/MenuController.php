@@ -72,35 +72,41 @@ class MenuController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(Request $request)
-    {
-        if (App::environment('demo')) {
-            return redirect()->back()->with('error', 'Action not allowed in demo.');
-        }
-        $data = $request->data;
-        $p = 0;
-        foreach ($data[0] as $key) {
-            $menu = Menu::find($key['id']);
-            $menu->is_parent = 1;
-            $menu->name = $key['name'];
-            $menu->menu_order = $p;
-            $menu->save();
-            $c = 0;
-            if (array_key_exists('children', $key)) {
-                foreach ($key['children'][0] as $child) {
-                    $menu = Menu::find($child['id']);
-                    $menu->parent_id = $key['id'];
-                    $menu->is_parent = 0;
-                    $menu->name = $child['name'];
-                    $menu->menu_order = $c;
-                    $menu->save();
-                    $c++;
-                }
-            }
-            $p++;
-        }
-        activity()->log('Update Menu');
-        return response()->json(['success' => 1, 'msg' => trans_choice("core::general.successfully_saved", 1)]);
+public function update(Request $request)
+{
+    if (App::environment('demo')) {
+        return redirect()->back()->with('error', 'Action not allowed in demo.');
     }
 
+    $data = $request->input('data');
+
+    // Convert "item[]=1&item[]=2..." into array
+    parse_str($data, $output);
+
+    if (!isset($output['item']) || !is_array($output['item'])) {
+        return response()->json([
+            'success' => 0,
+            'msg' => 'Menu data is not set correctly.'
+        ], 422);
+    }
+
+    $ids = $output['item']; // array of IDs
+    $p = 0;
+
+    foreach ($ids as $id) {
+        $menu = Menu::find($id);
+        if ($menu) {
+            $menu->menu_order = $p;
+            $menu->save();
+            $p++;
+        }
+    }
+
+    activity()->log('Update Menu');
+
+    return response()->json([
+        'success' => 1,
+        'msg' => trans_choice("core::general.successfully_saved", 1)
+    ]);
+}
 }

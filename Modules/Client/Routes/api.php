@@ -59,7 +59,7 @@ Route::prefix('v1')->group(function () {
             Route::post('{id}/update', 'Api\v1\TitleController@update');
             Route::get('{id}/destroy', 'Api\v1\TitleController@destroy');
         });
-//client types
+        //client types
         Route::prefix('client_type')->group(function () {
             Route::get('/', 'Api\v1\ClientTypeController@index');
             Route::get('create', 'Api\v1\ClientTypeController@create');
@@ -69,7 +69,7 @@ Route::prefix('v1')->group(function () {
             Route::post('{id}/update', 'Api\v1\ClientTypeController@update');
             Route::get('{id}/destroy', 'Api\v1\ClientTypeController@destroy');
         });
-//client relationship
+        //client relationship
         Route::prefix('client_relationship')->group(function () {
             Route::get('/', 'Api\v1\ClientRelationshipController@index');
             Route::get('get_client_relationships', 'Api\v1\ClientRelationshipController@get_client_relationships');

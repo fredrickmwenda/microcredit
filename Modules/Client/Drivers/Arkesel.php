@@ -230,6 +230,17 @@ class Arkesel
         $response = curl_exec($curl);
         $error = curl_error($curl);
         curl_close($curl);
+               \Log::info('Arkesel create group response: ' . $response);
+        // Check for cURL errors
+        
+        if ($error) {
+            throw new \Exception('Arkesel SMS Error: ' . $error);
+        }
+        // Handle Arkesel API error in response
+        $responseData = json_decode($response, true);
+        if (isset($responseData['status']) && $responseData['status'] === 'error') {
+            throw new \Exception('Arkesel API Error: ' . ($responseData['message'] ?? 'Unknown error'));
+        }
         if ($error) {
             throw new \Exception('Arkesel Create Group Error: ' . $error);
         }

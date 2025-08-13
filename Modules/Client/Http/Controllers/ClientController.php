@@ -725,7 +725,7 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        info($request->all());
+        //dd($request->all());
         $request->validate([
             'first_name' => ['required'],
             'last_name' => ['required'],
@@ -749,9 +749,7 @@ class ClientController extends Controller
         $client->client_type_id = $request->client_type_id;
         $client->profession_id = $request->profession_id;
         $client->mobile = $request->mobile;
-        // $client->church = $request->church;
-        // $client->pastor = $request->pastor;
-        // $client->church_location = $request->church_location;
+
         $client->notes = $request->notes;
         $client->email = $request->email;
         $client->address = $request->address;
@@ -768,9 +766,23 @@ class ClientController extends Controller
         $client->business_location      = $request->business_location;
         $client->business_address       = $request->business_address;
 
-        // $client->mobile = $request->mobile;
-        // $client->church = $request->church;
-        // $client->pastor = $request->pastor;
+        $church     = trim($request->church ?? '');
+        $pastor     = trim($request->pastor ?? '');
+        $location   = trim($request->church_location ?? '');
+
+        $allEmpty   = ($church === '' && $pastor === '' && $location === '');
+        $allFilled  = ($church !== '' && $pastor !== '' && $location !== '');
+
+        if ($allFilled) {
+            $client->church = $church;
+            $client->pastor = $pastor;
+            $client->church_location = $location;
+        } elseif (!$allEmpty) {
+            return back()
+                ->withErrors(['church_details' => 'Missing church details'])
+                ->withInput();
+        }
+
 
         $client->state = $request->state;
         $client->city = $request->city;
@@ -890,6 +902,23 @@ class ClientController extends Controller
         $client->city = $request->city;
         $client->zip = $request->zip;
         $client->client_group_id = $request->client_group_id;
+
+        $church     = trim($request->church ?? '');
+        $pastor     = trim($request->pastor ?? '');
+        $location   = trim($request->church_location ?? '');
+
+        $allEmpty   = ($church === '' && $pastor === '' && $location === '');
+        $allFilled  = ($church !== '' && $pastor !== '' && $location !== '');
+
+        if ($allFilled) {
+            $client->church = $church;
+            $client->pastor = $pastor;
+            $client->church_location = $location;
+        } elseif (!$allEmpty) {
+            return back()
+                ->withErrors(['church_details' => 'Missing church details'])
+                ->withInput();
+        }
 
         if ($request->hasFile('signature_pad')) {
             $signature_file_name = $request->file('signature_pad')->store('public/uploads/clients');

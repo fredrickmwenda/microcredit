@@ -84,6 +84,9 @@ class SavingsController extends Controller
             })
             ->when($status, function ($query) use ($status) {
                 $query->where("savings.status", $status);
+            } , function ($query) {
+                // If no status is passed, exclude closed 
+                $query->whereNotIn("savings.status", ['closed']);
             })
             ->when($orderBy, function (Builder $query) use ($orderBy, $orderByDir) {
                 $query->orderBy($orderBy, $orderByDir);

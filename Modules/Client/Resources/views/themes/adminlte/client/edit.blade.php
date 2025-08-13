@@ -243,15 +243,29 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-6">
+                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="photo" class="control-label">{{trans_choice('core::general.photo',1)}}</label>
-                            <input type="file" name="photo" id="photo" class="form-control @error('photo') is-invalid @enderror">
-                            @error('photo')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
+                            <label class="control-label">{{trans_choice('core::general.photo',1)}}</label>
+                            <div class="mb-2">
+                                <button type="button" class="btn btn-sm btn-info" id="useWebcamBtn">Use Webcam</button>
+                                <button type="button" class="btn btn-sm btn-secondary" id="useUploadBtn">Upload Photo</button>
+                            </div>
+                             
+                            <div id="webcamSection" style="display:none;">
+                                <video id="video" width="320" height="240" autoplay style="border:1px solid #ccc;"></video><br>
+                                <button type="button" class="btn btn-primary btn-sm mt-2" id="snap">Capture Photo</button>
+                                <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+                                <input type="hidden" name="client_photo" id="client_photo">
+                                <img id="preview" style="display:none; margin-top:10px; border:1px solid #ccc; max-width:100%;"/>
+                            </div>
+                            <div id="uploadSection">
+                                <input type="file" name="photo" id="photo" class="form-control @error('photo') is-invalid @enderror">
+                                @error('photo')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
                         </div>
                     </div>
 
@@ -554,6 +568,65 @@
             church_location: "{{ old('church_location', $client->church_location) }}",
         }
     })
-    console.log(app)
+        document.addEventListener('DOMContentLoaded', function() {
+        var webcamSection = document.getElementById('webcamSection');
+        var uploadSection = document.getElementById('uploadSection');
+        var useWebcamBtn = document.getElementById('useWebcamBtn');
+        var useUploadBtn = document.getElementById('useUploadBtn');
+        var video = document.getElementById('video');
+        var snap = document.getElementById('snap');
+        var canvas = document.getElementById('canvas');
+        var preview = document.getElementById('preview');
+        var clientPhoto = document.getElementById('client_photo');
+        var photoInput = document.getElementById('photo');
+
+        useWebcamBtn.addEventListener('click', function() {
+            webcamSection.style.display = '';
+            uploadSection.style.display = 'none';
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function(stream) {
+                        video.srcObject = stream;
+                    })
+                    .catch(function(err) {
+                        alert('Could not access webcam: ' + err);
+                    });
+            } else {
+                alert('Webcam not supported in this browser.');
+            }
+        });
+
+        useUploadBtn.addEventListener('click', function() {
+            webcamSection.style.display = 'none';
+            uploadSection.style.display = '';
+            if (video.srcObject) {
+                let tracks = video.srcObject.getTracks();
+                tracks.forEach(track => track.stop());
+                video.srcObject = null;
+            }
+            clientPhoto.value = '';
+            preview.style.display = 'none';
+        });
+
+        if (snap) {
+            snap.addEventListener('click', function(e) {
+                e.preventDefault();
+                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                var dataURL = canvas.toDataURL('image/png');
+                clientPhoto.value = dataURL;
+                preview.src = dataURL;
+                preview.style.display = 'block';
+                // Log the dataURL to the console for debugging
+                console.log('Webcam photo captured and attached as base64:', dataURL);
+                // Hide webcam and stop video stream
+                webcamSection.style.display = 'none';
+                if (video.srcObject) {
+                    let tracks = video.srcObject.getTracks();
+                    tracks.forEach(track => track.stop());
+                    video.srcObject = null;
+                }
+            });
+        }
+    });
 </script>
 @endsection

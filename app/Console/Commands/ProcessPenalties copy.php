@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Helpers\GeneralHelper;
 use App\LoanSchedule;
-use App\SavingsTransaction;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -440,96 +439,6 @@ protected function processOverdueMaturityPenalties($due_date)
         }
     }
 }
-
-
- /**
-     * Process savings account fees (monthly and annual)
-     */
-    protected function processSavingsFees()
-    {
-        // Get all savings accounts with a monthly or annual fee
-        $savingsAccounts = DB::table("savings_charges")
-            ->join('charges', 'charges.id', 'savings_charges.charge_id')
-            ->join("savings", 'savings.id', 'savings_charges.savings_id')
-            ->leftJoin("savings_products", 'savings_products.id', 'savings.savings_product_id')
-            ->selectRaw("
-                savings_charges.amount,
-                savings.*,
-                charges.charge_option,
-                charges.charge_type,
-                savings_products.chart_reference_id,
-                savings_products.accounting_rule,
-                savings_products.chart_expense_interest_id
-            ")
-            ->whereIn("charges.charge_type", ['annual_fee', 'monthly_fee'])
-            ->get();
-
-        foreach ($savingsAccounts as $savings) {
-            // Handle monthly fee (only on the 1st day of the month)
-            if ($savings->charge_type == "monthly_fee" && date("d") == "01") {
-                $this->createSavingsFeeTransaction($savings);
-            }
-
-            // Handle annual fee (only on January 1st)
-            if ($savings->charge_type == "annual_fee" && date("d-m") == "01-01") {
-                $this->createSavingsFeeTransaction($savings);
-            }
-        }
-    }
-
-    /**
-     * Create a savings transaction and journal entries for a given account
-     */
-    protected function createSavingsFeeTransaction($savings)
-    {
-        // Create savings transaction record
-        $savings_transaction = new SavingsTransaction();
-        $savings_transaction->borrower_id = $savings->borrower_id; // Link borrower
-        $savings_transaction->branch_id = $savings->branch_id; // Link branch
-        $savings_transaction->savings_id = $savings->id; // Link savings account
-        $savings_transaction->type = "bank_fees"; // Transaction type
-        $savings_transaction->reversible = 1; // Allow reversal
-        $savings_transaction->date = date("Y-m-d"); // Transaction date
-        $savings_transaction->time = date("H:i"); // Transaction time
-        $date = explode('-', date("Y-m-d")); // Break down date
-        $savings_transaction->year = $date[0];
-        $savings_transaction->month = $date[1];
-        $savings_transaction->debit = $savings->amount; // Fee amount
-        $savings_transaction->save();
-
-        // If cash-based accounting, create journal entries
-        if ($savings->accounting_rule == 'cash_based') {
-            // Credit customer account
-            $journal = new JournalEntry();
-            $journal->account_id = $savings->chart_reference_id;
-            $journal->branch_id = $savings_transaction->branch_id;
-            $journal->date = date("Y-m-d");
-            $journal->year = $date[0];
-            $journal->month = $date[1];
-            $journal->borrower_id = $savings_transaction->borrower_id;
-            $journal->transaction_type = 'pay_charge';
-            $journal->name = "Charge";
-            $journal->savings_id = $savings->id;
-            $journal->credit = $savings->amount;
-            $journal->reference = $savings_transaction->id;
-            $journal->save();
-
-            // Debit expense account
-            $journal = new JournalEntry();
-            $journal->account_id = $savings->chart_expense_interest_id;
-            $journal->branch_id = $savings_transaction->branch_id;
-            $journal->date = date("Y-m-d");
-            $journal->year = $date[0];
-            $journal->month = $date[1];
-            $journal->borrower_id = $savings_transaction->borrower_id;
-            $journal->transaction_type = 'pay_charge';
-            $journal->name = "Charge";
-            $journal->savings_id = $savings->id;
-            $journal->debit = $savings->amount;
-            $journal->reference = $savings_transaction->id;
-            $journal->save();
-        }
-    }
 
 
 

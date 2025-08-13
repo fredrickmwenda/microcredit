@@ -93,5 +93,5 @@ class Client extends Model
     public function isBlacklisted()
     {
         return $this->blacklist && $this->blacklist->status === 'active';
-    }
+    } 
 }

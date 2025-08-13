@@ -100,6 +100,14 @@
                                         </a>
                                     </li>
                                 @endif
+                                @if(strtolower($parent->name) === 'savings' || $parent->url === 'saving')
+                                    <li>
+                                        <a href="{{ url('saving?status=closed') }}" class="@if(Request::is('saving') && request('status') == 'closed') active @endif">
+                                            <i class="nav-icon fas fa-check-circle"></i>
+                                            Closed Savings
+                                        </a>
+                                    </li>
+                                @endif
                             </ul>
                         </div>
                     </li>
@@ -146,6 +154,14 @@
                                     </a>
                                 </li>
                             @endif
+                            @if(strtolower($parent->name) === 'savings' || $parent->url === 'saving')
+                                    <li>
+                                        <a href="{{ url('savings?status=closed') }}" class="@if(Request::is('saving') && request('status') == 'closed') active @endif">
+                                            <i class="nav-icon fas fa-check-circle"></i>
+                                            Closed Savings
+                                        </a>
+                                    </li>
+                                @endif
                         </ul>
                     </div>
                 </li>

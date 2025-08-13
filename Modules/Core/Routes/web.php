@@ -71,7 +71,7 @@ Route::prefix('module')->group(function () {
 Route::prefix('menu')->group(function () {
     Route::get('/', 'MenuController@index');
     Route::get('disable', 'MenuController@store_widget');
-    Route::post('update', 'MenuController@update');
+    Route::post('update', 'MenuController@update'); 
     Route::get('upload', 'MenuController@upload');
     Route::post('store', 'MenuController@store');
 

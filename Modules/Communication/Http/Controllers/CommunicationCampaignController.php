@@ -183,7 +183,7 @@ class CommunicationCampaignController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request->all());
+     
         $request->validate([
             'name' => ['required'],
             'sms_gateway_id' => ['required_if:campaign_type,sms'],
@@ -234,6 +234,7 @@ class CommunicationCampaignController extends Controller
         }
         // Arkesel SMS Campaign Integration
         if ($request->campaign_type == 'sms' && $request->sms_gateway_id) {
+            info('Arkesel campaign started for campaign ID: ' . $communication_campaign->id);
             $smsGateway = \Modules\Communication\Entities\SmsGateway::find($request->sms_gateway_id);
             // Get the selected business rule ID
             $ruleId = $request->communication_campaign_business_rule_id;
@@ -430,6 +431,7 @@ class CommunicationCampaignController extends Controller
                         if ($request->trigger_type == 'schedule' && !empty($request->scheduled_date)) {
                             $options['scheduled_date'] = $request->scheduled_date . (isset($request->scheduled_time) ? ' ' . $request->scheduled_time : '');
                         }
+                        info('Arkesel campaign sending message to group: ' . $groupName);
                         $arkesel->sendToContactGroup($smsGateway->sender, $request->description, $groupName, $options);
                     }
                 } catch (\Exception $e) {
