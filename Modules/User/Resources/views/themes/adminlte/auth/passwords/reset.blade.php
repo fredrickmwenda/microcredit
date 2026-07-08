@@ -3,26 +3,20 @@
     {{trans_choice("user::general.reset",1)}} {{trans_choice("user::general.password",1)}}
 @endsection
 @section('content')
-    <div class="login-box">
-        <div class="login-logo">
-            <a href="{{url('/')}}" class="logo-link text-center">
-                @if(!empty($logo=\Modules\Setting\Entities\Setting::where('setting_key','core.company_logo')->first()->setting_value))
-                    <img class="logo-light logo-img logo-img-lg" src="{{asset('storage/uploads/'.$logo)}}"
-                         srcset="{{asset('storage/uploads/'.$logo)}} 2x"
-                         alt="logo">
-                @else
-                    <h4>{{\Modules\Setting\Entities\Setting::where('setting_key','core.company_name')->first()->setting_value}}</h4>
-                @endif
-            </a>
-        </div>
+    @extends('core::layouts.auth')
+@section("title")
+    {{trans_choice("user::general.forgot_password",1)}}
+@endsection
+@section('content')
+         <div class="classic-card fade-in">
+            <div class="logo-section">
+                <!-- <div class="logo-text">Logo</div> -->
+                <h1 class="form-title">{{\Modules\Setting\Entities\Setting::where('setting_key','core.company_name')->first()->setting_value}}</h1>
+                <!-- <p class="form-subtitle">Sign in to your account.</p> -->
+            </div>
 
-        <div class="card">
-            <div class="card-body login-card-body">
-                <p class="login-box-msg">{{trans_choice("user::general.reset",1)}} {{trans_choice("user::general.password",1)}}</p>
-
-
-                <form method="post" action="{{ route('password.update') }}">
-                    {{csrf_field()}}
+            <form method="post" action="{{ route('password.update') }}">
+                @csrf
                     <input type="hidden" name="token" value="{{ $token }}">
                     <div class="form-group">
                         <div class="form-label-group">
@@ -83,14 +77,21 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="form-group">
-                        <button class="btn btn-lg btn-primary btn-block">{{trans_choice("user::general.reset",1)}}</button>
-                    </div>
-                </form>
-                <p class="mb-1">
+
+  
+
+                <button type="submit" class="btn btn-primary">
+                    {{trans_choice("user::general.reset",1)}}
+                </button>
+
+               
+            </form>                               <p class="mb-1">
                     <a href="{{ route('login') }}">{{trans_choice("user::general.back_to_login",1)}}</a>
                 </p>
-            </div>
         </div>
-    </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+       
+
+
 @endsection

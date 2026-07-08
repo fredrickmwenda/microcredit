@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ClientIdentification extends Model
 {
     protected $table = 'client_identification';
-    protected $fillable = [];
+    // protected $fillable = [];
 
     public function identification_type()
     {

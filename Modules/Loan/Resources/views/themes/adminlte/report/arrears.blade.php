@@ -4,7 +4,7 @@
 @endsection
 @section('content')
     <section class="content-header">
-        <div class="container-fluid">
+        <div class="conthen use the first optiontainer-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>{{trans_choice('loan::general.collection_sheet',1)}}</h1>
@@ -39,7 +39,7 @@
                 <div class="card-tools hidden-print">
                     <div class="dropdown">
                         <a href="#" class="btn btn-info btn-trigger btn-icon dropdown-toggle"
-                           data-bs-toggle="dropdown">
+                           data-toggle="dropdown">
                             {{trans_choice('core::general.action',2)}}
                         </a>
                         <div class="dropdown-menu dropdown-menu-xs dropdown-menu-right">
@@ -263,6 +263,8 @@
 @endsection
 @section('scripts')
     <script>
+                Vue.component('v-select', VueSelect.VueSelect)
+        Vue.component('flat-pickr', VueFlatpickr)
         var app = new Vue({
             el: "#app",
             data: {},

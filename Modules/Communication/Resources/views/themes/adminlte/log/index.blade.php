@@ -30,7 +30,7 @@
                 <div class="btn-group">
                     <div class="dropdown">
                         <a href="#" class="btn btn-trigger btn-icon dropdown-toggle"
-                           data-bs-toggle="dropdown">
+                           data-toggle="dropdown">
                             <i class="ri-tools-line"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-xs">

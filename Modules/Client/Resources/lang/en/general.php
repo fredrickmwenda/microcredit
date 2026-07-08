@@ -55,5 +55,16 @@ return [
     'client_balance_statement'=>'Client Balance Statement',
     'client_excel_import'=>'Client Excel Import',
 
+    'view_client'=>'View Client',
+    'credit_score'=>'Credit Score',
+    'credit_score_report'=>'Credit Score Report',
+    'credit_score_report_excel'=>'Credit Score Report Excel',
+    'credit_score_report_pdf'=>'Credit Score Report PDF',
+    'credit_score_report_csv'=>'Credit Score Report CSV',
+    'credit_score_report_print'=>'Credit Score Report Print',
+    'credit_score_report_email'=>'Credit Score Report Email'
+
+    
+
 
 ];

@@ -861,7 +861,9 @@
     </section>
 @endsection
 @section('scripts')
+    
     <script>
+        Vue.component('v-select', VueSelect.VueSelect)
         var app = new Vue({
             el: '#app',
             data: {

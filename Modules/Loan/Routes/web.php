@@ -43,7 +43,7 @@ Route::prefix('loan')->group(function () {
     Route::get('{id}/undo_reschedule', 'LoanController@undo_reschedule');
     Route::post('{id}/change_loan_officer', 'LoanController@change_loan_officer');
     Route::post('{id}/waive_interest', 'LoanController@waive_interest');
-//applications
+    //applications
     Route::get('application', 'LoanController@application');
     Route::get('application/{id}/show', 'LoanController@show_application');
     Route::get('get_applications', 'LoanController@get_applications');
@@ -166,6 +166,17 @@ Route::prefix('loan')->group(function () {
         Route::get('{id}/get_charges', 'LoanProductController@get_charges');
     });
 
+    // Loan Application Process (new prefix block)
+    Route::prefix('application')->group(function () {
+        Route::get('index', 'LoanApplicationController@index');
+        Route::get('get_applications', 'LoanApplicationController@get_applications');
+        Route::get('apply', 'LoanApplicationController@create');
+        Route::post('apply', 'LoanApplicationController@store');
+        Route::get('{id}/view', 'LoanApplicationController@show')->name('loan.applications.show');
+        Route::post('{id}/level1', 'LoanApplicationController@level1Review');
+        Route::any('{id}/level2', 'LoanApplicationController@level2Approve');
+    });
+
 });
 //reports
 Route::prefix('report')->group(function () {
@@ -177,4 +188,6 @@ Route::prefix('report')->group(function () {
     Route::get('loan/arrears', 'ReportController@arrears');
     Route::get('loan/disbursement', 'ReportController@disbursement');
     Route::get('loan/portfolio_at_risk', 'ReportController@portfolio_at_risk');
+    //daily loan collection report 
+    Route::get('loan/daily_collection', 'ReportController@dailyLoanCollectionReport');
 });

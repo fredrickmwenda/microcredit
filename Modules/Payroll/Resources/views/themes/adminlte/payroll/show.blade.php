@@ -243,7 +243,7 @@
                                     <td>
                                         <div class="btn-group">
                                             <button href="#" class="btn btn-default dropdown-toggle"
-                                                    data-bs-toggle="dropdown">
+                                                    data-toggle="dropdown">
                                                 <i class="ri-settings-3-line"></i>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right">

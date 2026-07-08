@@ -17,16 +17,16 @@
                                     <div class="float-right btn-group">
                                         @if($savings->status=='submitted' ||$savings->status=='pending')
                                             @can('savings.savings.approve_savings')
-                                                <a href="#" data-bs-toggle="modal" data-target="#approve_savings_modal"
+                                                <a href="#" data-toggle="modal" data-target="#approve_savings_modal"
                                                    class="btn btn-primary"><i
                                                             class="fa fa-check"></i>
                                                     {{ trans_choice('savings::general.approve',1) }}
                                                 </a>
-                                                <a href="#" data-bs-toggle="modal" data-target="#reject_savings_modal"
+                                                <a href="#" data-toggle="modal" data-target="#reject_savings_modal"
                                                    class="btn btn-primary"><i class="fa fa-times"></i>
                                                     {{ trans_choice('savings::general.reject',1) }}
                                                 </a>
-                                                <a href="#" data-bs-toggle="modal" data-target="#withdraw_savings_modal"
+                                                <a href="#" data-toggle="modal" data-target="#withdraw_savings_modal"
                                                    class="btn btn-primary"><i class="fa fa-times"></i>
                                                     {{ trans_choice('savings::general.withdraw',1) }}
                                                 </a>
@@ -42,7 +42,7 @@
                                                 <div class="modal fade" id="approve_savings_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close"data-bs-dismiss="modal"
+                                                            <button type="button" class="close"data-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -75,7 +75,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                           data-bs-dismiss="modal">
+                                                                           data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -88,7 +88,7 @@
                                                 <div class="modal fade" id="reject_savings_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close"data-bs-dismiss="modal"
+                                                            <button type="button" class="close"data-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -111,7 +111,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                           data-bs-dismiss="modal">
+                                                                           data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -124,7 +124,7 @@
                                                 <div class="modal fade" id="withdraw_savings_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close"data-bs-dismiss="modal"
+                                                            <button type="button" class="close"data-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -147,7 +147,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                           data-bs-dismiss="modal">
+                                                                           data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -171,7 +171,7 @@
                                                 </a>
                                             @endcan
                                             @can('savings.savings.edit')
-                                                <a href="#" data-bs-toggle="modal"
+                                                <a href="#" data-toggle="modal"
                                                    data-target="#change_savings_officer_modal"
                                                    class="btn btn-primary">
                                                     {{ trans_choice('savings::general.change',1) }} {{ trans_choice('savings::general.savings',1) }} {{ trans_choice('savings::general.officer',1) }}
@@ -185,7 +185,7 @@
                                                 </a>
                                             @endcan
                                             @can('savings.savings.close_savings')
-                                                <a href="#" data-bs-toggle="modal" data-target="#close_savings_modal"
+                                                <a href="#" data-toggle="modal" data-target="#close_savings_modal"
                                                    class="btn btn-primary">
                                                     {{ trans_choice('core::general.close',1) }} {{ trans_choice('savings::general.savings',1) }}
                                                 </a>
@@ -200,7 +200,7 @@
                                                 <div class="modal fade" id="change_savings_officer_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close"data-bs-dismiss="modal"
+                                                            <button type="button" class="close"data-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -230,7 +230,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                           data-bs-dismiss="modal">
+                                                                           data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -245,7 +245,7 @@
                                                 <div class="modal fade" id="close_savings_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close"data-bs-dismiss="modal"
+                                                            <button type="button" class="close"data-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -268,7 +268,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                           data-bs-dismiss="modal">
+                                                                           data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -306,13 +306,13 @@
                                         @endif
                                         @if($savings->status=='approved')
                                             @can('savings.savings.activate_savings')
-                                                <a href="#" data-bs-toggle="modal" data-target="#activate_savings_modal"
+                                                <a href="#" data-toggle="modal" data-target="#activate_savings_modal"
                                                    class="btn btn-primary"><i class="fa fa-flag"></i>
                                                     {{ trans_choice('savings::general.activate',1) }}
                                                 </a>
                                             @endcan
                                             @can('savings.savings.edit')
-                                                <a href="#" data-bs-toggle="modal"
+                                                <a href="#" data-toggle="modal"
                                                    data-target="#change_savings_officer_modal"
                                                    class="btn btn-primary">
                                                     {{ trans_choice('savings::general.change',1) }} {{ trans_choice('savings::general.savings',1) }} {{ trans_choice('savings::general.officer',1) }}
@@ -328,7 +328,7 @@
                                                 <div class="modal fade" id="change_savings_officer_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close"data-bs-dismiss="modal"
+                                                            <button type="button" class="close"data-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -358,7 +358,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                           data-bs-dismiss="modal">
+                                                                           data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -373,7 +373,7 @@
                                                 <div class="modal fade in" id="activate_savings_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close"data-bs-dismiss="modal">
+                                                            <button type="button" class="close"data-dismiss="modal">
                                                                 <span>×</span></button>
                                                             <div class="modal-header">
                                                                 <h4 class="modal-title">{{ trans_choice('savings::general.activate',1) }} {{ trans_choice('savings::general.savings',1) }}</h4>
@@ -408,7 +408,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                           data-bs-dismiss="modal">
+                                                                           data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -581,7 +581,7 @@
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
                                 <a href="#account_details" class="nav-link active"
-                                   data-bs-toggle="tab">
+                                   data-toggle="tab">
                                     {{ trans_choice('savings::general.account',1) }} {{ trans_choice('core::general.detail',2) }}
                                 </a>
                             </li>
@@ -589,7 +589,7 @@
                                 @can('savings.savings.transactions.index')
                                     <li class="nav-item">
                                         <a href="#savings_transactions" class="nav-link"
-                                           data-bs-toggle="tab">
+                                           data-toggle="tab">
                                             {{ trans_choice('savings::general.transaction',2) }}
                                         </a>
                                     </li>
@@ -598,7 +598,7 @@
                             @can('savings.savings.charges.index')
                                 <li class="nav-item">
                                     <a href="#savings_charges" class="nav-link"
-                                       data-bs-toggle="tab">
+                                       data-toggle="tab">
                                         {{ trans_choice('savings::general.charge',2) }}
                                     </a>
                                 </li>
@@ -761,7 +761,7 @@
                                                     <td>
                                                         <div class="dropdown">
                                                             <a href="#" class="dropdown-toggle btn btn-icon btn-trigger"
-                                                               data-bs-toggle="dropdown"><em
+                                                               data-toggle="dropdown"><em
                                                                         class="icon ni ni-more-h"></em></a>
                                                             <div class="dropdown-menu dropdown-menu-right">
                                                                 <ul class="link-list-opt no-bdr">
@@ -892,6 +892,8 @@
 @endsection
 @section('scripts')
     <script>
+                Vue.component('v-select', VueSelect.VueSelect)
+        Vue.component('flat-pickr', VueFlatpickr)
         var app = new Vue({
             el: '#app',
             data: {

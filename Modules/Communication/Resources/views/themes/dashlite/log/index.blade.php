@@ -78,7 +78,7 @@
                                                 <li>
                                                     <div class="dropdown">
                                                         <a href="#" class="btn btn-trigger btn-icon dropdown-toggle"
-                                                           data-bs-toggle="dropdown">
+                                                           data-toggle="dropdown">
                                                             <div class="dot dot-primary"></div>
                                                             <em class="icon ni ni-filter-alt"></em>
                                                         </a>
@@ -133,7 +133,7 @@
                                                 <li>
                                                     <div class="dropdown">
                                                         <a href="#" class="btn btn-trigger btn-icon dropdown-toggle"
-                                                           data-bs-toggle="dropdown">
+                                                           data-toggle="dropdown">
                                                             <em class="icon ni ni-setting"></em>
                                                         </a>
                                                         <div class="dropdown-menu dropdown-menu-xs dropdown-menu-right">

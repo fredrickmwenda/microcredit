@@ -42,62 +42,61 @@
                         <div class="col-md-12">
                             <div class="float-right btn-group">
                                 
-                @can('loan.loans.ceo_approval')
-                         @if($loan->status=='submitted' ||$loan->status=='pending' || $loan->status=='pending_ceo_approval')
-                    @can('loan.loans.approve_loan')
-                    <a href="#" data-bs-toggle="modal" data-target="#approve_loan_modal" class="btn btn-primary"><i class="fas fa-check"></i>
-                        {{ trans_choice('loan::general.approve',1) }}
-                    </a>
-                    <a href="#" data-bs-toggle="modal" data-target="#reject_loan_modal" class="btn btn-primary"><i class="fas fa-times"></i>
-                        {{ trans_choice('loan::general.reject',1) }}
-                    </a>
-                    <a href="#" data-bs-toggle="modal" data-target="#withdraw_loan_modal" class="btn btn-primary"><i class="fas fa-times"></i>
-                        {{ trans_choice('loan::general.withdraw',1) }}
-                    </a>
-                    @endcan
-                    @can('loan.loans.edit')
-                    <a href="{{url('loan/'.$loan->id.'/edit')}}" class="btn btn-primary">
-                        <i class="ri-edit-fill"></i>
-                        {{ trans_choice('core::general.edit',1) }}
-                    </a>
-                    @endcan
-                    @endif
-                
-                
-                
-                @else
+                            @can('loan.loans.ceo_approval')
+                                        @if($loan->status=='submitted' ||$loan->status=='pending' || $loan->status=='pending_ceo_approval')
+                                    @can('loan.loans.approve_loan')
+                                    <a href="#" data-toggle="modal" data-target="#approve_loan_modal" class="btn btn-primary"><i class="fas fa-check"></i>
+                                        {{ trans_choice('loan::general.approve',1) }}
+                                    </a>
+                                    <a href="#" data-toggle="modal" data-target="#reject_loan_modal" class="btn btn-primary"><i class="fas fa-times"></i>
+                                        {{ trans_choice('loan::general.reject',1) }}
+                                    </a>
+                                    <a href="#" data-toggle="modal" data-target="#withdraw_loan_modal" class="btn btn-primary"><i class="fas fa-times"></i>
+                                        {{ trans_choice('loan::general.withdraw',1) }}
+                                    </a>
+                                    @endcan
+                                    @can('loan.loans.edit')
+                                    <a href="{{url('loan/'.$loan->id.'/edit')}}" class="btn btn-primary">
+                                        <i class="ri-edit-fill"></i>
+                                        {{ trans_choice('core::general.edit',1) }}
+                                    </a>
+                                    @endcan
+                                    @endif
+                                
+                                
+                                
+                                @else
 
-
-                    @if($loan->status=='submitted' ||$loan->status=='pending')
-                    @can('loan.loans.approve_loan')
-                    <a href="#" data-bs-toggle="modal" data-target="#approve_loan_modal" class="btn btn-primary"><i class="fas fa-check"></i>
-                        {{ trans_choice('loan::general.approve',1) }}
-                    </a>
-                    <a href="#" data-bs-toggle="modal" data-target="#reject_loan_modal" class="btn btn-primary"><i class="fas fa-times"></i>
-                        {{ trans_choice('loan::general.reject',1) }}
-                    </a>
-                    <a href="#" data-bs-toggle="modal" data-target="#withdraw_loan_modal" class="btn btn-primary"><i class="fas fa-times"></i>
-                        {{ trans_choice('loan::general.withdraw',1) }}
-                    </a>
-                    @endcan
-                    @can('loan.loans.edit')
-                    <a href="{{url('loan/'.$loan->id.'/edit')}}" class="btn btn-primary">
-                        <i class="ri-edit-fill"></i>
-                        {{ trans_choice('core::general.edit',1) }}
-                    </a>
-                    @endcan
-                    @endif
+                                @if($loan->status=='submitted' ||$loan->status=='pending')
+                                @can('loan.loans.approve_loan')
+                                <a href="#" data-toggle="modal" data-target="#approve_loan_modal" class="btn btn-primary"><i class="fas fa-check"></i>
+                                    {{ trans_choice('loan::general.approve',1) }}
+                                </a>
+                                <a href="#" data-toggle="modal" data-target="#reject_loan_modal" class="btn btn-primary"><i class="fas fa-times"></i>
+                                    {{ trans_choice('loan::general.reject',1) }}
+                                </a>
+                                <a href="#" data-toggle="modal" data-target="#withdraw_loan_modal" class="btn btn-primary"><i class="fas fa-times"></i>
+                                    {{ trans_choice('loan::general.withdraw',1) }}
+                                </a>
+                                @endcan
+                                @can('loan.loans.edit')
+                                <a href="{{url('loan/'.$loan->id.'/edit')}}" class="btn btn-primary">
+                                    <i class="ri-edit-fill"></i>
+                                    {{ trans_choice('core::general.edit',1) }}
+                                </a>
+                                @endcan
+                                @endif
+                                
+                            @endcan
                     
-                @endcan
                     
-                    
-                               @can('loan.loans.approve_loan')
+                            @can('loan.loans.approve_loan')
                                 <div class="modal fade" id="approve_loan_modal">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h4 class="modal-title">{{ trans_choice('loan::general.approve',1) }} {{ trans_choice('loan::general.loan',1) }}</h4>
-                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">×</span>
                                                 </button>
                                             </div>
@@ -119,7 +118,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default float-left" data-bs-dismiss="modal">
+                                                    <button type="button" class="btn btn-default float-left" data-dismiss="modal">
                                                         {{ trans_choice('core::general.close',1) }}
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">{{ trans_choice('core::general.save',1) }}</button>
@@ -133,7 +132,7 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h4 class="modal-title">{{ trans_choice('loan::general.reject',1) }} {{ trans_choice('loan::general.loan',1) }}</h4>
-                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">×</span></button>
                                             </div>
                                             <form method="post" action="{{ url('loan/'.$loan->id.'/reject_loan') }}">
@@ -145,7 +144,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default pull-left" data-bs-dismiss="modal">
+                                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
                                                         {{ trans_choice('core::general.close',1) }}
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">{{ trans_choice('core::general.save',1) }}</button>
@@ -159,7 +158,7 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h4 class="modal-title">{{ trans_choice('loan::general.withdraw',1) }} {{ trans_choice('loan::general.loan',1) }}</h4>
-                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">×</span></button>
                                             </div>
                                             <form method="post" action="{{ url('loan/'.$loan->id.'/withdraw_loan') }}">
@@ -171,7 +170,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default pull-left" data-bs-dismiss="modal">
+                                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
                                                         {{ trans_choice('core::general.close',1) }}
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">{{ trans_choice('core::general.save',1) }}</button>
@@ -180,55 +179,59 @@
                                         </div>
                                     </div>
                                 </div>
-                                @endcan
-     
-        
-                                
-        
-                                @if($loan->status=='active')
+                            @endcan
+
+
+                            @if($loan->status=='active')
                                 @can('loan.loans.transactions.create')
                                 <a href="{{url('loan/'.$loan->id.'/repayment/create')}}" class="btn btn-primary"><i class="fas fa-dollar-sign"></i>
                                     {{ trans_choice('loan::general.make',1) }} {{ trans_choice('loan::general.repayment',1) }}
                                 </a>
                                 @endcan
+
                                 @can('loan.loans.disburse_loan')
                                 <a href="{{url('loan/'.$loan->id.'/undo_disbursement')}}" class="btn btn-primary confirm"><i class="fa fa-undo"></i>
                                     {{ trans_choice('loan::general.undo',1) }} {{ trans_choice('loan::general.disbursement',1) }}
                                 </a>
                                 @endcan
+
                                 @can('loan.loans.edit')
-                                <a href="#" data-bs-toggle="modal" data-target="#change_loan_officer_modal" class="btn btn-primary">
+                                <a href="#" data-toggle="modal" data-target="#change_loan_officer_modal" class="btn btn-primary">
                                     {{ trans_choice('loan::general.change',1) }} {{ trans_choice('loan::general.loan',1) }} {{ trans_choice('loan::general.officer',1) }}
                                 </a>
                                 @endcan
+
                                 @can('loan.loans.charges.create')
                                 <a href="{{url('loan/'.$loan->id.'/charge/create')}}" class="btn btn-primary"><i class="fa fa-plus"></i>
                                     {{ trans_choice('core::general.add',1) }} {{ trans_choice('loan::general.charge',1) }}
                                 </a>
                                 @endcan
+
                                 @can('loan.loans.transactions.edit')
-                                <a href="#" data-bs-toggle="modal" data-target="#waive_interest_modal" class="btn btn-primary">
+                                <a href="#" data-toggle="modal" data-target="#waive_interest_modal" class="btn btn-primary">
                                     {{ trans_choice('loan::general.waive',1) }} {{ trans_choice('loan::general.interest',1) }}
                                 </a>
                                 @endcan
 
                                 @can('loan.loans.write_off_loan')
-                                <a href="#" data-bs-toggle="modal" data-target="#write_off_loan_modal" class="btn btn-primary">
+                                <a href="#" data-toggle="modal" data-target="#write_off_loan_modal" class="btn btn-primary">
                                     {{ trans_choice('loan::general.write_off',1) }} {{ trans_choice('loan::general.loan',1) }}
                                 </a>
                                 @endcan
+
                                 @can('loan.loans.reschedule_loan')
-                                <a href="#" data-bs-toggle="modal" data-target="#reschedule_loan_modal" class="btn btn-primary">
+                                <a href="#" data-toggle="modal" data-target="#reschedule_loan_modal" class="btn btn-primary">
                                     {{ trans_choice('loan::general.reschedule',1) }} {{ trans_choice('loan::general.loan',1) }}
                                 </a>
                                 @endcan
+
                                 @can('loan.loans.edit')
                                 <div class="modal fade" id="change_loan_officer_modal">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h4 class="modal-title">{{ trans_choice('loan::general.change',1) }} {{ trans_choice('loan::general.loan',1) }} {{ trans_choice('loan::general.officer',1) }}</h4>
-                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">×</span></button>
                                             </div>
                                             <form method="post" action="{{ url('loan/'.$loan->id.'/change_loan_officer') }}">
@@ -245,7 +248,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default pull-left" data-bs-dismiss="modal">
+                                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
                                                         {{ trans_choice('core::general.close',1) }}
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">{{ trans_choice('core::general.save',1) }}</button>
@@ -255,13 +258,14 @@
                                     </div>
                                 </div>
                                 @endcan
+
                                 @can('loan.loans.transactions.edit')
                                 <div class="modal fade" id="waive_interest_modal">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h4 class="modal-title">{{ trans_choice('loan::general.waive',1) }} {{ trans_choice('loan::general.interest',1) }}</h4>
-                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">×</span></button>
                                             </div>
                                             <form method="post" action="{{ url('loan/'.$loan->id.'/waive_interest') }}">
@@ -282,7 +286,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default pull-left" data-bs-dismiss="modal">
+                                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
                                                         {{ trans_choice('core::general.close',1) }}
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">{{ trans_choice('core::general.save',1) }}</button>
@@ -292,13 +296,14 @@
                                     </div>
                                 </div>
                                 @endcan
+
                                 @can('loan.loans.write_off_loan')
                                 <div class="modal fade" id="write_off_loan_modal">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h4 class="modal-title">{{ trans_choice('loan::general.write_off',1) }} {{ trans_choice('loan::general.loan',1) }}</h4>
-                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">×</span></button>
                                             </div>
                                             <form method="post" action="{{ url('loan/'.$loan->id.'/write_off_loan') }}">
@@ -316,7 +321,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default pull-left" data-bs-dismiss="modal">
+                                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
                                                         {{ trans_choice('core::general.close',1) }}
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">{{ trans_choice('core::general.save',1) }}</button>
@@ -326,13 +331,14 @@
                                     </div>
                                 </div>
                                 @endcan
+
                                 @can('loan.loans.reschedule_loan')
                                 <div class="modal fade" id="reschedule_loan_modal">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h4 class="modal-title">{{ trans_choice('loan::general.reschedule',1) }} {{ trans_choice('loan::general.loan',1) }}</h4>
-                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">×</span></button>
                                             </div>
                                             <form method="post" action="{{ url('loan/'.$loan->id.'/reschedule_loan') }}">
@@ -414,7 +420,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default pull-left" data-bs-dismiss="modal">
+                                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
                                                         {{ trans_choice('core::general.close',1) }}
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">{{ trans_choice('core::general.save',1) }}</button>
@@ -424,38 +430,46 @@
                                     </div>
                                 </div>
                                 @endcan
-                                @endif
-                                @if($loan->status=='written_off')
+
+                            @endif
+
+
+                            @if($loan->status=='written_off')
                                 <a href="{{url('loan/'.$loan->id.'/repayment/create')}}" class="btn btn-primary"><i class="fas fa-dollar-sign"></i>
                                     {{ trans_choice('loan::general.recovery',1) }} {{ trans_choice('loan::general.payment',1) }}
                                 </a>
                                 <a href="{{url('loan/'.$loan->id.'/undo_write_off')}}" class="btn btn-primary confirm"><i class="fa fa-undo"></i>
                                     {{ trans_choice('loan::general.undo',1) }} {{ trans_choice('loan::general.loan',1) }} {{ trans_choice('loan::general.write_off',1) }}
                                 </a>
-                                @endif
-                                @if($loan->status=='approved')
+                            @endif
+
+
+                            @if($loan->status=='approved')
                                 @can('loan.loans.disburse_loan')
-                                <a href="#" data-bs-toggle="modal" data-target="#disburse_loan_modal" class="btn btn-primary"><i class="fas fa-flag"></i>
+                                <a href="#" data-toggle="modal" data-target="#disburse_loan_modal" class="btn btn-primary"><i class="fas fa-flag"></i>
                                     {{ trans_choice('loan::general.disburse',1) }}
                                 </a>
                                 @endcan
+
                                 @can('loan.loans.edit')
-                                <a href="#" data-bs-toggle="modal" data-target="#change_loan_officer_modal" class="btn btn-primary">
+                                <a href="#" data-toggle="modal" data-target="#change_loan_officer_modal" class="btn btn-primary">
                                     {{ trans_choice('loan::general.change',1) }} {{ trans_choice('loan::general.loan',1) }} {{ trans_choice('loan::general.officer',1) }}
                                 </a>
                                 @endcan
+
                                 @can('loan.loans.approve_loan')
                                 <a href="{{url('loan/'.$loan->id.'/undo_approval')}}" class="btn btn-primary confirm"><i class="fa fa-undo"></i>
                                     {{ trans_choice('loan::general.undo',1) }} {{ trans_choice('loan::general.approval',1) }}
                                 </a>
                                 @endcan
+
                                 @can('loan.loans.edit')
                                 <div class="modal fade" id="change_loan_officer_modal">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h4 class="modal-title">{{ trans_choice('loan::general.change',1) }} {{ trans_choice('loan::general.loan',1) }} {{ trans_choice('loan::general.officer',1) }}</h4>
-                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">×</span></button>
                                             </div>
                                             <form method="post" action="{{ url('loan/'.$loan->id.'/change_loan_officer') }}">
@@ -472,7 +486,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default pull-left" data-bs-dismiss="modal">
+                                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
                                                         {{ trans_choice('core::general.close',1) }}
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">{{ trans_choice('core::general.save',1) }}</button>
@@ -482,13 +496,14 @@
                                     </div>
                                 </div>
                                 @endcan
+
                                 @can('loan.loans.disburse_loan')
                                 <div class="modal fade in" id="disburse_loan_modal">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h4 class="modal-title">{{ trans_choice('loan::general.disburse',1) }} {{ trans_choice('loan::general.loan',1) }}</h4>
-                                                <button type="button" class="close" data-bs-dismiss="modal">
+                                                <button type="button" class="close" data-dismiss="modal">
                                                     <span>×</span></button>
                                             </div>
                                             <form method="post" action="{{ url('loan/'.$loan->id.'/disburse_loan') }}" class="form-horizontal">
@@ -518,7 +533,7 @@
                                                     <div class="form-group">
                                                         <label for="approved_amount" class="control-label">{{ trans_choice('core::general.show',1) }}
                                                             {{ trans_choice('loan::general.payment',1) }} {{ trans_choice('core::general.detail',2) }}</label>
-                                                        <button type="button" class="btn btn-primary collapsed" data-bs-toggle="collapse" data-target="#show_payment_details" aria-expanded="false">
+                                                        <button type="button" class="btn btn-primary collapsed" data-toggle="collapse" data-target="#show_payment_details" aria-expanded="false">
                                                             <i class="fa fa-plus"></i>
                                                         </button>
                                                     </div>
@@ -556,7 +571,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default pull-left" data-bs-dismiss="modal">
+                                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
                                                         {{ trans_choice('core::general.close',1) }}
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">{{ trans_choice('core::general.save',1) }}</button>
@@ -566,21 +581,27 @@
                                     </div>
                                 </div>
                                 @endcan
-                                @endif
-                                @if($loan->status=='rejected')
+
+                            @endif
+
+
+                            @if($loan->status=='rejected')
                                 @can('loan.loans.approve_loan')
                                 <a href="{{url('loan/'.$loan->id.'/undo_rejection')}}" class="btn btn-primary confirm"><i class="fa fa-undo"></i>
                                     {{ trans_choice('loan::general.undo',1) }} {{ trans_choice('loan::general.rejection',1) }}
                                 </a>
                                 @endcan
-                                @endif
-                                @if($loan->status=='withdrawn')
+
+                            @endif
+
+
+                            @if($loan->status=='withdrawn')
                                 @can('loan.loans.approve_loan')
                                 <a href="{{url('loan/'.$loan->id.'/undo_withdrawn')}}" class="btn btn-primary confirm"><i class="fa fa-undo"></i>
                                     {{ trans_choice('loan::general.undo',1) }} {{ trans_choice('loan::general.withdrawn',1) }}
                                 </a>
                                 @endcan
-                                @endif
+                            @endif
                             </div>
                         </div>
                     </div>
@@ -862,21 +883,21 @@
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
                                 <a href="#account_details" class="nav-link active"
-                                   data-bs-toggle="tab">
+                                   data-toggle="tab">
                                     {{ trans_choice('loan::general.account',1) }} {{ trans_choice('core::general.detail',2) }}
                                 </a>
                             </li>
                             @if($loan->status=='active' ||$loan->status=='closed'||$loan->status=='written_off'||$loan->status=='overpaid'||$loan->status=='rescheduled')
                                 <li class="nav-item">
                                     <a href="#repayment_schedule" class="nav-link"
-                                       data-bs-toggle="tab">
+                                       data-toggle="tab">
                                         {{ trans_choice('loan::general.repayment',1) }} {{ trans_choice('loan::general.schedule',1) }}
                                     </a>
                                 </li>
                                 @can('loan.loans.transactions.index')
                                     <li class="nav-item">
                                         <a href="#loan_transactions" class="nav-link"
-                                           data-bs-toggle="tab">
+                                           data-toggle="tab">
                                             {{ trans_choice('loan::general.transaction',2) }}
                                         </a>
                                     </li>
@@ -885,7 +906,7 @@
                             @can('loan.loans.charges.index')
                                 <li class="nav-item">
                                     <a href="#loan_charges" class="nav-link"
-                                       data-bs-toggle="tab">
+                                       data-toggle="tab">
                                         {{ trans_choice('loan::general.charge',2) }}
                                     </a>
                                 </li>
@@ -893,7 +914,7 @@
                             @can('loan.loans.files.index')
                                 <li class="nav-item">
                                     <a href="#loan_files" class="nav-link"
-                                       data-bs-toggle="tab">
+                                       data-toggle="tab">
                                         {{ trans_choice('loan::general.file',2) }}
                                     </a>
                                 </li>
@@ -901,7 +922,7 @@
                             @can('loan.loans.collateral.index')
                                 <li class="nav-item">
                                     <a href="#loan_collateral" class="nav-link"
-                                       data-bs-toggle="tab">
+                                       data-toggle="tab">
                                         {{ trans_choice('loan::general.collateral',2) }}
                                     </a>
                                 </li>
@@ -909,7 +930,7 @@
                             @can('loan.loans.guarantors.index')
                                 <li class="nav-item">
                                     <a href="#loan_guarantors" class="nav-link"
-                                       data-bs-toggle="tab">
+                                       data-toggle="tab">
                                         {{ trans_choice('loan::general.guarantor',2) }}
                                     </a>
                                 </li>
@@ -917,7 +938,7 @@
                             @can('loan.loans.notes.index')
                                 <li class="nav-item">
                                     <a href="#loan_notes" class="nav-link"
-                                       data-bs-toggle="tab">
+                                       data-toggle="tab">
                                         {{ trans_choice('core::general.note',2) }}
                                     </a>
                                 </li>
@@ -1071,7 +1092,7 @@
                                     <div class="m-4">
                                         <div class="btn-group">
                                             <button href="#" class="btn btn-info dropdown-toggle"
-                                                    data-bs-toggle="dropdown">
+                                                    data-toggle="dropdown">
                                                 {{trans_choice('core::general.action',1)}}
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-left">
@@ -1324,7 +1345,7 @@
                                                     <td>
                                                         <div class="btn-group">
                                                             <button href="#" class="btn btn-default dropdown-toggle"
-                                                                    data-bs-toggle="dropdown">
+                                                                    data-toggle="dropdown">
                                                                 <i class="ri-settings-3-line"></i>
                                                             </button>
                                                             <div class="dropdown-menu dropdown-menu-right">
@@ -1343,8 +1364,8 @@
                                                                     </a>
                                                                     @can('loan.loans.transactions.edit')
                                                                         <a href="{{url('loan/repayment/' . $key->id . '/edit') }}"
-                                                                           class="dropdown-item"><i
-                                                                                    class="ri-edit-fill"></i> {{ trans_choice('core::general.edit', 1) }}
+                                                                           class="dropdown-item">
+                                                                           <i class="ri-edit-fill"></i> {{ trans_choice('core::general.edit', 1) }}
                                                                         </a>
 
                                                                     @endcan
@@ -1649,6 +1670,8 @@
         </script>
     @endif
     <script>
+                Vue.component('v-select', VueSelect.VueSelect)
+        Vue.component('flat-pickr', VueFlatpickr)
         var app = new Vue({
             el: '#app',
             data: {

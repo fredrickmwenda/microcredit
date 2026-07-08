@@ -43,6 +43,23 @@ class LoginController extends Controller
 
     }
 
+    /**
+     * Get the needed authorization credentials from the request.
+     * Override to check for active status.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    protected function credentials(Request $request)
+    {
+        return array_merge($request->validate([
+            $this->username() => 'required|string',
+            'password' => 'required|string',
+        ]), [
+            'is_active' => 1  // Check if user is active
+        ]);
+    }
+
     public function showLoginForm()
     {
         return theme_view('user::auth.login');

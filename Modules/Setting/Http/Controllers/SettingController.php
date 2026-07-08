@@ -47,6 +47,7 @@ class SettingController extends Controller
     public function index()
     {
         $data = Setting::get();
+        info($data);
         return theme_view('setting::setting.index', compact('data'));
     }
 
@@ -66,6 +67,7 @@ class SettingController extends Controller
     public function sms()
     {
         $data = Setting::where('category', 'sms')->where('displayed', 1)->get();
+        // dd($data);
         return theme_view('setting::setting.sms', compact('data'));
     }
 

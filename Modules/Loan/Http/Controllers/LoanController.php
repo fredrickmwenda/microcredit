@@ -871,9 +871,13 @@ class LoanController extends Controller
                 return redirect()->back();
             }
 
-            Notification::send(User::whereHas('roles', function ($query) {
-                $query->where('name', 'CEO');
-            })->first(), new LoanApprovalNotification($loan, 'pending_ceo_approval'));
+            // if(Auth::user()->hasRoles(){
+
+            // });
+
+            // Notification::send(User::whereHas('roles', function ($query) {
+            //     $query->where('name', 'CEO');
+            // })->first(), new LoanApprovalNotification($loan, 'pending_ceo_approval'));
 
 
             $loan->status = Loan::STATUS_PENDING_CEO_APPROVAL;

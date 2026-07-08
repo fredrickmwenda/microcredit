@@ -14,6 +14,8 @@ use Modules\Loan\Entities\LoanProduct;
 use Modules\Loan\Exports\LoanExport;
 use Modules\User\Entities\User;
 use PDF;
+use Yajra\DataTables\Facades\DataTables;
+
 
 class ReportController extends Controller
 {
@@ -394,5 +396,164 @@ class ReportController extends Controller
         return theme_view('loan::report.disbursement',
             compact('start_date',
                 'end_date', 'branch_id', 'data', 'branches', 'loan_officer_id', 'loan_product_id', 'loan_products', 'users', 'status'));
+    }
+
+
+    
+
+    public function dailyLoanCollectionReport(Request $request)
+    {
+        if ($request->ajax()) {
+            // For modal details when clicking "View More" on a specific officer
+            if ($request->has('officer_id') && !$request->has('draw')) {
+                $officerId = $request->officer_id;
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+                $branch_id = $request->branch_id;
+                $loan_product_id = $request->loan_product_id;
+
+                // Disbursements (loans) for this officer
+                $disbursements = DB::table('loans')
+                    ->select('id', 'loan_officer_id', 'branch_id', 'loan_product_id', 'principal', 'disbursed_on_date', 'client_id')
+                    ->where('loan_officer_id', $officerId)
+                    ->whereNotNull('disbursed_on_date')
+                    ->when($start_date, fn($q) => $q->whereDate('disbursed_on_date', '>=', $start_date))
+                    ->when($end_date, fn($q) => $q->whereDate('disbursed_on_date', '<=', $end_date))
+                    ->when($branch_id, fn($q) => $q->where('branch_id', $branch_id))
+                    ->when($loan_product_id, fn($q) => $q->where('loan_product_id', $loan_product_id))
+                    ->with(['client:id,first_name,last_name', 'loanProduct:id,name'])
+                    ->get();
+
+                // Collections (repayments) for loans of this officer
+                $collections = DB::table('loan_transactions')
+                    ->join('loans', 'loan_transactions.loan_id', '=', 'loans.id')
+                    ->select('loan_transactions.*', 'loans.loan_officer_id')
+                    ->where('loans.loan_officer_id', $officerId)
+                    ->where('loan_transactions.loan_transaction_type_id', 2) // repayment
+                    ->where('loan_transactions.reversed', 0)
+                    ->when($start_date, fn($q) => $q->whereDate('loan_transactions.submitted_on', '>=', $start_date))
+                    ->when($end_date, fn($q) => $q->whereDate('loan_transactions.submitted_on', '<=', $end_date))
+                    ->when($branch_id, fn($q) => $q->where('loans.branch_id', $branch_id))
+                    ->when($loan_product_id, fn($q) => $q->where('loans.loan_product_id', $loan_product_id))
+                    ->with(['loan.client:id,first_name,last_name', 'loan.loanProduct:id,name'])
+                    ->get();
+
+                return response()->json([
+                    'disbursements' => $disbursements,
+                    'collections' => $collections,
+                ]);
+            }
+
+            // Main DataTable response – grouped by loan officer
+            $start_date = $request->start_date;
+            $end_date   = $request->end_date;
+            $branch_id  = $request->branch_id;
+            $loan_officer_id = $request->loan_officer_id;
+            $loan_product_id = $request->loan_product_id;
+
+            // 1. Get all loan officer IDs that have either disbursements or collections within the period
+            $disbursementOfficers = DB::table('loans')
+                ->select('loan_officer_id')
+                ->whereNotNull('disbursed_on_date')
+                ->when($start_date, fn($q) => $q->whereDate('disbursed_on_date', '>=', $start_date))
+                ->when($end_date, fn($q) => $q->whereDate('disbursed_on_date', '<=', $end_date))
+                ->when($branch_id, fn($q) => $q->where('branch_id', $branch_id))
+                ->when($loan_product_id, fn($q) => $q->where('loan_product_id', $loan_product_id))
+                ->distinct();
+
+            $collectionOfficers = DB::table('loan_transactions')
+                ->join('loans', 'loan_transactions.loan_id', '=', 'loans.id')
+                ->select('loans.loan_officer_id')
+                ->where('loan_transactions.loan_transaction_type_id', 2)
+                ->where('loan_transactions.reversed', 0)
+                ->when($start_date, fn($q) => $q->whereDate('loan_transactions.submitted_on', '>=', $start_date))
+                ->when($end_date, fn($q) => $q->whereDate('loan_transactions.submitted_on', '<=', $end_date))
+                ->when($branch_id, fn($q) => $q->where('loans.branch_id', $branch_id))
+                ->when($loan_product_id, fn($q) => $q->where('loans.loan_product_id', $loan_product_id))
+                ->distinct();
+
+            $officerIds = $disbursementOfficers->union($collectionOfficers)->pluck('loan_officer_id');
+
+            // If no officers found, return empty DataTable
+            if ($officerIds->isEmpty()) {
+                return DataTables::of(collect([]))
+                    ->with(['totals' => (object)[
+                        'total_loans_issued' => 0,
+                        'total_disbursed' => 0,
+                        'total_collection_count' => 0,
+                        'total_collected' => 0,
+                        'net_collection_total' => 0,
+                    ]])
+                    ->make(true);
+            }
+
+            // 2. Subquery for disbursements per officer (only among those IDs)
+            $disbursements = DB::table('loans')
+                ->selectRaw('loan_officer_id, COUNT(*) as loans_issued, SUM(principal) as total_disbursed')
+                ->whereIn('loan_officer_id', $officerIds)
+                ->whereNotNull('disbursed_on_date')
+                ->when($start_date, fn($q) => $q->whereDate('disbursed_on_date', '>=', $start_date))
+                ->when($end_date, fn($q) => $q->whereDate('disbursed_on_date', '<=', $end_date))
+                ->when($branch_id, fn($q) => $q->where('branch_id', $branch_id))
+                ->when($loan_product_id, fn($q) => $q->where('loan_product_id', $loan_product_id))
+                ->groupBy('loan_officer_id');
+
+            // 3. Subquery for collections per officer (only among those IDs)
+            $collections = DB::table('loan_transactions')
+                ->join('loans', 'loan_transactions.loan_id', '=', 'loans.id')
+                ->selectRaw('loans.loan_officer_id, COUNT(*) as collection_count, SUM(loan_transactions.amount) as total_collected')
+                ->whereIn('loans.loan_officer_id', $officerIds)
+                ->where('loan_transactions.loan_transaction_type_id', 2)
+                ->where('loan_transactions.reversed', 0)
+                ->when($start_date, fn($q) => $q->whereDate('loan_transactions.submitted_on', '>=', $start_date))
+                ->when($end_date, fn($q) => $q->whereDate('loan_transactions.submitted_on', '<=', $end_date))
+                ->when($branch_id, fn($q) => $q->where('loans.branch_id', $branch_id))
+                ->when($loan_product_id, fn($q) => $q->where('loans.loan_product_id', $loan_product_id))
+                ->groupBy('loans.loan_officer_id');
+
+            // 4. Combine with users table to get officer names
+            $query = DB::table('users')
+                ->joinSub($disbursements, 'disb', 'users.id', '=', 'disb.loan_officer_id', 'left')
+                ->joinSub($collections, 'coll', 'users.id', '=', 'coll.loan_officer_id', 'left')
+                ->select(
+                    'users.id as officer_id',
+                    DB::raw("CONCAT(users.first_name, ' ', users.last_name) as officer_name"),
+                    DB::raw("COALESCE(disb.loans_issued, 0) as loans_issued"),
+                    DB::raw("COALESCE(disb.total_disbursed, 0) as total_disbursed"),
+                    DB::raw("COALESCE(coll.collection_count, 0) as collection_count"),
+                    DB::raw("COALESCE(coll.total_collected, 0) as total_collected"),
+                    DB::raw("COALESCE(coll.total_collected, 0) - COALESCE(disb.total_disbursed, 0) as net_collection")
+                )
+                ->whereIn('users.id', $officerIds)
+                ->when($loan_officer_id, fn($q) => $q->where('users.id', $loan_officer_id))
+                ->orderBy('officer_name');
+
+            // 5. Totals across all displayed officers
+            $totals = (object)[
+                'total_loans_issued'    => $query->sum('loans_issued'),
+                'total_disbursed'       => $query->sum('total_disbursed'),
+                'total_collection_count'=> $query->sum('collection_count'),
+                'total_collected'       => $query->sum('total_collected'),
+                'net_collection_total'  => $query->sum('net_collection'),
+            ];
+
+            return DataTables::of($query)
+                ->editColumn('total_disbursed', fn($row) => number_format($row->total_disbursed, 2))
+                ->editColumn('total_collected', fn($row) => number_format($row->total_collected, 2))
+                ->editColumn('net_collection', fn($row) => number_format($row->net_collection, 2))
+                ->addColumn('action', function($row) {
+                    return '<button class="btn btn-sm btn-info view-more-btn" data-officer-id="'.$row->officer_id.'" data-officer-name="'.$row->officer_name.'">View More</button>';
+                })
+                ->with(['totals' => $totals])
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        // For initial page load: get filter options
+        $branches       = Branch::all();
+        $loan_products  = LoanProduct::all();
+        $loan_officers  = User::whereDoesntHave('roles', fn($q) => $q->whereIn('name', ['client', 'admin']))->get();
+
+        return theme_view('loan::report.daily_loan_collection', compact('branches', 'loan_products', 'loan_officers'));
     }
 }

@@ -94,4 +94,14 @@ class Client extends Model
     {
         return $this->blacklist && $this->blacklist->status === 'active';
     } 
+
+    public function creditScore()
+    {
+        return $this->hasOne(CreditScore::class)->latestOfMany();
+    }
+
+    public function creditScoreHistory()
+    {
+        return $this->hasMany(CreditScoreHistory::class);
+    }
 }

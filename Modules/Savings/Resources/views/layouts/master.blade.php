@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -16,4 +16,4 @@
         {{-- Laravel Mix - JS File --}}
         {{-- <script src="{{ mix('js/savings.js') }}"></script> --}}
     </body>
-</html>
+</html> -->

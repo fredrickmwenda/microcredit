@@ -36,7 +36,7 @@ class ReportController extends Controller
 
             }
         }
-        //dd($data);
+        // dd($data);
         return theme_view('report::index',compact('data'));
     }
 

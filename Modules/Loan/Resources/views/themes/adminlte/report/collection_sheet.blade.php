@@ -38,7 +38,7 @@
                 <div class="card-tools hidden-print">
                     <div class="dropdown">
                         <a href="#" class="btn btn-info btn-trigger btn-icon dropdown-toggle"
-                           data-bs-toggle="dropdown">
+                           data-toggle="dropdown">
                             {{trans_choice('core::general.action',2)}}
                         </a>
                         <div class="dropdown-menu dropdown-menu-xs dropdown-menu-right">
@@ -220,6 +220,8 @@
 @endsection
 @section('scripts')
     <script>
+                Vue.component('v-select', VueSelect.VueSelect)
+        Vue.component('flat-pickr', VueFlatpickr)
         var app = new Vue({
             el: "#app",
             data: {},

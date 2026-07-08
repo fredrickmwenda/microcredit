@@ -17,16 +17,16 @@
                                     <div class="pull-right btn-group">
                                         @if($loan->status=='submitted' ||$loan->status=='pending')
                                             @can('loan.loans.approve_loan')
-                                                <a href="#" data-bs-toggle="modal" data-target="#approve_loan_modal"
+                                                <a href="#" data-toggle="modal" data-target="#approve_loan_modal"
                                                    class="btn btn-primary"><i
                                                             class="fa fa-check"></i>
                                                     {{ trans_choice('loan::general.approve',1) }}
                                                 </a>
-                                                <a href="#" data-bs-toggle="modal" data-target="#reject_loan_modal"
+                                                <a href="#" data-toggle="modal" data-target="#reject_loan_modal"
                                                    class="btn btn-primary"><i class="fa fa-times"></i>
                                                     {{ trans_choice('loan::general.reject',1) }}
                                                 </a>
-                                                <a href="#" data-bs-toggle="modal" data-target="#withdraw_loan_modal"
+                                                <a href="#" data-toggle="modal" data-target="#withdraw_loan_modal"
                                                    class="btn btn-primary"><i class="fa fa-times"></i>
                                                     {{ trans_choice('loan::general.withdraw',1) }}
                                                 </a>
@@ -42,7 +42,7 @@
                                                 <div class="modal fade" id="approve_loan_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close" data-bs-dismiss="modal"
+                                                            <button type="button" class="close" data-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span>
                                                             </button>
@@ -84,7 +84,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default float-left"
-                                                                            data-bs-dismiss="modal">
+                                                                            data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -97,7 +97,7 @@
                                                 <div class="modal fade" id="reject_loan_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close" data-bs-dismiss="modal"
+                                                            <button type="button" class="close" data-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -119,7 +119,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                            data-bs-dismiss="modal">
+                                                                            data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -132,7 +132,7 @@
                                                 <div class="modal fade" id="withdraw_loan_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close" data-bs-dismiss="modal"
+                                                            <button type="button" class="close" data-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -154,7 +154,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                            data-bs-dismiss="modal">
+                                                                            data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -180,7 +180,7 @@
                                                 </a>
                                             @endcan
                                             @can('loan.loans.edit')
-                                                <a href="#" data-bs-toggle="modal" data-target="#change_loan_officer_modal"
+                                                <a href="#" data-toggle="modal" data-target="#change_loan_officer_modal"
                                                    class="btn btn-primary">
                                                     {{ trans_choice('loan::general.change',1) }} {{ trans_choice('loan::general.loan',1) }} {{ trans_choice('loan::general.officer',1) }}
                                                 </a>
@@ -193,20 +193,20 @@
                                                 </a>
                                             @endcan
                                             @can('loan.loans.transactions.edit')
-                                                <a href="#" data-bs-toggle="modal" data-target="#waive_interest_modal"
+                                                <a href="#" data-toggle="modal" data-target="#waive_interest_modal"
                                                    class="btn btn-primary">
                                                     {{ trans_choice('loan::general.waive',1) }} {{ trans_choice('loan::general.interest',1) }}
                                                 </a>
                                             @endcan
 
                                             @can('loan.loans.write_off_loan')
-                                                <a href="#" data-bs-toggle="modal" data-target="#write_off_loan_modal"
+                                                <a href="#" data-toggle="modal" data-target="#write_off_loan_modal"
                                                    class="btn btn-primary">
                                                     {{ trans_choice('loan::general.write_off',1) }} {{ trans_choice('loan::general.loan',1) }}
                                                 </a>
                                             @endcan
                                             @can('loan.loans.reschedule_loan')
-                                                <a href="#" data-bs-toggle="modal" data-target="#reschedule_loan_modal"
+                                                <a href="#" data-toggle="modal" data-target="#reschedule_loan_modal"
                                                    class="btn btn-primary">
                                                     {{ trans_choice('loan::general.reschedule',1) }} {{ trans_choice('loan::general.loan',1) }}
                                                 </a>
@@ -215,7 +215,7 @@
                                                 <div class="modal fade" id="change_loan_officer_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close" data-bs-dismiss="modal"
+                                                            <button type="button" class="close" data-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -244,7 +244,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                            data-bs-dismiss="modal">
+                                                                            data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -259,7 +259,7 @@
                                                 <div class="modal fade" id="waive_interest_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close" data-bs-dismiss="modal"
+                                                            <button type="button" class="close" data-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -298,7 +298,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                            data-bs-dismiss="modal">
+                                                                            data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -313,7 +313,7 @@
                                                 <div class="modal fade" id="write_off_loan_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close" data-bs-dismiss="modal"
+                                                            <button type="button" class="close" data-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -346,7 +346,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                            data-bs-dismiss="modal">
+                                                                            data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -361,7 +361,7 @@
                                                 <div class="modal fade" id="reschedule_loan_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close" data-bs-dismiss="modal"
+                                                            <button type="button" class="close" data-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -514,7 +514,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                            data-bs-dismiss="modal">
+                                                                            data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -538,13 +538,13 @@
                                         @endif
                                         @if($loan->status=='approved')
                                             @can('loan.loans.disburse_loan')
-                                                <a href="#" data-bs-toggle="modal" data-target="#disburse_loan_modal"
+                                                <a href="#" data-toggle="modal" data-target="#disburse_loan_modal"
                                                    class="btn btn-primary"><i class="fa fa-flag"></i>
                                                     {{ trans_choice('loan::general.disburse',1) }}
                                                 </a>
                                             @endcan
                                             @can('loan.loans.edit')
-                                                <a href="#" data-bs-toggle="modal" data-target="#change_loan_officer_modal"
+                                                <a href="#" data-toggle="modal" data-target="#change_loan_officer_modal"
                                                    class="btn btn-primary">
                                                     {{ trans_choice('loan::general.change',1) }} {{ trans_choice('loan::general.loan',1) }} {{ trans_choice('loan::general.officer',1) }}
                                                 </a>
@@ -559,7 +559,7 @@
                                                 <div class="modal fade" id="change_loan_officer_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close" data-bs-dismiss="modal"
+                                                            <button type="button" class="close" data-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -588,7 +588,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                            data-bs-dismiss="modal">
+                                                                            data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -604,7 +604,7 @@
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
                                                             <button type="button" class="close"
-                                                                    data-bs-dismiss="modal">
+                                                                    data-dismiss="modal">
                                                                 <span>×</span></button>
                                                             <div class="modal-header">
                                                                 <h4 class="modal-title">{{ trans_choice('loan::general.disburse',1) }} {{ trans_choice('loan::general.loan',1) }}</h4>
@@ -658,7 +658,7 @@
                                                                             {{ trans_choice('loan::general.payment',1) }} {{ trans_choice('core::general.detail',2) }}</label>
                                                                         <button type="button"
                                                                                 class="btn btn-primary collapsed"
-                                                                                data-bs-toggle="collapse"
+                                                                                data-toggle="collapse"
                                                                                 data-target="#show_payment_details"
                                                                                 aria-expanded="false">
                                                                             <i class="fa fa-plus"></i>
@@ -719,7 +719,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                            data-bs-dismiss="modal">
+                                                                            data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -1027,21 +1027,21 @@
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
                                 <a href="#account_details" class="nav-link active"
-                                   data-bs-toggle="tab">
+                                   data-toggle="tab">
                                     {{ trans_choice('loan::general.account',1) }} {{ trans_choice('core::general.detail',2) }}
                                 </a>
                             </li>
                             @if($loan->status=='active' ||$loan->status=='closed'||$loan->status=='written_off'||$loan->status=='overpaid'||$loan->status=='rescheduled')
                                 <li class="nav-item">
                                     <a href="#repayment_schedule" class="nav-link"
-                                       data-bs-toggle="tab">
+                                       data-toggle="tab">
                                         {{ trans_choice('loan::general.repayment',1) }} {{ trans_choice('loan::general.schedule',1) }}
                                     </a>
                                 </li>
                                 @can('loan.loans.transactions.index')
                                     <li class="nav-item">
                                         <a href="#loan_transactions" class="nav-link"
-                                           data-bs-toggle="tab">
+                                           data-toggle="tab">
                                             {{ trans_choice('loan::general.transaction',2) }}
                                         </a>
                                     </li>
@@ -1050,7 +1050,7 @@
                             @can('loan.loans.charges.index')
                                 <li class="nav-item">
                                     <a href="#loan_charges" class="nav-link"
-                                       data-bs-toggle="tab">
+                                       data-toggle="tab">
                                         {{ trans_choice('loan::general.charge',2) }}
                                     </a>
                                 </li>
@@ -1058,7 +1058,7 @@
                             @can('loan.loans.files.index')
                                 <li class="nav-item">
                                     <a href="#loan_files" class="nav-link"
-                                       data-bs-toggle="tab">
+                                       data-toggle="tab">
                                         {{ trans_choice('loan::general.file',2) }}
                                     </a>
                                 </li>
@@ -1066,7 +1066,7 @@
                             @can('loan.loans.collateral.index')
                                 <li class="nav-item">
                                     <a href="#loan_collateral" class="nav-link"
-                                       data-bs-toggle="tab">
+                                       data-toggle="tab">
                                         {{ trans_choice('loan::general.collateral',2) }}
                                     </a>
                                 </li>
@@ -1074,7 +1074,7 @@
                             @can('loan.loans.guarantors.index')
                                 <li class="nav-item">
                                     <a href="#loan_guarantors" class="nav-link"
-                                       data-bs-toggle="tab">
+                                       data-toggle="tab">
                                         {{ trans_choice('loan::general.guarantor',2) }}
                                     </a>
                                 </li>
@@ -1082,7 +1082,7 @@
                             @can('loan.loans.notes.index')
                                 <li class="nav-item">
                                     <a href="#loan_notes" class="nav-link"
-                                       data-bs-toggle="tab">
+                                       data-toggle="tab">
                                         {{ trans_choice('core::general.note',2) }}
                                     </a>
                                 </li>
@@ -1234,7 +1234,7 @@
                                     <div class="m-4">
                                         <div class="dropdown">
                                             <button type="button" class="btn btn-info  btn-action dropdown-toggle"
-                                                    data-bs-toggle="dropdown">
+                                                    data-toggle="dropdown">
                                                 <span>{{trans_choice('core::general.action',1)}}</span>
                                                 <em class="icon ni ni-chevron-down"></em>
                                             </button>
@@ -1492,7 +1492,7 @@
                                                     <td>
                                                         <div class="dropdown">
                                                             <a href="#" class="dropdown-toggle btn btn-icon btn-trigger"
-                                                               data-bs-toggle="dropdown"><em
+                                                               data-toggle="dropdown"><em
                                                                         class="icon ni ni-more-h"></em></a>
                                                             <div class="dropdown-menu dropdown-menu-right">
                                                                 <ul class="link-list-opt no-bdr">
@@ -1827,6 +1827,8 @@
         </script>
     @endif
     <script>
+                Vue.component('v-select', VueSelect.VueSelect)
+        Vue.component('flat-pickr', VueFlatpickr)
         var app = new Vue({
             el: '#app',
             data: {

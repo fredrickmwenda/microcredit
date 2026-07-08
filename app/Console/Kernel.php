@@ -33,7 +33,7 @@ class Kernel extends ConsoleKernel
             ->appendOutputTo(storage_path('logs/scheduler.log'));
         //process scheduled campai9gns 
         //campaigns:process
-        $schedule->command('communication:process-scheduled-campaigns')
+        $schedule->command('campaigns:process')
             ->daily()
             ->appendOutputTo(storage_path('logs/scheduler.log'));
 

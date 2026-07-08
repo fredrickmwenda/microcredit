@@ -23,6 +23,7 @@ use Modules\Savings\Entities\SavingsTransaction;
 use Modules\Savings\Events\SavingsStatusChanged;
 use Modules\Savings\Events\TransactionUpdated;
 use Modules\User\Entities\User;
+
 use Modules\Client\Entities\ClientGroup;
 use PDF;
 use Yajra\DataTables\Facades\DataTables;
@@ -51,7 +52,7 @@ class SavingsController extends Controller
      * Display a listing of the resource.
      * @return Response
      */
-    public function index(Request $request)
+   public function index(Request $request)
     {
         $perPage = $request->per_page ?: 20;
         $orderBy = $request->order_by;
@@ -126,7 +127,8 @@ class SavingsController extends Controller
         return DataTables::of($query)->editColumn('client', function ($data) {
             return '<a href="' . url('client/' . $data->client_id . '/show') . '">' . $data->client . '</a>';
         })->editColumn('balance', function ($data) {
-            return number_format($data->balance_derived, $data->decimals);
+            // return number_format($data->balance_derived, $data->decimals);
+            return number_format($data->balance_derived, 2);
         })->editColumn('interest_rate', function ($data) {
             return number_format($data->interest_rate, 2);
         })->editColumn('status', function ($data) {
@@ -220,9 +222,6 @@ class SavingsController extends Controller
 //
 //            $savings_charges[$key->id] = $key;
 //        }
-        // $users = User::whereHas('roles', function ($query) {
-        //     return $query->where('name', '!=', 'client');
-        // })->get();
         $users = User::whereDoesntHave('roles', function ($query) {
             $query->whereIn('name', ['client', 'admin']);
         })->get();
@@ -316,9 +315,6 @@ class SavingsController extends Controller
      */
     public function show($id)
     {
-        // $users = User::whereHas('roles', function ($query) {
-        //     return $query->where('name', '!=', 'client');
-        // })->get();
         $users = User::whereDoesntHave('roles', function ($query) {
             $query->whereIn('name', ['client', 'admin']);
         })->get();
@@ -351,9 +347,6 @@ class SavingsController extends Controller
                 $charges_list[] = $key;
             }
         }
-        // $users = User::whereHas('roles', function ($query) {
-        //     return $query->where('name', '!=', 'client');
-        // })->get();
         $users = User::whereDoesntHave('roles', function ($query) {
             $query->whereIn('name', ['client', 'admin']);
         })->get();
@@ -599,72 +592,117 @@ class SavingsController extends Controller
 
     public function activate_savings(Request $request, $id)
     {
-
         $request->validate([
             'activated_on_date' => ['required', 'date'],
         ]);
-
-        $savings = Savings::find($id);
+    
+        $savings = Savings::findOrFail($id);
+    
         if ($savings->charges->where('savings_charge_type_id', 1)->sum('amount') > $savings->automatic_opening_balance) {
             Flash::warning(trans('savings::general.charges_greater_than_opening_balance'));
-            //return redirect()->back();
         }
+    
         $previous_status = $savings->status;
+    
         $savings->activated_by_user_id = Auth::id();
         $savings->activated_on_date = $request->activated_on_date;
         $savings->status = 'active';
         $savings->activated_notes = $request->activated_notes;
-        //determine next interest calculation day
+    
+        // ----------------------------------------------------
+        // Generate Interest Dates
+        // ----------------------------------------------------
         $monthly_dates = [];
         $biannual_dates = [];
         $annual_dates = [];
+    
         for ($i = 0; $i < 12; $i++) {
-            $monthly_dates[] = ["date" => Carbon::today()->startOfYear()->endOfMonth()->addMonthNoOverflow($i)->format("Y-m-d")];
+            $date = Carbon::today()
+                ->startOfYear()
+                ->endOfMonth()
+                ->addMonthNoOverflow($i)
+                ->format('Y-m-d');
+    
+            $monthly_dates[] = ['date' => $date];
+    
             if ($i == 5 || $i == 11) {
-                $biannual_dates[] = ["date" => Carbon::today()->startOfYear()->endOfMonth()->addMonthNoOverflow($i)->format("Y-m-d")];
-
+                $biannual_dates[] = ['date' => $date];
             }
+    
             if ($i == 11) {
-                $annual_dates[] = ["date" => Carbon::today()->startOfYear()->endOfMonth()->addMonthNoOverflow($i)->format("Y-m-d")];
-
+                $annual_dates[] = ['date' => $date];
             }
         }
-        $monthly_dates = collect($monthly_dates);
+    
+        $monthly_dates  = collect($monthly_dates);
         $biannual_dates = collect($biannual_dates);
-        $annual_dates = collect($annual_dates);
-        $next_interest_posting_date = '';
-        $next_interest_calculation_date = '';
+        $annual_dates   = collect($annual_dates);
+    
+        $next_interest_posting_date = null;
+        $next_interest_calculation_date = null;
+    
+        // ----------------------------------------------------
+        // Interest Posting Date (SAFE)
+        // ----------------------------------------------------
         if ($savings->interest_posting_period_type == 'monthly') {
-            $next_interest_posting_date = $monthly_dates->where('date', '>=', Carbon::today())->first()['date'];
+            $next_interest_posting_date = optional(
+                $monthly_dates->where('date', '>=', Carbon::today())->first()
+            )['date'];
         }
+    
         if ($savings->interest_posting_period_type == 'biannual') {
-            $next_interest_posting_date = $biannual_dates->where('date', '>=', Carbon::today())->first()['date'];
+            $next_interest_posting_date = optional(
+                $biannual_dates->where('date', '>=', Carbon::today())->first()
+            )['date'];
         }
+    
         if ($savings->interest_posting_period_type == 'annually') {
-            $next_interest_posting_date = $annual_dates->where('date', '>=', Carbon::today())->first()['date'];
+            $next_interest_posting_date = optional(
+                $annual_dates->where('date', '>=', Carbon::today())->first()
+            )['date'];
         }
+    
+        // ----------------------------------------------------
+        // Interest Calculation Date (SAFE)
+        // ----------------------------------------------------
         if ($savings->compounding_period == 'daily') {
-            $next_interest_calculation_date = Carbon::today()->format("Y-m-d");
+            $next_interest_calculation_date = Carbon::today()->format('Y-m-d');
         }
+    
         if ($savings->compounding_period == 'weekly') {
-            $next_interest_calculation_date = Carbon::today()->endOfWeek()->format("Y-m-d");
+            $next_interest_calculation_date = Carbon::today()->endOfWeek()->format('Y-m-d');
         }
+    
         if ($savings->compounding_period == 'monthly') {
-            $next_interest_calculation_date = $monthly_dates->where('date', '>=', Carbon::today())->first()['date'];
+            $next_interest_calculation_date = optional(
+                $monthly_dates->where('date', '>=', Carbon::today())->first()
+            )['date'];
         }
+    
         if ($savings->compounding_period == 'biannual') {
-            $next_interest_calculation_date = $biannual_dates->where('date', '>=', Carbon::today())->first()['date'];
+            $next_interest_calculation_date = optional(
+                $biannual_dates->where('date', '>=', Carbon::today())->first()
+            )['date'];
         }
+    
         if ($savings->compounding_period == 'annually') {
-            $next_interest_calculation_date = $annual_dates->where('date', '>=', Carbon::today())->first()['date'];
+            $next_interest_calculation_date = optional(
+                $annual_dates->where('date', '>=', Carbon::today())->first()
+            )['date'];
         }
+    
         $savings->start_interest_calculation_date = $next_interest_calculation_date;
-        $savings->next_interest_calculation_date = $next_interest_calculation_date;
-        $savings->start_interest_posting_date = $next_interest_posting_date;
-        $savings->next_interest_posting_date = $next_interest_posting_date;
+        $savings->next_interest_calculation_date  = $next_interest_calculation_date;
+        $savings->start_interest_posting_date     = $next_interest_posting_date;
+        $savings->next_interest_posting_date      = $next_interest_posting_date;
+    
         $savings->save();
+    
+        // ----------------------------------------------------
+        // Automatic Opening Balance
+        // ----------------------------------------------------
         if ($savings->automatic_opening_balance > 0) {
-            //add automatic opening balance transaction
+    
             $savings_transaction = new SavingsTransaction();
             $savings_transaction->created_by_id = Auth::id();
             $savings_transaction->branch_id = $savings->branch_id;
@@ -672,14 +710,17 @@ class SavingsController extends Controller
             $savings_transaction->name = trans_choice('savings::general.deposit', 1);
             $savings_transaction->savings_transaction_type_id = 1;
             $savings_transaction->submitted_on = $savings->activated_on_date;
-            $savings_transaction->created_on = date("Y-m-d");
+            $savings_transaction->created_on = date('Y-m-d');
             $savings_transaction->amount = $savings->automatic_opening_balance;
             $savings_transaction->credit = $savings->automatic_opening_balance;
             $savings_transaction->reversible = 1;
-            $automatic_opening_balance_transaction_id = $savings_transaction->id;
             $savings_transaction->save();
+    
+            $automatic_opening_balance_transaction_id = $savings_transaction->id;
+    
             if ($savings->savings_product->accounting_rule == 'cash') {
-                //credit account
+    
+                // Credit
                 $journal_entry = new JournalEntry();
                 $journal_entry->created_by_id = Auth::id();
                 $journal_entry->transaction_number = 'S' . $automatic_opening_balance_transaction_id;
@@ -688,13 +729,14 @@ class SavingsController extends Controller
                 $journal_entry->chart_of_account_id = $savings->savings_product->savings_control_chart_of_account_id;
                 $journal_entry->transaction_type = 'savings_deposit';
                 $journal_entry->date = $savings->activated_on_date;
-                $date = explode('-', $savings->activated_on_date);
-                $journal_entry->month = $date[1];
-                $journal_entry->year = $date[0];
+                [$year, $month] = explode('-', $savings->activated_on_date);
+                $journal_entry->month = $month;
+                $journal_entry->year = $year;
                 $journal_entry->credit = $savings->automatic_opening_balance;
                 $journal_entry->reference = $savings->id;
                 $journal_entry->save();
-                //debit account
+    
+                // Debit
                 $journal_entry = new JournalEntry();
                 $journal_entry->created_by_id = Auth::id();
                 $journal_entry->transaction_number = 'S' . $automatic_opening_balance_transaction_id;
@@ -703,16 +745,19 @@ class SavingsController extends Controller
                 $journal_entry->chart_of_account_id = $savings->savings_product->savings_reference_chart_of_account_id;
                 $journal_entry->transaction_type = 'savings_deposit';
                 $journal_entry->date = $savings->activated_on_date;
-                $date = explode('-', $savings->activated_on_date);
-                $journal_entry->month = $date[1];
-                $journal_entry->year = $date[0];
+                $journal_entry->month = $month;
+                $journal_entry->year = $year;
                 $journal_entry->debit = $savings->automatic_opening_balance;
                 $journal_entry->reference = $savings->id;
                 $journal_entry->save();
             }
         }
-        //charges
+    
+        // ----------------------------------------------------
+        // Charges
+        // ----------------------------------------------------
         foreach ($savings->charges->where('savings_charge_type_id', 1) as $key) {
+    
             $savings_transaction = new SavingsTransaction();
             $savings_transaction->created_by_id = Auth::id();
             $savings_transaction->savings_id = $savings->id;
@@ -721,13 +766,15 @@ class SavingsController extends Controller
             $savings_transaction->savings_transaction_type_id = 12;
             $savings_transaction->reversible = 1;
             $savings_transaction->submitted_on = $savings->activated_on_date;
-            $savings_transaction->created_on = date("Y-m-d");
+            $savings_transaction->created_on = date('Y-m-d');
             $savings_transaction->amount = $key->amount;
             $savings_transaction->debit = $key->amount;
             $savings_transaction->savings_linked_charge_id = $key->id;
             $savings_transaction->save();
+    
             if ($savings->savings_product->accounting_rule == 'cash') {
-                //credit account
+    
+                // Credit
                 $journal_entry = new JournalEntry();
                 $journal_entry->created_by_id = Auth::id();
                 $journal_entry->transaction_number = 'S' . $savings_transaction->id;
@@ -736,13 +783,14 @@ class SavingsController extends Controller
                 $journal_entry->chart_of_account_id = $savings->savings_product->savings_control_chart_of_account_id;
                 $journal_entry->transaction_type = 'savings_pay_charge';
                 $journal_entry->date = $savings->activated_on_date;
-                $date = explode('-', $savings->activated_on_date);
-                $journal_entry->month = $date[1];
-                $journal_entry->year = $date[0];
+                [$year, $month] = explode('-', $savings->activated_on_date);
+                $journal_entry->month = $month;
+                $journal_entry->year = $year;
                 $journal_entry->credit = $key->amount;
                 $journal_entry->reference = $savings->id;
                 $journal_entry->save();
-                //debit account
+    
+                // Debit
                 $journal_entry = new JournalEntry();
                 $journal_entry->created_by_id = Auth::id();
                 $journal_entry->transaction_number = 'S' . $savings_transaction->id;
@@ -751,28 +799,32 @@ class SavingsController extends Controller
                 $journal_entry->chart_of_account_id = $savings->savings_product->income_from_fees_chart_of_account_id;
                 $journal_entry->transaction_type = 'savings_pay_charge';
                 $journal_entry->date = $savings->activated_on_date;
-                $date = explode('-', $savings->activated_on_date);
-                $journal_entry->month = $date[1];
-                $journal_entry->year = $date[0];
+                $journal_entry->month = $month;
+                $journal_entry->year = $year;
                 $journal_entry->debit = $key->amount;
                 $journal_entry->reference = $savings->id;
                 $journal_entry->save();
             }
+    
             $key->savings_transaction_id = $savings_transaction->id;
             $key->calculated_amount = $key->amount;
             $key->paid_amount = $key->amount;
             $key->is_paid = 1;
             $key->save();
         }
+    
         activity()->on($savings)
             ->withProperties(['id' => $savings->id])
             ->log('Activate Savings');
-        //fire savings status changed event
-        event(new SavingsStatusChanged($savings, $previous_status,0));
+    
+        event(new SavingsStatusChanged($savings, $previous_status, 0));
         event(new TransactionUpdated($savings));
-        \flash(trans_choice("core::general.successfully_saved", 1))->success()->important();
+    
+        flash(trans_choice('core::general.successfully_saved', 1))->success()->important();
+    
         return redirect('savings/' . $savings->id . '/show');
     }
+
 
     public function undo_activation(Request $request, $id)
     {
@@ -1517,26 +1569,45 @@ class SavingsController extends Controller
         return redirect('savings/' . $savings->id . '/show');
     }
 
-    public function getSavingsDepositReport(Request $request)
+      public function getSavingsDepositReport(Request $request)
     {
         if ($request->ajax()) {
             $status = $request->status;
             $start_date = $request->start_date;
             $end_date = $request->end_date;
             $client_id = $request->client_id;
+            $savings_officer_id = $request->savings_officer_id;
             $query = DB::table("savings_transactions")
                     ->leftJoin("savings", "savings.id", "savings_transactions.savings_id")
                     ->leftJoin("clients", "clients.id", "savings.client_id")
                     ->leftJoin("branches", "branches.id", "clients.branch_id")
-                    ->selectRaw("savings_transactions.id,savings_transactions.reversible,savings_transactions.reversed,savings_transactions.savings_id,branches.name branch,savings.client_id,clients.loan_officer_id,
-                            concat(clients.first_name,' ',clients.last_name) client_name,
-                            clients.mobile,clients.email,clients.external_id,savings_transactions.status,
-                            savings_transactions.name trx_name, savings_transactions.amount as deposit,savings_transactions.submitted_on")
+                    ->leftJoin("users as savings_officer","savings_officer.id", "savings.savings_officer_id")
+                    ->selectRaw("
+                        savings_transactions.id,
+                        savings_transactions.reversible,
+                        savings_transactions.reversed,
+                        savings_transactions.savings_id,
+                        branches.name branch,
+                        savings.client_id,
+                        clients.loan_officer_id,
+                        concat(clients.first_name,' ',clients.last_name) client_name,
+                        clients.mobile,
+                        clients.email,
+                        clients.external_id,
+                        savings_transactions.status,
+                        savings_transactions.name trx_name, 
+                        savings_transactions.amount as deposit,
+                        savings_transactions.submitted_on,
+                        concat(savings_officer.first_name,' ',savings_officer.last_name) savings_officer_name
+                    ")
                 ->when($status, function ($query) use ($status) {
                     $query->where('status', $status);
                 })
                 ->when($client_id, function ($query) use ($client_id) {
                     $query->where('clients.id', $client_id);
+                })
+                ->when($savings_officer_id, function ($query) use ($savings_officer_id) {
+                    $query->where('savings_officer.id', $savings_officer_id);
                 })
                 ->when($start_date, function ($query) use ($start_date) {
                     $query->whereDate('savings_transactions.submitted_on', '>=', $start_date);
@@ -1546,13 +1617,31 @@ class SavingsController extends Controller
                 })
                 ->groupBy('savings_transactions.submitted_on');
 
+            // get totals by transaction type
+            $totals = DB::table("savings_transactions")
+                ->leftJoin("savings", "savings.id", "savings_transactions.savings_id")
+                ->when($savings_officer_id, fn($q) => $q->where('savings.savings_officer_id', $savings_officer_id))
+                ->when($start_date, fn($q) => $q->whereDate('savings_transactions.submitted_on', '>=', $start_date))
+                ->when($end_date, fn($q) => $q->whereDate('savings_transactions.submitted_on', '<=', $end_date))
+                ->selectRaw("
+                    SUM(CASE WHEN savings_transactions.savings_transaction_type_id = 1 THEN savings_transactions.amount ELSE 0 END) as total_deposit,
+                    SUM(CASE WHEN savings_transactions.savings_transaction_type_id = 2 THEN savings_transactions.amount ELSE 0 END) as total_withdrawal
+                ")
+                ->first();
+  
             return DataTables::of($query)->editColumn('id', function ($data) {
                 return '<a href="' . url('savings/transaction/' . $data->id . '/show') . '">' . $data->id . '</a>';
 
             })->editColumn('client_name', function ($data) {
                 return '<a href="' . url('client/' . $data->client_id . '/show') . '">' . $data->client_name . '</a>';
 
-            })->editColumn('status', function ($data) {
+            })->editColumn('savings_officer_name', function ($data) {
+                return $data->savings_officer_name ?? 'N/A';
+            })->editColumn('deposit', function ($data) {
+            return number_format($data->deposit, 2);
+        })
+            
+            ->editColumn('status', function ($data) {
                 if ($data->status == "pending") {
                     return trans_choice('savings::general.pending', 1);
                 }
@@ -1578,13 +1667,13 @@ class SavingsController extends Controller
                 
                 $action .= '<div class="btn-group" style="margin-left:5px;">
                 <button href="#" class="btn btn-default dropdown-toggle"
-                        data-bs-toggle="dropdown">
-                    <i class="ri-settings-3-line"></i>
+                        data-toggle="dropdown">
+                    <i class="fas fa-ellipsis-h"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a href="'. url('savings/transaction/' . $data->id . '/show') . '"
                        class="dropdown-item"><i
-                                class="ri-eye-fill"></i> View
+                                class="fas fa-eye"></i> View
                     </a>
 
                     <a href="'. url('savings/transaction/' . $data->id . '/pdf') . '"
@@ -1600,7 +1689,7 @@ class SavingsController extends Controller
                     if($data->reversible == 1 && $data->reversed==0){
                         $action .=   '<a href="'. url('savings/transaction/' . $data->id . '/edit') . '"
                            class="dropdown-item"><i
-                                    class="ri-edit-fill"></i> Edit
+                                    class="fas fa-edit"></i> Edit
                         </a>
                         <a href="'. url('savings/transaction/' . $data->id . '/reverse') . '"
                            class="dropdown-item confirm"><i
@@ -1613,14 +1702,233 @@ class SavingsController extends Controller
     
                 return $action;
             })
-            ->rawColumns(['id', 'client_name', 'action'])->make(true);
+                    ->with(['totals' => $totals])
+            ->rawColumns(['id', 'client_name', 'savings_officer_name', 'action'])->make(true);
         }
+
+
 
         $client_groups = ClientGroup::all();
         $clients = Client::all();
         $user =Auth::user();
-        return theme_view('savings::savings.saving_deposit_report', compact('client_groups','clients'));
+        $savings_officers = User::whereIn('id', function($query) {
+            $query->select('savings_officer_id')
+                ->from('savings')
+                ->whereNotNull('savings_officer_id');
+        })
+        ->get();
+
+        return theme_view('savings::savings.saving_deposit_report', compact('client_groups','clients','savings_officers'));
     }
+
+
+
+
+// public function getDailySavingsReport(Request $request)
+// {
+//     if ($request->ajax()) {
+//         $start_date = $request->start_date;
+//         $end_date = $request->end_date;
+//         $client_id = $request->client_id;
+//         $savings_officer_id = $request->savings_officer_id;
+
+//         // Main query grouped by date
+//         $query = DB::table("savings_transactions")
+//             ->leftJoin("savings", "savings.id", "=", "savings_transactions.savings_id")
+//             ->leftJoin("clients", "clients.id", "=", "savings.client_id")
+//             ->leftJoin("users as savings_officer", "savings_officer.id", "=", "savings.savings_officer_id")
+//             ->selectRaw("
+//                 DATE(savings_transactions.submitted_on) as date,
+//                 SUM(CASE WHEN savings_transactions.savings_transaction_type_id = 1 THEN savings_transactions.amount ELSE 0 END) as total_deposits,
+//                 SUM(CASE WHEN savings_transactions.savings_transaction_type_id = 2 THEN savings_transactions.amount ELSE 0 END) as total_withdrawals,
+//                 COUNT(savings_transactions.id) as transaction_count,
+//                 CONCAT(savings_officer.first_name, ' ', savings_officer.last_name) as savings_officer_name
+//             ")
+//             ->whereIn('savings_transactions.status', ['approved', 'completed'])
+//             ->when($savings_officer_id, function ($q) use ($savings_officer_id) {
+//                 $q->where('savings.savings_officer_id', $savings_officer_id);
+//             })
+//             ->when($client_id, function ($q) use ($client_id) {
+//                 $q->where('clients.id', $client_id);
+//             })
+//             ->when($start_date, function ($q) use ($start_date) {
+//                 $q->whereDate('savings_transactions.submitted_on', '>=', $start_date);
+//             })
+//             ->when($end_date, function ($q) use ($end_date) {
+//                 $q->whereDate('savings_transactions.submitted_on', '<=', $end_date);
+//             })
+//             ->groupBy('date', 'savings_officer.id')
+//             ->orderBy('date', 'desc');
+
+//         // Totals query (for footer)
+//         $totals = DB::table("savings_transactions")
+//             ->leftJoin("savings", "savings.id", "=", "savings_transactions.savings_id")
+//             ->leftJoin("clients", "clients.id", "=", "savings.client_id")
+//             ->when($savings_officer_id, function ($q) use ($savings_officer_id) {
+//                 $q->where('savings.savings_officer_id', $savings_officer_id);
+//             })
+//             ->when($client_id, function ($q) use ($client_id) {
+//                 $q->where('clients.id', $client_id);
+//             })
+//             ->when($start_date, function ($q) use ($start_date) {
+//                 $q->whereDate('savings_transactions.submitted_on', '>=', $start_date);
+//             })
+//             ->when($end_date, function ($q) use ($end_date) {
+//                 $q->whereDate('savings_transactions.submitted_on', '<=', $end_date);
+//             })
+//             ->selectRaw("
+//                 SUM(CASE WHEN savings_transactions.savings_transaction_type_id = 1 THEN savings_transactions.amount ELSE 0 END) as total_deposits,
+//                 SUM(CASE WHEN savings_transactions.savings_transaction_type_id = 2 THEN savings_transactions.amount ELSE 0 END) as total_withdrawals
+//             ")
+//             ->first();
+
+//         return DataTables::of($query)
+//             ->editColumn('total_deposits', function ($row) {
+//                 return number_format($row->total_deposits, 2);
+//             })
+//             ->editColumn('total_withdrawals', function ($row) {
+//                 return number_format($row->total_withdrawals, 2);
+//             })
+//             ->addColumn('net_change', function ($row) {
+//                 return number_format($row->total_deposits - $row->total_withdrawals, 2);
+//             })
+//             ->editColumn('date', function ($row) {
+//                 return date('d-m-Y', strtotime($row->date));
+//             })
+//             ->addColumn('action', function ($row) {
+//                 return '<a href="'.url('report/savings/daily?date='.$row->date).'" class="btn btn-sm btn-primary">View Details</a>';
+//             })
+//             ->with(['totals' => $totals])
+//             ->rawColumns(['action'])
+//             ->make(true);
+//     }
+
+//     // For non-AJAX: load filter dropdowns
+//     $clients = Client::all();
+//     $savings_officers = User::whereIn('id', function($query) {
+//         $query->select('savings_officer_id')
+//             ->from('savings')
+//             ->whereNotNull('savings_officer_id');
+//     })->get();
+
+//     return theme_view('savings::savings.daily_savings_report', compact('clients', 'savings_officers'));
+// }
+
+public function getDailySavingsReport(Request $request)
+{
+    if ($request->ajax()) {
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+        $client_id = $request->client_id;
+        $savings_officer_id = $request->savings_officer_id;
+
+        // Main query: individual transactions
+        $query = DB::table("savings_transactions")
+            ->leftJoin("savings", "savings.id", "=", "savings_transactions.savings_id")
+            ->leftJoin("clients", "clients.id", "=", "savings.client_id")
+            ->leftJoin("branches", "branches.id", "=", "clients.branch_id")
+            ->leftJoin("users as savings_officer", "savings_officer.id", "=", "savings.savings_officer_id")
+            ->selectRaw("
+                savings_transactions.id,
+                savings_transactions.reversible,
+                savings_transactions.reversed,
+                savings_transactions.savings_id,
+                branches.name as branch,
+                savings.client_id,
+                clients.loan_officer_id,
+                concat(clients.first_name, ' ', clients.last_name) as client_name,
+                clients.mobile,
+                clients.email,
+                clients.external_id,
+                savings_transactions.status,
+                savings_transactions.name as trx_name,
+                savings_transactions.amount as deposit,
+                savings_transactions.submitted_on,
+                concat(savings_officer.first_name, ' ', savings_officer.last_name) as savings_officer_name
+            ")
+            ->when($savings_officer_id, function ($q) use ($savings_officer_id) {
+                $q->where('savings.savings_officer_id', $savings_officer_id);
+            })
+            ->when($client_id, function ($q) use ($client_id) {
+                $q->where('clients.id', $client_id);
+            })
+            ->when($start_date, function ($q) use ($start_date) {
+                $q->whereDate('savings_transactions.submitted_on', '>=', $start_date);
+            })
+            ->when($end_date, function ($q) use ($end_date) {
+                $q->whereDate('savings_transactions.submitted_on', '<=', $end_date);
+            });
+
+        // Totals query (for footer)
+        $totals = DB::table("savings_transactions")
+            ->leftJoin("savings", "savings.id", "=", "savings_transactions.savings_id")
+            ->leftJoin("clients", "clients.id", "=", "savings.client_id")
+            ->when($savings_officer_id, function ($q) use ($savings_officer_id) {
+                $q->where('savings.savings_officer_id', $savings_officer_id);
+            })
+            ->when($client_id, function ($q) use ($client_id) {
+                $q->where('clients.id', $client_id);
+            })
+            ->when($start_date, function ($q) use ($start_date) {
+                $q->whereDate('savings_transactions.submitted_on', '>=', $start_date);
+            })
+            ->when($end_date, function ($q) use ($end_date) {
+                $q->whereDate('savings_transactions.submitted_on', '<=', $end_date);
+            })
+            ->selectRaw("
+                SUM(CASE WHEN savings_transactions.savings_transaction_type_id = 1 THEN savings_transactions.amount ELSE 0 END) as total_deposit,
+                SUM(CASE WHEN savings_transactions.savings_transaction_type_id = 2 THEN savings_transactions.amount ELSE 0 END) as total_withdrawal
+            ")
+            ->first();
+
+        return DataTables::of($query)
+            ->editColumn('id', function ($data) {
+                return '<a href="' . url('savings/transaction/' . $data->id . '/show') . '">' . $data->id . '</a>';
+            })
+            ->editColumn('client_name', function ($data) {
+                return '<a href="' . url('client/' . $data->client_id . '/show') . '">' . $data->client_name . '</a>';
+            })
+            ->editColumn('status', function ($data) {
+                if ($data->status == "pending") return trans_choice('savings::general.pending', 1);
+                if ($data->status == "approved") return trans_choice('savings::general.approved', 1);
+                if ($data->status == "declined") return trans_choice('savings::general.declined', 1);
+                return "N/A";
+            })
+            ->editColumn('deposit', function ($data) {
+                return number_format($data->deposit, 2);
+            })
+            ->addColumn('action', function ($data) {
+                $action = '<a href="' . url('savings/' . $data->savings_id . '/show') . '" class="btn btn-info btn-sm">Saving Details</a>';
+                if ($data->status == "pending" && (Auth::user()->roles->first()->name == "admin" || Auth::user()->roles->first()->name == "Loan Manager")) {
+                    $action .= '<button class="btn-round approval btn-sm" style="margin-left:5px;" data-id="'.$data->id.'" data-status="approved"><i class="fas fa-check"></i></button>';
+                    $action .= '<button class="btn-round approval btn-sm" style="margin-left:5px;" data-id="'.$data->id.'" data-status="declined"><i class="fas fa-times"></i></button>';
+                }
+                $action .= '<div class="btn-group" style="margin-left:5px;">
+                    <button href="#" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a href="'. url('savings/transaction/' . $data->id . '/show') . '" class="dropdown-item"><i class="fas fa-eye"></i> View</a>
+                        <a href="'. url('savings/transaction/' . $data->id . '/pdf') . '" target="_blank" class="dropdown-item"><i class="fas fa-file-pdf"></i> Receipt</a>
+                        <a href="'. url('savings/transaction/' . $data->id . '/print') . '" target="_blank" class="dropdown-item"><i class="fa fa-print"></i> Print</a>';
+                if ($data->reversible == 1 && $data->reversed == 0) {
+                    $action .= '<a href="'. url('savings/transaction/' . $data->id . '/edit') . '" class="dropdown-item"><i class="fas fa-edit"></i> Edit</a>
+                                <a href="'. url('savings/transaction/' . $data->id . '/reverse') . '" class="dropdown-item confirm"><i class="fas fa-undo"></i> Reverse</a>';
+                }
+                $action .= '</div></div>';
+                return $action;
+            })
+            ->with(['totals' => $totals])
+            ->rawColumns(['id', 'client_name', 'action'])
+            ->make(true);
+    }
+
+    // For non-AJAX: load filter dropdowns
+    $clients = Client::all();
+    $savings_officers = User::whereIn('id', function($q) {
+        $q->select('savings_officer_id')->from('savings')->whereNotNull('savings_officer_id');
+    })->get();
+
+    return theme_view('savings::savings.daily_savings_report', compact('clients', 'savings_officers'));
+}
 
     public function addSavingDeposit()
     {
@@ -1666,6 +1974,288 @@ class SavingsController extends Controller
         \flash(trans_choice("core::general.successfully_saved", 1))->success()->important();
         return redirect('savings/deposit_report');
     }
+
+    /**
+     * Staff Savings Summary Report
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\JsonResponse
+     */
+    // public function staffSavingsSummary(Request $request)
+    // {
+    //     // AJAX for modal transactions (deposits & withdrawals per officer)
+    //     if ($request->ajax() && $request->has('officer_id') && !$request->has('draw')) {
+    //         $officerId = $request->officer_id;
+    //         $savingsIds = Savings::where('savings_officer_id', $officerId)
+    //             ->whereIn('status', ['active', 'approved', 'withdrawn', 'closed'])
+    //             ->pluck('id');
+
+    //         $deposits = SavingsTransaction::whereIn('savings_id', $savingsIds)
+    //             ->where('savings_transaction_type_id', 1)
+    //             ->where('reversed', 0)
+    //             ->with(['savings.client'])
+    //             ->orderBy('submitted_on', 'desc')
+    //             ->get();
+
+    //         $withdrawals = SavingsTransaction::whereIn('savings_id', $savingsIds)
+    //             ->where('savings_transaction_type_id', 2)
+    //             ->where('reversed', 0)
+    //             ->with(['savings.client'])
+    //             ->orderBy('submitted_on', 'desc')
+    //             ->get();
+
+    //         return response()->json(compact('deposits', 'withdrawals'));
+    //     }
+
+    //     // DataTables server-side processing for the summary table
+    //     if ($request->ajax() && $request->has('draw')) {
+    //         $start_date = $request->start_date;
+    //         $end_date = $request->end_date;
+    //         $client_id = $request->client_id;
+    //         $savings_officer_id = $request->savings_officer_id;
+
+    //         // Main query – grouped by officer
+    //         $query = DB::table('savings')
+    //             ->join('users', 'savings.savings_officer_id', '=', 'users.id')
+    //             ->leftJoin('savings_transactions', function ($join) use ($start_date, $end_date) {
+    //                 $join->on('savings.id', '=', 'savings_transactions.savings_id')
+    //                     ->where('savings_transactions.reversed', 0);
+    //                 if ($start_date) {
+    //                     $join->whereDate('savings_transactions.submitted_on', '>=', $start_date);
+    //                 }
+    //                 if ($end_date) {
+    //                     $join->whereDate('savings_transactions.submitted_on', '<=', $end_date);
+    //                 }
+    //             })
+    //             ->when($client_id, function ($q) use ($client_id) {
+    //                 $q->where('savings.client_id', $client_id);
+    //             })
+    //             ->when($savings_officer_id, function ($q) use ($savings_officer_id) {
+    //                 $q->where('savings.savings_officer_id', $savings_officer_id);
+    //             })
+    //             ->whereNotNull('savings.savings_officer_id')
+    //             ->whereIn('savings.status', ['active', 'approved', 'withdrawn', 'closed'])
+    //             ->select(
+    //                 'users.id as officer_id',
+    //                 DB::raw("CONCAT(users.first_name, ' ', users.last_name) as officer_name"),
+    //                 DB::raw("COUNT(DISTINCT savings.client_id) as total_clients"),
+    //                 DB::raw("SUM(CASE WHEN savings_transactions.savings_transaction_type_id = 1 THEN savings_transactions.amount ELSE 0 END) as total_deposits"),
+    //                 DB::raw("SUM(CASE WHEN savings_transactions.savings_transaction_type_id = 2 THEN savings_transactions.amount ELSE 0 END) as total_withdrawals")
+    //             )
+    //             ->groupBy('users.id', 'users.first_name', 'users.last_name')
+    //             ->orderBy('officer_name');
+
+    //         // Calculate grand totals (for the footer) – without grouping
+    //         $totalsQuery = DB::table('savings')
+    //             ->join('users', 'savings.savings_officer_id', '=', 'users.id')
+    //             ->leftJoin('savings_transactions', function ($join) use ($start_date, $end_date) {
+    //                 $join->on('savings.id', '=', 'savings_transactions.savings_id')
+    //                     ->where('savings_transactions.reversed', 0);
+    //                 if ($start_date) {
+    //                     $join->whereDate('savings_transactions.submitted_on', '>=', $start_date);
+    //                 }
+    //                 if ($end_date) {
+    //                     $join->whereDate('savings_transactions.submitted_on', '<=', $end_date);
+    //                 }
+    //             })
+    //             ->when($client_id, function ($q) use ($client_id) {
+    //                 $q->where('savings.client_id', $client_id);
+    //             })
+    //             ->when($savings_officer_id, function ($q) use ($savings_officer_id) {
+    //                 $q->where('savings.savings_officer_id', $savings_officer_id);
+    //             })
+    //             ->whereNotNull('savings.savings_officer_id')
+    //             ->whereIn('savings.status', ['active', 'approved', 'withdrawn', 'closed'])
+    //             ->select(
+    //                 DB::raw("SUM(CASE WHEN savings_transactions.savings_transaction_type_id = 1 THEN savings_transactions.amount ELSE 0 END) as grand_deposits"),
+    //                 DB::raw("SUM(CASE WHEN savings_transactions.savings_transaction_type_id = 2 THEN savings_transactions.amount ELSE 0 END) as grand_withdrawals")
+    //             )
+    //             ->first();
+
+    //         return DataTables::of($query)
+    //             ->editColumn('total_deposits', function ($row) {
+    //                 return number_format($row->total_deposits, 2);
+    //             })
+    //             ->editColumn('total_withdrawals', function ($row) {
+    //                 return number_format($row->total_withdrawals, 2);
+    //             })
+    //             ->addColumn('action', function ($row) {
+    //                 return '<button class="btn btn-sm btn-info view-more-btn" data-officer-id="'.$row->officer_id.'" data-officer-name="'.$row->officer_name.'">View More</button>';
+    //             })
+    //             ->with(['totals' => $totalsQuery])
+    //             ->rawColumns(['action'])
+    //             ->make(true);
+    //     }
+
+    //     // For initial page load – get filter dropdowns
+    //     $clients = Client::where('status', 'active')->get();
+    //     $savings_officers = User::whereIn('id', function($q) {
+    //         $q->select('savings_officer_id')->from('savings')->whereNotNull('savings_officer_id');
+    //     })->get();
+
+    //     return theme_view('savings::savings.staff_savings_summary', compact('clients', 'savings_officers'));
+    // }
+
+
+/**
+ * Staff Savings Summary Report
+ * - Main table: list officers with aggregated totals
+ * - Modal DataTables: deposits & withdrawals per officer with server-side processing
+ */
+public function staffSavingsSummary(Request $request)
+{
+    // ========== MODAL DATATABLES: DEPOSITS ==========
+    if ($request->ajax() && $request->has('table') && $request->table == 'deposits' && $request->has('officer_id')) {
+        $officerId = $request->officer_id;
+        // Default to today if not provided
+        $start_date = $request->get('start_date', date('Y-m-d'));
+        $end_date   = $request->get('end_date', date('Y-m-d'));
+        $client_id  = $request->client_id;
+
+        $savingsIds = Savings::where('savings_officer_id', $officerId)
+            ->whereIn('status', ['active', 'approved', 'withdrawn', 'closed'])
+            ->pluck('id');
+
+        $query = SavingsTransaction::whereIn('savings_id', $savingsIds)
+            ->where('savings_transaction_type_id', 1)
+            ->where('reversed', 0)
+            ->with(['savings.client'])
+            ->when($start_date, fn($q) => $q->whereDate('submitted_on', '>=', $start_date))
+            ->when($end_date, fn($q) => $q->whereDate('submitted_on', '<=', $end_date))
+            ->when($client_id, function($q) use ($client_id) {
+                $q->whereHas('savings.client', fn($cq) => $cq->where('id', $client_id));
+            })
+            ->orderBy('submitted_on', 'desc');
+
+        return DataTables::of($query)
+            ->editColumn('submitted_on', fn($row) => date('Y-m-d', strtotime($row->submitted_on)))
+            ->addColumn('time', fn($row) => date('h:i A', strtotime($row->created_at ?? $row->submitted_on)))
+            ->addColumn('client_name', fn($row) => $row->savings->client ? $row->savings->client->first_name . ' ' . $row->savings->client->last_name : 'N/A')
+            ->addColumn('amount_formatted', fn($row) => number_format($row->amount, 2))
+            ->addColumn('account_number', fn($row) => $row->savings->account_number ?? 'N/A')
+            ->make(true);
+    }
+
+    // ========== MODAL DATATABLES: WITHDRAWALS ==========
+    if ($request->ajax() && $request->has('table') && $request->table == 'withdrawals' && $request->has('officer_id')) {
+        $officerId = $request->officer_id;
+        $start_date = $request->get('start_date', date('Y-m-d'));
+        $end_date   = $request->get('end_date', date('Y-m-d'));
+        $client_id  = $request->client_id;
+
+        $savingsIds = Savings::where('savings_officer_id', $officerId)
+            ->whereIn('status', ['active', 'approved', 'withdrawn', 'closed'])
+            ->pluck('id');
+
+        $query = SavingsTransaction::whereIn('savings_id', $savingsIds)
+            ->where('savings_transaction_type_id', 2)
+            ->where('reversed', 0)
+            ->with(['savings.client'])
+            ->when($start_date, fn($q) => $q->whereDate('submitted_on', '>=', $start_date))
+            ->when($end_date, fn($q) => $q->whereDate('submitted_on', '<=', $end_date))
+            ->when($client_id, function($q) use ($client_id) {
+                $q->whereHas('savings.client', fn($cq) => $cq->where('id', $client_id));
+            })
+            ->orderBy('submitted_on', 'desc');
+
+        return DataTables::of($query)
+            ->editColumn('submitted_on', fn($row) => date('Y-m-d', strtotime($row->submitted_on)))
+            ->addColumn('time', fn($row) => date('h:i A', strtotime($row->created_at ?? $row->submitted_on)))
+            ->addColumn('client_name', fn($row) => $row->savings->client ? $row->savings->client->first_name . ' ' . $row->savings->client->last_name : 'N/A')
+            ->addColumn('amount_formatted', fn($row) => number_format($row->amount, 2))
+            ->addColumn('account_number', fn($row) => $row->savings->account_number ?? 'N/A')
+            ->make(true);
+    }
+
+    // ========== MAIN SUMMARY DATATABLE (OFFICERS) ==========
+    if ($request->ajax() && $request->has('draw')) {
+        $start_date = $request->get('start_date', date('Y-m-d'));
+        $end_date   = $request->get('end_date', date('Y-m-d'));
+        $client_id  = $request->client_id;
+        $savings_officer_id = $request->savings_officer_id;
+
+        $query = DB::table('savings')
+            ->join('users', 'savings.savings_officer_id', '=', 'users.id')
+            ->leftJoin('savings_transactions', function ($join) use ($start_date, $end_date) {
+                $join->on('savings.id', '=', 'savings_transactions.savings_id')
+                    ->where('savings_transactions.reversed', 0);
+                if ($start_date) {
+                    $join->whereDate('savings_transactions.submitted_on', '>=', $start_date);
+                }
+                if ($end_date) {
+                    $join->whereDate('savings_transactions.submitted_on', '<=', $end_date);
+                }
+            })
+            ->when($client_id, function ($q) use ($client_id) {
+                $q->where('savings.client_id', $client_id);
+            })
+            ->when($savings_officer_id, function ($q) use ($savings_officer_id) {
+                $q->where('savings.savings_officer_id', $savings_officer_id);
+            })
+            ->whereNotNull('savings.savings_officer_id')
+            ->whereIn('savings.status', ['active', 'approved', 'withdrawn', 'closed'])
+            ->select(
+                'users.id as officer_id',
+                DB::raw("CONCAT(users.first_name, ' ', users.last_name) as officer_name"),
+                DB::raw("COUNT(DISTINCT savings.client_id) as total_clients"),
+                DB::raw("SUM(CASE WHEN savings_transactions.savings_transaction_type_id = 1 THEN savings_transactions.amount ELSE 0 END) as total_deposits"),
+                DB::raw("SUM(CASE WHEN savings_transactions.savings_transaction_type_id = 2 THEN savings_transactions.amount ELSE 0 END) as total_withdrawals")
+            )
+            ->groupBy('users.id', 'users.first_name', 'users.last_name')
+            ->orderBy('officer_name');
+
+        // Totals query (also uses defaulted dates)
+        $totalsQuery = DB::table('savings')
+            ->join('users', 'savings.savings_officer_id', '=', 'users.id')
+            ->leftJoin('savings_transactions', function ($join) use ($start_date, $end_date) {
+                $join->on('savings.id', '=', 'savings_transactions.savings_id')
+                    ->where('savings_transactions.reversed', 0);
+                if ($start_date) {
+                    $join->whereDate('savings_transactions.submitted_on', '>=', $start_date);
+                }
+                if ($end_date) {
+                    $join->whereDate('savings_transactions.submitted_on', '<=', $end_date);
+                }
+            })
+            ->when($client_id, function ($q) use ($client_id) {
+                $q->where('savings.client_id', $client_id);
+            })
+            ->when($savings_officer_id, function ($q) use ($savings_officer_id) {
+                $q->where('savings.savings_officer_id', $savings_officer_id);
+            })
+            ->whereNotNull('savings.savings_officer_id')
+            ->whereIn('savings.status', ['active', 'approved', 'withdrawn', 'closed'])
+            ->select(
+                DB::raw("SUM(CASE WHEN savings_transactions.savings_transaction_type_id = 1 THEN savings_transactions.amount ELSE 0 END) as grand_deposits"),
+                DB::raw("SUM(CASE WHEN savings_transactions.savings_transaction_type_id = 2 THEN savings_transactions.amount ELSE 0 END) as grand_withdrawals")
+            )
+            ->first();
+
+        return DataTables::of($query)
+            ->editColumn('total_deposits', function ($row) {
+                return number_format($row->total_deposits, 2);
+            })
+            ->editColumn('total_withdrawals', function ($row) {
+                return number_format($row->total_withdrawals, 2);
+            })
+            ->addColumn('action', function ($row) {
+                return '<button class="btn btn-sm btn-info view-more-btn" data-officer-id="'.$row->officer_id.'" data-officer-name="'.$row->officer_name.'">View More</button>';
+            })
+            ->with(['totals' => $totalsQuery])
+            ->rawColumns(['action'])
+            ->make(true);
+    }
+
+    // ========== INITIAL PAGE LOAD (NON-AJAX) ==========
+    $clients = Client::where('status', 'active')->get();
+    $savings_officers = User::whereIn('id', function($q) {
+        $q->select('savings_officer_id')->from('savings')->whereNotNull('savings_officer_id');
+    })->get();
+
+    return theme_view('savings::savings.staff_savings_summary', compact('clients', 'savings_officers'));
+}
+
+
+
 
     public function test()
     {

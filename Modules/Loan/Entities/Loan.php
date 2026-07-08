@@ -21,7 +21,7 @@ class Loan extends Model
     const STATUS_WRITTEN_OFF = 'written_off';
     const STATUS_OVERPAID = 'overpaid';
     const STATUS_SUBMITTED = 'submitted';
-    protected $fillable = [];
+    //protected $fillable = [];
     public $table = "loans";
 
     public function charges()
@@ -141,6 +141,12 @@ class Loan extends Model
     public function approved_by_user()
     {
         return $this->belongsTo(User::class, 'approved_by_user_id');
+    }
+
+
+     public function application()
+    {
+        return $this->hasOne(LoanApplicationProcess::class);
     }
 
  

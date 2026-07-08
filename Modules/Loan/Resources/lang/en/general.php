@@ -195,5 +195,55 @@ return [
     'restructure' => 'Restructure',
     'no_installment_schedule_found' => 'No Installment Schedule Found',
 
+    'loan_application' => 'Loan Application',
+    'loan_application_form' => 'Loan Appliccation Form',
+    'agree_to_the_terms' => 'Agree To The Terms',
+    'repayment_period' => 'Repayment Period',
+    'preferred_repayment_method' => 'Preferred Repayment Method',
+    'loan_amount_requested' => 'Loan Amount Requested',
+    'purpose_of_loan' => 'Loan Purpose',
+    'loan_details' => 'Loan Details',
+    'bank' => 'Bank',
+    'mobile_money' => 'Mobile Money',
+    'payroll' => 'Payroll',
+    'post_dated_cheque'=> 'Post Dated Cheque',
+    'standing_order'=> 'Standing  Order',
+
+    'level1_review' => 'Loan Officer Review',
+    'level2_review' => 'Manager Review',
+
+    'level1_status' => 'Loan Officer Review',
+    'level2_approve' => 'Manager Approval',
+    'level2_status' => 'Manager Review',
+    'level1_approval' => 'Loan Officer Approval',
+    'level1_loan_officer_review_form' => 'Level 1 Loan Officer Review Form',
+    'level2_manager_review_form' => 'Level 2 Manager Review Form',
+    'level1_loan_officer_review' => 'Level 1 Loan Officer Review Form',
+
+    'recommended_amount' => 'Recommended Amount',
+    'reference_number' => 'Reference Number',
+    'amount_requested' => 'Requested Amount',
+
+    'total_score' => 'Total Score',
+    'risk_rating' => 'Risk Rating',
+
+    'level2_manager_approval' => 'Manager Approval Form',
+
+    'level1_decision_at' => 'Loan Officer Decision At',
+    'level2_decision_at' => 'Manager Decision At',
+
+    'level1_notes' => 'Loan Officer Notes',
+    'level2_notes' => 'Manager Notes',
+
+    'level1_decision' => 'Loan Officer Decision',
+    'level2_decision' => 'Manager Decision',
+
+
+
+
+
+    'terms_and_conditions' => 'Terms and Conditions',
+
+
 
 ];

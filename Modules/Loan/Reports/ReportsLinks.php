@@ -20,6 +20,7 @@ class ReportsLinks
     {
         return [
             "report/loan" => trans_choice('loan::general.loan', 1) . ' ' . trans_choice('report::general.report', 2),
+            "report/loan-officer-changes" => 'Loan Officer Change Audit',
         ];
 
     }

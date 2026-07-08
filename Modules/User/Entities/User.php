@@ -3,7 +3,7 @@
 namespace Modules\User\Entities;
 
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
@@ -19,7 +19,7 @@ class User extends Authenticatable
      */
     protected $guard_name = 'web';
     protected $fillable = [
-        'name', 'email', 'password', 'first_name', 'last_name', 'username', 'enable_google2fa', 'google2fa_secret', 'phone', 'address', 'city', 'gender', 'api_token', 'notes', 'branch_id', 'email_verified_at', 'last_login', 'photo'
+        'name', 'email', 'password', 'first_name', 'last_name', 'username', 'enable_google2fa', 'google2fa_secret', 'phone', 'address', 'city', 'gender', 'api_token', 'notes', 'branch_id', 'email_verified_at', 'last_login', 'photo', 'is_active'
     ];
 
     /**
@@ -51,5 +51,17 @@ class User extends Authenticatable
     public function is_ceo()
     {
         return $this->role == 'CEO';
+    }
+
+    // Scope to get only active users
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', 1);
+    }
+
+    // Check if user is active
+    public function isActive()
+    {
+        return $this->is_active == 1;
     }
 }

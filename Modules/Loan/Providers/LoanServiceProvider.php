@@ -5,6 +5,8 @@ namespace Modules\Loan\Providers;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Modules\Loan\Entities\Loan;
+use Modules\Loan\Observers\LoanOfficerChangeObserver;
 
 class LoanServiceProvider extends ServiceProvider
 {
@@ -20,6 +22,10 @@ class LoanServiceProvider extends ServiceProvider
         $this->registerViews();
         //$this->registerFactories();
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        
+        // Register observers
+        Loan::observe(LoanOfficerChangeObserver::class);
+        
         $this->app->booted(function () {
             $schedule = $this->app->make(Schedule::class);
             $schedule->command('loan_penalties:process')->daily();

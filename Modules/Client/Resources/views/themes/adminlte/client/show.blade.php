@@ -110,8 +110,8 @@
                                 {{trans_choice('core::general.status',1)}}
                             </b>
                             <a class="float-right">
-                                <a class="float-right" data-bs-toggle="modal"
-                                    data-bs-target="#change_status_modal" href="#">
+                                <a class="float-right" data-toggle="modal"
+                                    data-target="#change_status_modal" href="#">
                                     @if($client->status=='pending')
                                     {{trans_choice('core::general.pending',1)}}
                                     @endif
@@ -275,8 +275,8 @@
                     </ul>
                     <!-- <div class="d-flex justify-content-center"> -->
                     @can('client.clients.activate')
-                    <a href="#" data-bs-toggle="modal" class="btn btn-primary btn-sm  m-1"
-                        data-bs-target="#change_status_modal">
+                    <a href="#" data-toggle="modal" class="btn btn-primary btn-sm  m-1"
+                        data-target="#change_status_modal">
                         <i class="fas fa-check-circle"></i>
                         <span>{{trans_choice('client::general.change',1)}} {{trans_choice('core::general.status',1)}}</span>
                     </a>
@@ -289,7 +289,7 @@
                     </a>
 
                     @if(!$client->isBlacklisted())
-                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#blacklistModal">
+                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#blacklistModal">
                         Blacklist
                     </button>
                     @include('client::client.partials.blacklist_modal')
@@ -301,8 +301,8 @@
                     <span class="text-danger ml-2">Blacklisted: {{ $client->blacklist->reason }}</span>
                     @endif
 
-                    <a href="#" data-bs-toggle="modal"
-                        data-bs-target="#transfer_client_modal" class="btn btn-primary btn-sm m-1"><i
+                    <a href="#" data-toggle="modal"
+                        data-target="#transfer_client_modal" class="btn btn-primary btn-sm m-1"><i
                             class="fas fa-forward"></i>
                         <span>{{trans_choice('client::general.transfer',1)}}</span>
                     </a>
@@ -340,14 +340,14 @@
                     <ul class="nav nav-tabs">
                         <!--accounts tab-->
                         <li class="nav-item">
-                            <a class="nav-link active" href="#accounts" data-bs-toggle="tab" aria-expanded="false">{{trans_choice('client::general.account',2)}}
+                            <a class="nav-link active" href="#accounts" data-toggle="tab" aria-expanded="false">{{trans_choice('client::general.account',2)}}
                             </a>
                         </li>
 
                         <!-- Client identification tab -->
                         @can('client.clients.identification.index')
                         <li class="nav-item">
-                            <a class="nav-link" href="#client_identification" data-bs-toggle="tab"
+                            <a class="nav-link" href="#client_identification" data-toggle="tab"
                                 aria-expanded="false">{{trans_choice('client::general.identification',1)}}</a>
                         </li>
                         @endcan
@@ -355,7 +355,7 @@
                         <!-- Next of Kin Tab -->
                         @can('client.clients.next_of_kin.index')
                         <li class="nav-item">
-                            <a class="nav-link" href="#client_next_of_kin" data-bs-toggle="tab"
+                            <a class="nav-link" href="#client_next_of_kin" data-toggle="tab"
                                 aria-expanded="true">{{trans_choice('client::general.next_of_kin',1)}}</a>
                         </li>
                         @endcan
@@ -363,7 +363,7 @@
                         <!-- Client Authentication Details -->
                         @can('client.clients.index')
                         <li class="nav-item">
-                            <a class="nav-link" href="#login_details" data-bs-toggle="tab"
+                            <a class="nav-link" href="#login_details" data-toggle="tab"
                                 aria-expanded="false">{{trans_choice('user::general.login',1)}} {{trans_choice('core::general.detail',2)}}</a>
                         </li>
                         @endcan
@@ -371,10 +371,14 @@
                         <!-- Client Files Details -->
                         @can('client.clients.files.index')
                         <li class="nav-item">
-                            <a class="nav-link" href="#files" data-bs-toggle="tab"
+                            <a class="nav-link" href="#files" data-toggle="tab"
                                 aria-expanded="false">{{trans_choice('client::general.file',2)}}</a>
                         </li>
                         @endcan
+                        <li class="nav-item">
+                            <a class="nav-link" href="#credit_score" data-toggle="tab"
+                                aria-expanded="false">{{trans_choice('client::general.credit_score',1)}}</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="card-body">
@@ -610,6 +614,136 @@
                             </div>
                         </div>
                         @endcan
+                        <div class="tab-pane" id="credit_score">
+                            <div class="row gy-4">
+                                <div class="col-md-8">
+                                    <div class="card card-bordered card-preview">
+                                        <div class="card-header">
+                                            <h3 class="card-title">{{$client->full_name}} — {{$client->client_number}}</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="text-center">
+                                                <div style="position: relative; width: 320px; height: 180px; margin: 0 auto;">
+                                                    <svg viewBox="0 0 320 180" style="width: 100%; height: 100%;">
+                                                        @php
+                                                            $minScore = 0;
+                                                            $maxScore = 500;
+                                                            $totalRange = $maxScore - $minScore;
+                                                            $arcLength = 251;
+                                                            $segments = [];
+                                                            foreach($ranges as $range) {
+                                                                $start = max($range->min_score, $minScore);
+                                                                $end = min($range->max_score, $maxScore);
+                                                                if ($start < $end) {
+                                                                    $segments[] = ['start' => $start, 'end' => $end, 'color' => $range->color_code];
+                                                                }
+                                                            }
+                                                            $score = $creditScore?->score ?? 0;
+                                                            $activeLength = (($score - $minScore) / $totalRange) * $arcLength;
+                                                            $activeColor = $creditScore?->range?->color_code ?? '#ef4444';
+                                                        @endphp
+                                                        @foreach($segments as $segment)
+                                                            @php
+                                                                $startOffset = (($segment['start'] - $minScore) / $totalRange) * $arcLength;
+                                                                $segmentLength = (($segment['end'] - $segment['start']) / $totalRange) * $arcLength;
+                                                            @endphp
+                                                            <circle cx="160" cy="160" r="80" 
+                                                                stroke="{{ $segment['color'] }}" 
+                                                                stroke-dasharray="{{ $segmentLength }} {{ $arcLength - $segmentLength }}"
+                                                                stroke-dashoffset="{{ -$startOffset }}"
+                                                                fill="none" stroke-width="20" stroke-linecap="round"
+                                                                transform="rotate(180 160 160)" />
+                                                        @endforeach
+                                                        <circle cx="160" cy="160" r="80" 
+                                                            stroke="{{ $activeColor }}" 
+                                                            stroke-dasharray="{{ $activeLength }} {{ $arcLength - $activeLength }}"
+                                                            stroke-dashoffset="0"
+                                                            fill="none" stroke-width="20" stroke-linecap="round"
+                                                            transform="rotate(180 160 160)" />
+                                                    </svg>
+                                                    <div style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); text-align: center;">
+                                                        <div class="text-6xl font-bold text-gray-800" id="scoreDisplay">{{ $score }}</div>
+                                                        <div class="text-lg text-gray-500 font-medium">{{ $creditScore?->rating_label ?? 'Poor' }}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex justify-content-between text-muted px-5 mt-2">
+                                                    <span>0</span>
+                                                    <span>500</span>
+                                                </div>
+                                                <p class="text-muted mt-3">
+                                                    Last updated on {{ $creditScore?->assessed_at?->format('d F Y h:iA') ?? now()->format('d F Y h:iA') }}
+                                                </p>
+                                            </div>
+
+                                            <h3 class="mt-5">{{ trans_choice('core::general.history',2) }}</h3>
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>{{ trans_choice('core::general.date',1) }}</th>
+                                                        <th>{{ trans_choice('core::general.status',1) }}</th>
+                                                        <th>{{ trans_choice('core::general.previous_score',1) }}</th>
+                                                        <th>{{ trans_choice('core::general.new_score',1) }}</th>
+                                                        <th>{{ trans_choice('core::general.reason',1) }}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($history as $item)
+                                                    <tr>
+                                                        <td>{{ $item->change_date->format('d M Y') }}</td>
+                                                        <td>
+                                                            @if($item->status === 'Pending')
+                                                                <span class="badge badge-warning">{{ $item->status }}</span>
+                                                            @elseif($item->status === 'Confirmed')
+                                                                <span class="badge badge-success">{{ $item->status }}</span>
+                                                            @else
+                                                                <span class="badge badge-danger">{{ $item->status }}</span>
+                                                            @endif
+                                                        </td>
+                                                        <td>{{ $item->previous_score }}</td>
+                                                        <td>{{ $item->new_score }}</td>
+                                                        <td>{{ $item->reason ?? '-' }}</td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card card-bordered card-preview">
+                                        <div class="card-header">
+                                            <h3 class="card-title">{{ trans_choice('core::general.update',1) }} {{ trans_choice('client::general.credit_score',1) }}</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <form method="post" action="{{ url('client/'.$client->id.'/credit_score/update') }}">
+                                                {{csrf_field()}}
+                                                <!-- Add client_id as hidden input -->
+                                                <input type="hidden" name="client_id" value="{{ $client->id }}">
+                                                <div class="form-group">
+                                                    <label for="new_score" class="control-label">{{ trans_choice('core::general.new_score',1) }} (0-500)</label>
+                                                    <input type="number" name="new_score" id="new_score" min="0" max="500" class="form-control numeric" value="{{ old('new_score', $creditScore?->score ?? '') }}" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="status" class="control-label">{{ trans_choice('core::general.status',1) }}</label>
+                                                    <select class="form-control" name="status" id="status" required>
+                                                        <option value="Pending" @if(old('status') === 'Pending') selected @endif>{{ trans_choice('core::general.pending',1) }}</option>
+                                                        <option value="Confirmed" @if(old('status') === 'Confirmed') selected @endif>{{ trans_choice('core::general.confirmed',1) }}</option>
+                                                        <option value="Rejected" @if(old('status') === 'Rejected') selected @endif>{{ trans_choice('core::general.rejected',1) }}</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="reason" class="control-label">{{ trans_choice('core::general.reason',1) }}</label>
+                                                    <textarea name="reason" id="reason" rows="3" class="form-control">{{ old('reason', $creditScore?->notes ?? '') }}</textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-primary">{{ trans_choice('core::general.save',1) }}</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -623,7 +757,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">{{ trans_choice('client::general.change',1) }} {{ trans_choice('core::general.status',1) }}</h4>
-                    <button type="button" class="close" data-bs-dismiss="modal">
+                    <button type="button" class="close" data-dismiss="modal">
                         <span>×</span></button>
                 </div>
                 <form method="post"
@@ -660,7 +794,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default float-left"
-                            data-bs-dismiss="modal">
+                            data-dismiss="modal">
                             {{ trans_choice('core::general.close',1) }}
                         </button>
                         <button type="submit"
@@ -682,8 +816,7 @@
         $('#savings-data-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{!! url('
-            savings / get_savings ? client_id = '.$client->id) !!}',
+            ajax: '{{ url("savings/get_savings") }}?client_id={{ $client->id }}',
             columns : [{
                     data: 'id',
                     name: 'id'
@@ -752,8 +885,7 @@
         $('#loan-data-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{!! url('
-            loan / get_loans ? client_id = '.$client->id) !!}',
+            ajax: '{{ url("loan/get_loans") }}?client_id={{ $client->id }}',            
             columns : [{
                     data: 'id',
                     name: 'id'

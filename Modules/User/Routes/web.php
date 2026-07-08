@@ -59,6 +59,14 @@ Route::prefix('user')->group(function () {
         Route::post('{id}/update', 'RoleController@update');
         Route::get('{id}/destroy', 'RoleController@destroy');
     });
+    Route::prefix('permission')->group(function () {
+        Route::get('/', 'PermissionController@index')->name('permission.index');
+        Route::get('create', 'PermissionController@create')->name('permission.create');
+        Route::post('store', 'PermissionController@store')->name('permission.store');
+        Route::get('{id}/edit', 'PermissionController@edit')->name('permission.edit');
+        Route::post('{id}/update', 'PermissionController@update')->name('permission.update');
+        Route::get('{id}/delete', 'PermissionController@delete')->name('permission.delete');
+    });
 });
 Route::post('/2fa', function () {
     return redirect(URL()->previous());

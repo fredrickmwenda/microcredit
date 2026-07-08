@@ -157,4 +157,67 @@ return [
     'Invalid Password' => 'Invalid Password',
     'new' => 'New',
     'rate' => 'Rate|Rates',
+    'update' => 'Update',
+    'history' => 'History|Histories',
+    'view_history' => 'View History',
+    'view_details' => 'View Details',
+    'reason' => 'Reason|Reasons',
+    'new_score' => 'New Score',
+    'personal_information' => 'Personal Information',
+    'phone_number' => 'Phone Number',
+
+    'ghana_card_number'=> 'Ghana Card Number',
+    'residential_address'=>'Residential Address',
+    'digital_address' => 'Digital Address',
+    'nationality' => 'Nationality',
+
+    'employment_business_details' => 'Employment Business Details',
+    'employment_status' => 'Employment Status',
+    'employer_business_name' => 'Employer Business Name',
+    'occupation' => 'Occupation',
+    'monthly_net_income' => 'Monthly Net Income',
+    'work_address' => 'Work Address',
+    'length_of_employment' => 'Length of Employment',
+    'employed' => 'Employed',
+    'unemployed'=> 'UnEmployed',
+    'self_employed' => 'Self Employed',
+// credit scores
+    'credit_score' => 'Credit Score',
+    'credit_history' => 'Credit History',
+    'criteria'=> 'Credit Score Criteria',
+    'income_stability' => 'Income Stability',
+    'debt_to_income' => 'Debt To Income',
+    'employment_length' => 'Employment Length',
+    'guarantor_strength'=> 'Guarantor Strength',
+    'previous_score' => 'Previous Score',
+
+    //status
+    'approve' => 'Approve',
+    'reject' => 'Reject',
+    'decline' => 'Decline',
+    'decision' => 'Decision',
+
+    //credit score sets
+    'min' => 'Min',
+    'max' => 'Max',
+    'score' => 'Score',
+    'order' => 'Order',
+    'color' => 'Color',
+    'label' => 'Label',
+
+    'credit_score_range' => 'Credit Score Range',
+    'defer'=> 'Defer',
+    'deferred' => 'Deferred',
+    'reschedule' => 'Reschedule',
+    'rescheduled' => 'Rescheduled',
+
+    'confirmed' => 'Confirmed',
+    'rejected' => 'Rejected',
+    'pending_approval' => 'Pending Approval',
+    'awaiting_disbursement' => 'Awaiting Disbursement',
+    'written_off' => 'Written Off',
+    'overpaid' => 'Overpaid',
+
+
+
 ];

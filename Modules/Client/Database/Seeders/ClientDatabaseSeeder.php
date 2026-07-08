@@ -16,6 +16,7 @@ class ClientDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        $this->call(SettingTableSeeder::class);
+        // $this->call(SettingTableSeeder::class);
+        $this->call(CreditScoreRangeSeederTableSeeder::class);
     }
 }

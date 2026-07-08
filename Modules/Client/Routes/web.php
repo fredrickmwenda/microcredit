@@ -38,6 +38,11 @@ Route::prefix('client')->group(function () {
     Route::post('{id}/user/store', 'ClientController@store_user');
     Route::get('user/{id}/destroy', 'ClientController@destroy_user');
     Route::post('{id}/change_status', 'ClientController@change_status');
+    
+    // Credit Score - Per Client
+    Route::get('{id}/credit_score', 'CreditScoreController@dashboard');
+    Route::post('{id}/credit_score/update', 'CreditScoreController@update');
+    
     //client identification
     Route::get('{id}/client_identification/create', 'ClientIdentificationController@create');
     Route::post('{id}/client_identification/store', 'ClientIdentificationController@store');
@@ -45,6 +50,7 @@ Route::prefix('client')->group(function () {
     Route::get('client_identification/{id}/edit', 'ClientIdentificationController@edit');
     Route::post('client_identification/{id}/update', 'ClientIdentificationController@update');
     Route::get('client_identification/{id}/destroy', 'ClientIdentificationController@destroy');
+    
     //client next of kin
     Route::get('{id}/client_next_of_kin/create', 'ClientNextOfKinController@create');
     Route::post('{id}/client_next_of_kin/store', 'ClientNextOfKinController@store');
@@ -52,6 +58,7 @@ Route::prefix('client')->group(function () {
     Route::get('client_next_of_kin/{id}/edit', 'ClientNextOfKinController@edit');
     Route::post('client_next_of_kin/{id}/update', 'ClientNextOfKinController@update');
     Route::get('client_next_of_kin/{id}/destroy', 'ClientNextOfKinController@destroy');
+    
     //client files
     Route::get('{id}/file/create', 'ClientFileController@create');
     Route::post('{id}/file/store', 'ClientFileController@store');
@@ -59,6 +66,7 @@ Route::prefix('client')->group(function () {
     Route::get('file/{id}/edit', 'ClientFileController@edit');
     Route::post('file/{id}/update', 'ClientFileController@update');
     Route::get('file/{id}/destroy', 'ClientFileController@destroy');
+    
     //titles
     Route::prefix('title')->group(function () {
         Route::get('/', 'TitleController@index');
@@ -70,7 +78,8 @@ Route::prefix('client')->group(function () {
         Route::post('{id}/update', 'TitleController@update');
         Route::get('{id}/destroy', 'TitleController@destroy');
     });
-//client types
+    
+    //client types
     Route::prefix('client_type')->group(function () {
         Route::get('/', 'ClientTypeController@index');
         Route::get('get_client_types', 'ClientTypeController@get_client_types');
@@ -81,7 +90,8 @@ Route::prefix('client')->group(function () {
         Route::post('{id}/update', 'ClientTypeController@update');
         Route::get('{id}/destroy', 'ClientTypeController@destroy');
     });
-//client relationship
+    
+    //client relationship
     Route::prefix('client_relationship')->group(function () {
         Route::get('/', 'ClientRelationshipController@index');
         Route::get('get_client_relationships', 'ClientRelationshipController@get_client_relationships');
@@ -92,6 +102,7 @@ Route::prefix('client')->group(function () {
         Route::post('{id}/update', 'ClientRelationshipController@update');
         Route::get('{id}/destroy', 'ClientRelationshipController@destroy');
     });
+    
     Route::prefix('client_identification_type')->group(function () {
         Route::get('/', 'ClientIdentificationTypeController@index');
         Route::get('get_client_identification_types', 'ClientIdentificationTypeController@get_client_identification_types');
@@ -102,6 +113,7 @@ Route::prefix('client')->group(function () {
         Route::post('{id}/update', 'ClientIdentificationTypeController@update');
         Route::get('{id}/destroy', 'ClientIdentificationTypeController@destroy');
     });
+    
     Route::prefix('profession')->group(function () {
         Route::get('/', 'ProfessionController@index');
         Route::get('get_professions', 'ProfessionController@get_professions');
@@ -112,10 +124,10 @@ Route::prefix('client')->group(function () {
         Route::post('{id}/update', 'ProfessionController@update');
         Route::get('{id}/destroy', 'ProfessionController@destroy');
     });
+    
     //group 
     Route::prefix('group')->group(function () {
         Route::get('/', 'GroupController@index');
-        //Route::get('get_professions', 'GroupController@get_professions');
         Route::get('create', 'GroupController@create');
         Route::post('store', 'GroupController@store');
         Route::get('{id}/show', 'GroupController@show');
@@ -124,7 +136,19 @@ Route::prefix('client')->group(function () {
         Route::get('{id}/destroy', 'GroupController@destroy');
     });
 
-      // Blacklist routes
+    //credit score range
+    Route::prefix('credit_score_range')->group(function () {
+        Route::get('/', 'CreditScoreRangeController@index');
+        Route::get('get_credit_score_ranges', 'CreditScoreRangeController@get_credit_score_ranges');
+        Route::get('create', 'CreditScoreRangeController@create');
+        Route::post('store', 'CreditScoreRangeController@store');
+        Route::get('{id}/show', 'CreditScoreRangeController@show');
+        Route::get('{id}/edit', 'CreditScoreRangeController@edit');
+        Route::post('{id}/update', 'CreditScoreRangeController@update');
+        Route::get('{id}/destroy', 'CreditScoreRangeController@destroy');
+    });
+
+    // Blacklist routes
     Route::post('{id}/blacklist', 'ClientController@blacklist')->name('client.blacklist');
     Route::post('{id}/unblacklist', 'ClientController@unblacklist')->name('client.unblacklist');
 

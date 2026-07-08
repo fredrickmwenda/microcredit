@@ -73,7 +73,7 @@
                                 </div>
                                 <div class="nk-block-head-content">
                                     @can('branch.branches.assign_user')
-                                        <a href="#" data-bs-toggle="modal" data-target="#addUser"
+                                        <a href="#" data-toggle="modal" data-target="#addUser"
                                            class="btn btn-info btn-sm">{{trans_choice('core::general.add',1)}} {{trans_choice('core::general.user',1)}}</a>
                                     @endcan
                                 </div>
@@ -100,7 +100,7 @@
                                         <td>
                                             <div class="btn-group">
                                                 <button type="button" class="btn btn-info btn-xs dropdown-toggle"
-                                                        data-bs-toggle="dropdown"
+                                                        data-toggle="dropdown"
                                                         aria-expanded="true"><i class="fa fa-navicon"></i></button>
                                                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                                     @can('branch.branches.assign_user')
@@ -138,7 +138,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">{{trans_choice('core::general.add',1)}} {{trans_choice('core::general.user',1)}}</h4>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">*</span></button>
                 </div>
                 <form method="post" action="{{url('branch/'.$branch->id.'/add_user')}}" class="">
@@ -158,7 +158,7 @@
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-info">{{trans_choice('core::general.save',1)}}</button>
                         <button type="button" class="btn default"
-                                data-bs-dismiss="modal">{{trans_choice('core::general.close',1)}}</button>
+                                data-dismiss="modal">{{trans_choice('core::general.close',1)}}</button>
                     </div>
                 </form>
             </div>

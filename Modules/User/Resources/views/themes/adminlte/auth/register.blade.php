@@ -1,3 +1,5 @@
+
+text/x-generic register.blade.php ( HTML document, ASCII text )
 @extends('core::layouts.auth')
 @section("title")
     {{trans_choice("user::general.register",1)}}
@@ -11,7 +13,7 @@
                     <img class="logo-light logo-img logo-img-lg" src="{{asset('storage/uploads/'.$logo)}}"
                          srcset="{{asset('storage/uploads/'.$logo)}} 2x"
                          alt="logo">
-                @else
+                @else 
                     <h4>{{\Modules\Setting\Entities\Setting::where('setting_key','core.company_name')->first()->setting_value}}</h4>
                 @endif
             </a>

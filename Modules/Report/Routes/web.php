@@ -13,4 +13,6 @@
 
 Route::prefix('report')->group(function() {
     Route::get('/', 'ReportController@index');
+    Route::get('/loan-officer-changes', 'LoanOfficerChangeReportController@index')->name('loan.officer.changes');
+    Route::get('/savings-officer-changes', 'SavingsOfficerChangeReportController@index')->name('savings.officer.changes');
 });

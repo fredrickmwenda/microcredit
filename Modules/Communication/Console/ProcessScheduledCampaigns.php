@@ -19,7 +19,7 @@ class ProcessScheduledCampaigns extends Command
      *
      * @var string
      */
-    protected $name = 'communication:process-scheduled-campaigns';
+    protected $name = 'campaigns:process';
 
     /**
      * The console command description.

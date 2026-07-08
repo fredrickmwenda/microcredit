@@ -140,7 +140,7 @@
                     </div>
 
 
-
+ 
 
                     <div class="col-md-6">
                         <div class="form-group">
@@ -253,7 +253,7 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6"> 
                         <div class="form-group">
                             <label for="email" class="control-label">{{trans_choice('core::general.email',1)}}</label>
                             <input type="email" name="email" id="email" v-model="email" class="form-control @error('email') is-invalid @enderror">
@@ -305,13 +305,14 @@
                                 <button type="button" class="btn btn-sm btn-secondary" id="useUploadBtn">Upload Photo</button>
                             </div>
                              
-                            <div id="webcamSection" style="display:none;">
-                                <video id="video" width="320" height="240" autoplay style="border:1px solid #ccc;"></video><br>
-                                <button type="button" class="btn btn-primary btn-sm mt-2" id="snap">Capture Photo</button>
-                                <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
-                                <input type="hidden" name="client_photo" id="client_photo">
-                                <img id="preview" style="display:none; margin-top:10px; border:1px solid #ccc; max-width:100%;"/>
-                            </div>
+<div id="webcamSection" style="display:none;">
+    <video id="video" width="320" height="240" autoplay style="border:1px solid #ccc;"></video><br>
+    <button type="button" class="btn btn-primary btn-sm mt-2" id="snap" data-mode="capture">Capture Photo</button>
+    <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+    <input type="hidden" name="client_photo" id="client_photo">
+    <img id="preview" style="display:none; margin-top:10px; border:1px solid #ccc; max-width:100%;"/>
+</div>
+
                             <div id="uploadSection">
                                 <input type="file" name="photo" id="photo" class="form-control @error('photo') is-invalid @enderror">
                                 @error('photo')
@@ -532,7 +533,7 @@
                         </div>
                     </div>
 
-                                        <div class="col-md-12 mb-3">
+                    <div class="col-md-12 mb-3">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="church_membership" v-model="church_membership">
                             <label class="form-check-label" for="church_membership">
@@ -540,41 +541,41 @@
                             </label>
                         </div>
                     </div>
-                    <div v-if="church_membership">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="church" class="control-label">Church</label>
-                                <input type="text" name="church" id="church" v-model="church" class="form-control @error('church') is-invalid @enderror">
-                                @error('church')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="pastor" class="control-label">Pastor</label>
-                                <input type="text" name="pastor" id="pastor" v-model="pastor" class="form-control @error('pastor') is-invalid @enderror">
-                                @error('pastor')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="church_location" class="control-label">Church Location</label>
-                                <input type="text" name="church_location" id="church_location" v-model="church_location" class="form-control @error('church_location') is-invalid @enderror">
-                                @error('church_location')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
+                    <template v-if="church_membership">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label for="church" class="control-label">Church</label>
+            <input type="text" name="church" id="church" v-model="church" class="form-control @error('church') is-invalid @enderror">
+            @error('church')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+            @enderror
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="pastor" class="control-label">Pastor</label>
+            <input type="text" name="pastor" id="pastor" class="form-control @error('pastor') is-invalid @enderror">
+            @error('pastor')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+            @enderror
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="church_location" class="control-label">Church Location</label>
+            <input type="text" name="church_location" id="church_location" class="form-control @error('church_location') is-invalid @enderror">
+            @error('church_location')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+            @enderror
+        </div>
+    </div>
+</template>
 
                 </div>
             </div>
@@ -629,66 +630,108 @@
         }
     })
 
-    document.addEventListener('DOMContentLoaded', function() {
-        var webcamSection = document.getElementById('webcamSection');
-        var uploadSection = document.getElementById('uploadSection');
-        var useWebcamBtn = document.getElementById('useWebcamBtn');
-        var useUploadBtn = document.getElementById('useUploadBtn');
-        var video = document.getElementById('video');
-        var snap = document.getElementById('snap');
-        var canvas = document.getElementById('canvas');
-        var preview = document.getElementById('preview');
-        var clientPhoto = document.getElementById('client_photo');
-        var photoInput = document.getElementById('photo');
+ document.addEventListener('DOMContentLoaded', function() {
+    var webcamSection = document.getElementById('webcamSection');
+    var uploadSection = document.getElementById('uploadSection');
+    var useWebcamBtn = document.getElementById('useWebcamBtn');
+    var useUploadBtn = document.getElementById('useUploadBtn');
+    var video = document.getElementById('video');
+    var snap = document.getElementById('snap');
+    var canvas = document.getElementById('canvas');
+    var preview = document.getElementById('preview');
+    var clientPhoto = document.getElementById('client_photo');
+    var photoInput = document.getElementById('photo');
+    var stream = null;
 
-        useWebcamBtn.addEventListener('click', function() {
-            webcamSection.style.display = '';
-            uploadSection.style.display = 'none';
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({ video: true })
-                    .then(function(stream) {
-                        video.srcObject = stream;
-                    })
-                    .catch(function(err) {
-                        alert('Could not access webcam: ' + err);
-                    });
-            } else {
-                alert('Webcam not supported in this browser.');
-            }
-        });
-
-        useUploadBtn.addEventListener('click', function() {
-            webcamSection.style.display = 'none';
-            uploadSection.style.display = '';
-            if (video.srcObject) {
-                let tracks = video.srcObject.getTracks();
-                tracks.forEach(track => track.stop());
-                video.srcObject = null;
-            }
-            clientPhoto.value = '';
-            preview.style.display = 'none';
-        });
-
-        if (snap) {
-            snap.addEventListener('click', function(e) {
-                e.preventDefault();
-                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-                var dataURL = canvas.toDataURL('image/png');
-                clientPhoto.value = dataURL;
-                preview.src = dataURL;
-                preview.style.display = 'block';
-                // Log the dataURL to the console for debugging
-                console.log('Webcam photo captured and attached as base64:', dataURL);
-                // Hide webcam and stop video stream
-                webcamSection.style.display = 'none';
-                if (video.srcObject) {
-                    let tracks = video.srcObject.getTracks();
-                    tracks.forEach(track => track.stop());
-                    video.srcObject = null;
-                }
-            });
+    useWebcamBtn.addEventListener('click', function() {
+        webcamSection.style.display = '';
+        uploadSection.style.display = 'none';
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(s) {
+                    stream = s;
+                    video.srcObject = stream;
+                })
+                .catch(function(err) {
+                    alert('Could not access webcam: ' + err);
+                });
+        } else {
+            alert('Webcam not supported in this browser.');
         }
     });
+
+    useUploadBtn.addEventListener('click', function() {
+        webcamSection.style.display = 'none';
+        uploadSection.style.display = '';
+        stopWebcam();
+        clientPhoto.value = '';
+        preview.style.display = 'none';
+    });
+
+    function stopWebcam() {
+        if (stream) {
+            let tracks = stream.getTracks();
+            tracks.forEach(track => track.stop());
+            video.srcObject = null;
+            stream = null;
+        }
+    }
+
+    if (snap) {
+        snap.dataset.mode = 'capture';
+
+        snap.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            // === Retake Mode ===
+            if (snap.dataset.mode === 'retake') {
+                // Show webcam again
+                video.style.display = 'block';
+                preview.style.display = 'none';
+                clientPhoto.value = '';
+
+                // Remove confirmation message
+                let existingMsg = document.getElementById('captureMsg');
+                if (existingMsg) existingMsg.remove();
+
+                // Switch button text back
+                snap.textContent = 'Capture Photo';
+                snap.dataset.mode = 'capture';
+
+                // Restart webcam stream
+                useWebcamBtn.click();
+                return;
+            }
+
+            // === Capture Mode ===
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            var dataURL = canvas.toDataURL('image/png');
+            clientPhoto.value = dataURL;
+            preview.src = dataURL;
+            preview.style.display = 'block';
+
+            // Hide webcam feed
+            video.style.display = 'none';
+            stopWebcam();
+
+            // Remove old message if exists
+            let existingMsg = document.getElementById('captureMsg');
+            if (existingMsg) existingMsg.remove();
+
+            // Add confirmation message below the button
+            let captureMessage = document.createElement('div');
+            captureMessage.id = 'captureMsg';
+            captureMessage.className = 'mt-2';
+            captureMessage.innerHTML = '<span style="color:green;font-weight:bold;">✅ Photo captured successfully</span>';
+            snap.parentNode.insertBefore(captureMessage, snap.nextSibling);
+
+            // Switch button to Retake mode
+            snap.textContent = 'Retake Photo';
+            snap.dataset.mode = 'retake';
+        });
+    }
+});
+
 </script>
 @parent
 @endsection

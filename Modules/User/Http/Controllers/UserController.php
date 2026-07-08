@@ -83,7 +83,7 @@ class UserController extends Controller
         return DataTables::of($query)->editColumn('user', function ($data) {
             return $data->first_name . ' ' . $data->last_name;
         })->editColumn('action', function ($data) {
-            $action = '<div class="btn-group"><button type="button" class="btn btn-info btn-xs dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa fa-navicon"></i></button> <ul class="dropdown-menu dropdown-menu-right" role="menu">';
+            $action = '<div class="btn-group"><button type="button" class="btn btn-info btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="true"><i class="fa fa-navicon"></i></button> <ul class="dropdown-menu dropdown-menu-right" role="menu">';
             $action .= '<li><a href="' . url('user/' . $data->id . '/show') . '" class="">' . trans_choice('user::general.detail', 2) . '</a></li>';
             if (Auth::user()->hasPermissionTo('user.users.edit')) {
                 $action .= '<li><a href="' . url('user/' . $data->id . '/edit') . '" class="">' . trans_choice('user::general.edit', 2) . '</a></li>';
@@ -148,7 +148,8 @@ class UserController extends Controller
             'notes' => $request->notes,
             'address' => $request->address,
             'password' => Hash::make($request->password),
-            'email_verified_at' => date("Y-m-d H:i:s")
+            'email_verified_at' => date("Y-m-d H:i:s"),
+            'is_active' => $request->has('is_active') ? 1 : 0
         ];
         if ($request->hasFile('photo')) {
             $file_name = $request->file('photo')->store('public/uploads');
@@ -237,6 +238,7 @@ class UserController extends Controller
             'email' => $request->email,
             'notes' => $request->notes,
             'address' => $request->address,
+            'is_active' => $request->has('is_active') ? 1 : 0
         ];
         if (!empty($request->password)) {
             $credentials['password'] = Hash::make($request->password);

@@ -8,15 +8,111 @@ use Illuminate\Contracts\View\Factory;
  * Date: 7/6/19
  * Time: 4:28 PM
  */
+// function build_html_form_field($value)
+// {
+//     if (empty($value->id)) {
+//         $field_name = 'field_' . uniqid();
+//     } else {
+//         $field_name = 'field_' . $value->id;
+//     }
+//     $html = '';
+//     $html .= "<label class='control-label' for='$field_name'>$value->name</label>";
+//     if ($value->required == 1) {
+//         $required = " required";
+//     } else {
+//         $required = "";
+//     }
+
+//     if ($value->type == 'text') {
+//         $html .= "<input type='text' name='$field_name' id='$field_name' class='form-control $value->class' value='$value->setting_value' $required/>";
+//     }
+//     if ($value->type == 'number') {
+//         $html .= "<input type='number' name='$field_name' id='$field_name' class='form-control $value->class' value='$value->setting_value' $required/>";
+//     }
+//     if ($value->type == 'info') {
+//         $html .= "<input type='text' name='$field_name' id='$field_name' class='form-control $value->class' value='$value->setting_value' disabled/>";
+//     }
+//     if ($value->type == 'textarea') {
+//         $html .= "<textarea name='$field_name' id='$field_name' class='form-control $value->class' $required>$value->setting_value</textarea>";
+//     }
+//     if ($value->type == 'date') {
+//         $html .= "<input type='text' name='$field_name' id='$field_name' class='form-control date-picker $value->class' value='$value->setting_value' $required/>";
+//     }
+//     if ($value->type == 'file') {
+//         $html .= "<input type='file' name='$field_name' id='$field_name' class='form-control $value->class' data-allowed='$value->options' data-path='$value->setting_value' $required/>";
+//     }
+//     if ($value->type == 'select' || $value->type == 'select_multiple') {
+//         $html .= "<select name='$field_name' id='$field_name' class='form-control $value->class' $required>";
+//         $html .= "<option value=''></option>";
+//         foreach (explode(',', $value->options) as $key) {
+//             if ($value->type == 'select') {
+//                 if ($value->setting_value == $key) {
+//                     $selected = " selected";
+//                 } else {
+//                     $selected = "";
+//                 }
+//             }
+//             if ($value->type == 'select_multiple') {
+//                 if (in_array(explode(',', $value->setting_value), $key)) {
+//                     $selected = " selected";
+//                 } else {
+//                     $selected = "";
+//                 }
+//             }
+//             $html .= "<option value='$key' $selected>$key</option>";
+//         }
+//         $html .= "</select>";
+//     }
+//     if ($value->type == 'select_db' || $value->type == 'select_db_multiple') {
+//         $html .= "<select name='$field_name' id='$field_name' class='form-control $value->class' $required>";
+//         $html .= "<option value=''></option>";
+//         $records = \Illuminate\Support\Facades\DB::table($value->options)->get();
+//         foreach ($records as $key) {
+//             list($value_field, $display_field) = explode(',', $value->db_columns);
+//             if ($value->type == 'select_db') {
+//                 if ($value->setting_value == $key->$value_field) {
+//                     $selected = " selected";
+//                 } else {
+//                     $selected = "";
+//                 }
+//             }
+//             if ($value->type == 'select_db_multiple') {
+//                 if (in_array(explode(',', $value->setting_value), $key->$value_field)) {
+//                     $selected = " selected";
+//                 } else {
+//                     $selected = '';
+//                 }
+//             }
+//             $html .= "<option value='" . $key->$value_field . "' $selected>" . $key->$display_field . "</option>";
+//         }
+//         $html .= "</select>";
+//     }
+
+//     return $html;
+// }
+
 function build_html_form_field($value)
 {
+    // Safe label retrieval
+    if (property_exists($value, 'name')) {
+        $label = $value->name;
+    } elseif (property_exists($value, 'setting_key')) {
+        $label = $value->setting_key;
+    } elseif (property_exists($value, 'display_name')) {
+        $label = $value->display_name;
+    } else {
+        $label = 'Setting';
+    }
+
     if (empty($value->id)) {
         $field_name = 'field_' . uniqid();
     } else {
         $field_name = 'field_' . $value->id;
     }
+
     $html = '';
-    $html .= "<label class='control-label' for='$field_name'>$value->name</label>";
+    $html .= "<label class='control-label' for='$field_name'>$label</label>";
+
     if ($value->required == 1) {
         $required = " required";
     } else {
@@ -41,46 +137,51 @@ function build_html_form_field($value)
     if ($value->type == 'file') {
         $html .= "<input type='file' name='$field_name' id='$field_name' class='form-control $value->class' data-allowed='$value->options' data-path='$value->setting_value' $required/>";
     }
+
+    // Fixed select & select_multiple
     if ($value->type == 'select' || $value->type == 'select_multiple') {
-        $html .= "<select name='$field_name' id='$field_name' class='form-control $value->class' $required>";
+        $multiple = ($value->type == 'select_multiple') ? ' multiple' : '';
+        $html .= "<select name='$field_name' id='$field_name' class='form-control $value->class' $required $multiple>";
         $html .= "<option value=''></option>";
+
         foreach (explode(',', $value->options) as $key) {
+            $selected = '';
             if ($value->type == 'select') {
                 if ($value->setting_value == $key) {
                     $selected = " selected";
-                } else {
-                    $selected = "";
                 }
             }
             if ($value->type == 'select_multiple') {
-                if (in_array(explode(',', $value->setting_value), $key)) {
+                // Fixed: in_array($needle, $haystack)
+                if (in_array($key, explode(',', $value->setting_value))) {
                     $selected = " selected";
-                } else {
-                    $selected = "";
                 }
             }
             $html .= "<option value='$key' $selected>$key</option>";
         }
         $html .= "</select>";
     }
+
+    // Fixed select_db & select_db_multiple
     if ($value->type == 'select_db' || $value->type == 'select_db_multiple') {
-        $html .= "<select name='$field_name' id='$field_name' class='form-control $value->class' $required>";
+        $multiple = ($value->type == 'select_db_multiple') ? ' multiple' : '';
+        $html .= "<select name='$field_name' id='$field_name' class='form-control $value->class' $required $multiple>";
         $html .= "<option value=''></option>";
+
         $records = \Illuminate\Support\Facades\DB::table($value->options)->get();
+        list($value_field, $display_field) = explode(',', $value->db_columns);
+
         foreach ($records as $key) {
-            list($value_field, $display_field) = explode(',', $value->db_columns);
+            $selected = '';
             if ($value->type == 'select_db') {
                 if ($value->setting_value == $key->$value_field) {
                     $selected = " selected";
-                } else {
-                    $selected = "";
                 }
             }
             if ($value->type == 'select_db_multiple') {
-                if (in_array(explode(',', $value->setting_value), $key->$value_field)) {
+                // Fixed: in_array($needle, $haystack)
+                if (in_array($key->$value_field, explode(',', $value->setting_value))) {
                     $selected = " selected";
-                } else {
-                    $selected = '';
                 }
             }
             $html .= "<option value='" . $key->$value_field . "' $selected>" . $key->$display_field . "</option>";

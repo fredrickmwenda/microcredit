@@ -6,12 +6,64 @@
 
 <style>
     
-    .card.cust-card {
+    /* .card.cust-card {
     background: #ffffff38 !important;
-}
+} */
 
 </style>
-<div class="login-row">
+        
+        <div class="classic-card fade-in">
+            <div class="logo-section">
+                <!-- <div class="logo-text">Logo</div> -->
+                <h1 class="form-title">{{\Modules\Setting\Entities\Setting::where('setting_key','core.company_name')->first()->setting_value}}</h1>
+                <!-- <p class="form-subtitle">Sign in to your account.</p> -->
+            </div>
+
+            <form method="post" action="{{ route('login') }}">
+                @csrf
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="Email Address" name="email" required>
+                                        @error('email')
+                    <div class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                    </div>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Password" name="password" required>
+                    @error('password')
+                    <div class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                    </div>
+                    @enderror
+                    
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="form-check">
+                        <input type="checkbox" {{ old('remember') ? 'checked' : '' }} id="remember" class="form-check-input">
+                        <label for="remember" class="form-check-label">Remember Me</label>
+                    </div>
+                    <div class="forgot-password">
+                        <a href="{{ route('password.request') }}">Forgot Password?</a>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Login
+                </button>
+
+               
+            </form>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+       
+
+<!-- <div class="login-row">
     <div class="login-box">
         <div class="card cust-card">
             <div class="card-body login-card-body">
@@ -22,9 +74,7 @@
                 <form method="post" action="{{ route('login') }}">
                     {{csrf_field()}}
                     <div class="form-group">
-                        <!--<div class="form-label-group">-->
-                        <!--    <label class="form-label" for="email">{{trans_choice("user::general.email",1)}}</label>-->
-                        <!--</div>-->
+                       
                         <input type="email" class="form-control @error('email') is-invalid @enderror"
                                name="email"
                                placeholder="{{trans_choice("user::general.email",1)}}" value="{{ old('email') }}"
@@ -38,11 +88,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <!--<div class="form-label-group">-->
-                        <!--    <label class="form-label"-->
-                        <!--           for="password">{{trans_choice("user::general.password",1)}}</label>-->
-                            
-                        <!--</div>-->
+                       
                         <div class="form-control-wrap">
                             <a tabindex="-1" href="#" class="form-icon form-icon-right passcode-switch"
                                data-target="password">
@@ -95,5 +141,5 @@
                 <h2>{{\Modules\Setting\Entities\Setting::where('setting_key','core.company_name')->first()->setting_value}}</h2>
         </a>
     </div>
-</div>
+</div> -->
 @endsection

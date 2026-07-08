@@ -34,7 +34,7 @@
         <div class="card">
             <div class="card-body p-0">
                 <table id="" class="table table-striped table-hover">
-                    <thead>
+                    <thead
                     <tr>
                         <th>{{trans_choice('core::general.name',1)}}</th>
                         <th>{{trans_choice('core::general.description',1)}}</th>

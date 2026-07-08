@@ -42,6 +42,9 @@ Route::prefix('savings')->group(function () {
     Route::get('{id}/undo_dormant', 'SavingsController@undo_dormant');
     Route::post('{id}/change_savings_officer', 'SavingsController@change_savings_officer');
     Route::post('{id}/waive_interest', 'SavingsController@waive_interest');
+
+    Route::get('/daily','SavingsController@getDailySavingsReport');
+
     //transactions
     Route::get('{id}/transaction/create', 'SavingsController@create_transaction');
     Route::post('{id}/transaction/store', 'SavingsController@store_transaction');
@@ -93,6 +96,7 @@ Route::prefix('savings')->group(function () {
         Route::get('{id}/get_charges', 'SavingsProductController@get_charges');
     });
 });
+
 //reports
 Route::prefix('report')->group(function () {
     Route::get('savings', 'ReportController@index');
@@ -100,4 +104,5 @@ Route::prefix('report')->group(function () {
     Route::get('savings/balance', 'ReportController@balance');
     Route::get('savings/account', 'ReportController@account');
     Route::get('savings/account_statement', 'ReportController@account_statement');
+    Route::get('savings/staff-summary', 'SavingsController@staffSavingsSummary');
 });

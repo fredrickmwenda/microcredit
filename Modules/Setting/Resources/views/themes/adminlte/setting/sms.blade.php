@@ -39,7 +39,7 @@
                                 <div class="form-group">
                                     {!!build_html_form_field($key)!!}
                                 </div>
-                            </div>
+                            </div> 
                         </div>
                     @endforeach
                 </div>

@@ -28,6 +28,8 @@ use Modules\Client\Entities\Blacklist;
 use Modules\Client\Entities\ClientImport;
 use Modules\Communication\Entities\SmsGateway;
 use Modules\Communication\Entities\CommunicationLog;
+use Modules\Client\Entities\CreditScoreRange;
+use Modules\Client\Entities\CreditScore;
 
 class ClientController extends Controller
 {
@@ -97,7 +99,7 @@ class ClientController extends Controller
         return DataTables::of($query)->editColumn('staff', function ($data) {
             return $data->staff;
         })->editColumn('action', function ($data) {
-            $action = '<div class="btn-group"><button type="button" class="btn btn-info btn-xs dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa fa-navicon"></i></button> <ul class="dropdown-menu dropdown-menu-right" role="menu">';
+            $action = '<div class="btn-group"><button type="button" class="btn btn-info btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="true"><i class="fa fa-navicon"></i></button> <ul class="dropdown-menu dropdown-menu-right" role="menu">';
             $action .= '<li><a href="' . url('client/' . $data->id . '/show') . '" class="">' . trans_choice('user::general.detail', 2) . '</a></li>';
             if (Auth::user()->hasPermissionTo('client.clients.edit')) {
                 $action .= '<li><a href="' . url('client/' . $data->id . '/edit') . '" class="">' . trans_choice('user::general.edit', 2) . '</a></li>';
@@ -213,8 +215,6 @@ class ClientController extends Controller
         //return $clientsData;
         return theme_view('client::client.dormant_clients', compact('dormant_clients', 'dormant_duration'));
     }
-
-
 
     public function getClientTotalDepositReport(Request $request)
     {
@@ -831,8 +831,32 @@ class ClientController extends Controller
     public function show($id)
     {
         $client = Client::with('loan_officer')->find($id);
+        
         $custom_fields = CustomField::where('category', 'add_client')->where('active', 1)->get();
-        return theme_view('client::client.show', compact('client', 'custom_fields'));
+        // $creditScores = DB::table('credit_scores')
+        //     ->where('client_id', $id)
+        //     ->latest()
+        //     ->get(); // Returns a Collection of stdClass objects
+
+        // // Parse the date for every record in the collection
+        // $creditScores = $creditScores->map(function ($item) {
+        //     $item->assessed_at = \Carbon\Carbon::parse($item->assessed_at);
+        //     return $item;
+        // });
+        // dd($creditScores);
+        $creditScore = DB::table('credit_scores')
+            ->where('client_id', $id)
+            ->latest()
+            ->first();
+
+        // If a record exists, convert the string to a Carbon instance
+        if ($creditScore) {
+            $creditScore->assessed_at = \Carbon\Carbon::parse($creditScore->assessed_at);
+        }
+            
+        $history = $client->creditScoreHistory()->latest()->get();
+        $ranges = CreditScoreRange::orderBy('sort_order')->get();
+        return theme_view('client::client.show', compact('client', 'custom_fields', 'creditScore', 'history', 'ranges'));
     }
 
     /**

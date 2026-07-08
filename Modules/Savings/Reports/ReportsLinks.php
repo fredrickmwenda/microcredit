@@ -20,6 +20,7 @@ class ReportsLinks
     {
         return [
             "report/savings" => trans_choice('savings::general.savings', 1) . ' ' . trans_choice('report::general.report', 2),
+            "report/savings-officer-changes" => 'Savings Officer Change Audit',
         ];
 
     }

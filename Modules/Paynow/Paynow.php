@@ -13,6 +13,8 @@ use Modules\Loan\Entities\LoanTransaction;
 use Modules\Setting\Entities\Setting;
 use Nwidart\Modules\Facades\Module;
 
+
+if (!class_exists(Paynow::class)) {
 class Paynow extends PaymentGateway
 {
     public function __construct()
@@ -149,4 +151,5 @@ class Paynow extends PaymentGateway
             }
         }
     }
+}
 }

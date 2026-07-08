@@ -80,4 +80,5 @@ return [
     'Number of Savings' => 'Number of Savings',
     'Disbursed Loans Amount' => 'Disbursed Loans Amount',
     'Total Payments Received' => 'Total Payments Received',
+    'is_active' => 'Active',
 ];

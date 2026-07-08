@@ -182,7 +182,7 @@ class CommunicationController extends Controller
                     return '<span>' . e($data->sms_gateway_sender) . '</span>';
                 })
                 ->editColumn('sms_gateway_key', function ($data) {
-                    return '<span data-bs-toggle="tooltip" title="' . e($data->sms_gateway_key) . '">' . \Illuminate\Support\Str::limit($data->sms_gateway_key, 10) . '</span>';
+                    return '<span data-toggle="tooltip" title="' . e($data->sms_gateway_key) . '">' . \Illuminate\Support\Str::limit($data->sms_gateway_key, 10) . '</span>';
                 })
                 ->editColumn('sms_gateway_active', function ($data) {
                     if ($data->sms_gateway_active == '0') {

@@ -5,6 +5,8 @@ namespace Modules\Savings\Providers;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Modules\Savings\Entities\Savings;
+use Modules\Savings\Observers\SavingsOfficerChangeObserver;
 
 class SavingsServiceProvider extends ServiceProvider
 {
@@ -20,6 +22,10 @@ class SavingsServiceProvider extends ServiceProvider
         $this->registerViews();
         //$this->registerFactories();
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        
+        // Register observers
+        Savings::observe(SavingsOfficerChangeObserver::class);
+        
         $this->app->booted(function () {
             $schedule = $this->app->make(Schedule::class);
             $schedule->command('savings:calculate_interest')->daily();

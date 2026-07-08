@@ -17,16 +17,16 @@
                                     <div class="pull-right btn-group">
                                         @if($share->status=='submitted' ||$share->status=='pending')
                                             @can('share.shares.approve_shares')
-                                                <a href="#" data-bs-toggle="modal" data-target="#approve_share_modal"
+                                                <a href="#" data-toggle="modal" data-target="#approve_share_modal"
                                                    class="btn btn-primary"><i
                                                             class="fa fa-check"></i>
                                                     {{ trans_choice('share::general.approve',1) }}
                                                 </a>
-                                                <a href="#" data-bs-toggle="modal" data-target="#reject_share_modal"
+                                                <a href="#" data-toggle="modal" data-target="#reject_share_modal"
                                                    class="btn btn-primary"><i class="fa fa-times"></i>
                                                     {{ trans_choice('share::general.reject',1) }}
                                                 </a>
-                                                <a href="#" data-bs-toggle="modal" data-target="#withdraw_share_modal"
+                                                <a href="#" data-toggle="modal" data-target="#withdraw_share_modal"
                                                    class="btn btn-primary"><i class="fa fa-times"></i>
                                                     {{ trans_choice('share::general.withdraw',1) }}
                                                 </a>
@@ -41,7 +41,7 @@
                                                 <div class="modal fade" id="approve_share_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close"data-bs-dismiss="modal"
+                                                            <button type="button" class="close"data-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -73,7 +73,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                           data-bs-dismiss="modal">
+                                                                           data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -86,7 +86,7 @@
                                                 <div class="modal fade" id="reject_share_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close"data-bs-dismiss="modal"
+                                                            <button type="button" class="close"data-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -108,7 +108,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                           data-bs-dismiss="modal">
+                                                                           data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -121,7 +121,7 @@
                                                 <div class="modal fade" id="withdraw_share_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close"data-bs-dismiss="modal"
+                                                            <button type="button" class="close"data-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -143,7 +143,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                           data-bs-dismiss="modal">
+                                                                           data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -157,17 +157,17 @@
                                         @endif
                                         @if($share->status=='active')
                                             @can('share.shares.transactions.create')
-                                                <a href="#" data-bs-toggle="modal" data-target="#redeem_share_modal"
+                                                <a href="#" data-toggle="modal" data-target="#redeem_share_modal"
                                                    class="btn btn-success"><i class="fa fa-dollar"></i>
                                                     {{ trans_choice('share::general.redeem',1) }} {{ trans_choice('share::general.share',2) }}
                                                 </a>
-                                                <a href="#" data-bs-toggle="modal" data-target="#purchase_share_modal"
+                                                <a href="#" data-toggle="modal" data-target="#purchase_share_modal"
                                                    class="btn btn-warning"><i class="fa fa-money"></i>
                                                     {{ trans_choice('share::general.purchase',1) }} {{ trans_choice('share::general.share',2) }}
                                                 </a>
                                             @endcan
                                             @can('share.share.edit')
-                                                <a href="#" data-bs-toggle="modal"
+                                                <a href="#" data-toggle="modal"
                                                    data-target="#change_share_officer_modal"
                                                    class="btn btn-primary">
                                                     {{ trans_choice('share::general.change',1) }} {{ trans_choice('share::general.share',1) }} {{ trans_choice('share::general.officer',1) }}
@@ -181,7 +181,7 @@
                                                 </a>
                                             @endcan
                                             @can('share.shares.close_shares')
-                                                <a href="#" data-bs-toggle="modal" data-target="#close_share_modal"
+                                                <a href="#" data-toggle="modal" data-target="#close_share_modal"
                                                    class="btn btn-primary">
                                                     {{ trans_choice('core::general.close',1) }} {{ trans_choice('share::general.share',1) }}
                                                 </a>
@@ -196,7 +196,7 @@
                                                 <div class="modal fade" id="change_share_officer_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close"data-bs-dismiss="modal"
+                                                            <button type="button" class="close"data-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -225,7 +225,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                           data-bs-dismiss="modal">
+                                                                           data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -240,7 +240,7 @@
                                                 <div class="modal fade" id="close_share_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close"data-bs-dismiss="modal"
+                                                            <button type="button" class="close"data-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -262,7 +262,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                           data-bs-dismiss="modal">
+                                                                           data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -276,7 +276,7 @@
                                             <div class="modal fade" id="redeem_share_modal">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
-                                                        <button type="button" class="close"data-bs-dismiss="modal"
+                                                        <button type="button" class="close"data-dismiss="modal"
                                                                 aria-label="Close">
                                                             <span aria-hidden="true">×</span></button>
                                                         <div class="modal-header">
@@ -314,7 +314,7 @@
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-default pull-left"
-                                                                       data-bs-dismiss="modal">
+                                                                       data-dismiss="modal">
                                                                     {{ trans_choice('core::general.close',1) }}
                                                                 </button>
                                                                 <button type="submit"
@@ -327,7 +327,7 @@
                                             <div class="modal fade" id="purchase_share_modal">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
-                                                        <button type="button" class="close"data-bs-dismiss="modal"
+                                                        <button type="button" class="close"data-dismiss="modal"
                                                                 aria-label="Close">
                                                             <span aria-hidden="true">×</span></button>
                                                         <div class="modal-header">
@@ -365,7 +365,7 @@
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-default pull-left"
-                                                                       data-bs-dismiss="modal">
+                                                                       data-dismiss="modal">
                                                                     {{ trans_choice('core::general.close',1) }}
                                                                 </button>
                                                                 <button type="submit"
@@ -402,13 +402,13 @@
                                         @endif
                                         @if($share->status=='approved')
                                             @can('share.shares.activate_shares')
-                                                <a href="#" data-bs-toggle="modal" data-target="#activate_share_modal"
+                                                <a href="#" data-toggle="modal" data-target="#activate_share_modal"
                                                    class="btn btn-primary"><i class="fa fa-flag"></i>
                                                     {{ trans_choice('share::general.activate',1) }}
                                                 </a>
                                             @endcan
                                             @can('share.shares.edit')
-                                                <a href="#" data-bs-toggle="modal"
+                                                <a href="#" data-toggle="modal"
                                                    data-target="#change_share_officer_modal"
                                                    class="btn btn-primary d-none">
                                                     {{ trans_choice('share::general.change',1) }} {{ trans_choice('share::general.share',1) }} {{ trans_choice('share::general.officer',1) }}
@@ -424,7 +424,7 @@
                                                 <div class="modal fade" id="change_share_officer_modal">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <button type="button" class="close"data-bs-dismiss="modal"
+                                                            <button type="button" class="close"data-dismiss="modal"
                                                                     aria-label="Close">
                                                                 <span aria-hidden="true">×</span></button>
                                                             <div class="modal-header">
@@ -453,7 +453,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                           data-bs-dismiss="modal">
+                                                                           data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -469,7 +469,7 @@
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
                                                             <button type="button" class="close"
-                                                                   data-bs-dismiss="modal">
+                                                                   data-dismiss="modal">
                                                                 <span>×</span></button>
                                                             <div class="modal-header">
                                                                 <h4 class="modal-title">{{ trans_choice('share::general.activate',1) }} {{ trans_choice('share::general.share',2) }}</h4>
@@ -501,7 +501,7 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button"
                                                                             class="btn btn-default pull-left"
-                                                                           data-bs-dismiss="modal">
+                                                                           data-dismiss="modal">
                                                                         {{ trans_choice('core::general.close',1) }}
                                                                     </button>
                                                                     <button type="submit"
@@ -656,7 +656,7 @@
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
                                 <a href="#account_details" class="nav-link active"
-                                   data-bs-toggle="tab">
+                                   data-toggle="tab">
                                     {{ trans_choice('share::general.account',1) }} {{ trans_choice('core::general.detail',2) }}
                                 </a>
                             </li>
@@ -664,7 +664,7 @@
                                 @can('share.shares.transactions.index')
                                     <li class="nav-item">
                                         <a href="#share_transactions" class="nav-link"
-                                           data-bs-toggle="tab">
+                                           data-toggle="tab">
                                             {{ trans_choice('share::general.transaction',2) }}
                                         </a>
                                     </li>
@@ -673,7 +673,7 @@
                             @can('share.shares.charges.index')
                                 <li class="nav-item">
                                     <a href="#share_charges" class="nav-link"
-                                       data-bs-toggle="tab">
+                                       data-toggle="tab">
                                         {{ trans_choice('share::general.charge',2) }}
                                     </a>
                                 </li>
@@ -773,7 +773,7 @@
                                                     <td>
                                                         <div class="drodown">
                                                             <a href="#" class="dropdown-toggle btn btn-icon btn-trigger"
-                                                               data-bs-toggle="dropdown"><em
+                                                               data-toggle="dropdown"><em
                                                                         class="icon ni ni-more-h"></em></a>
                                                             <div class="dropdown-menu dropdown-menu-right">
                                                                 <ul class="link-list-opt no-bdr">
@@ -889,6 +889,8 @@
 @endsection
 @section('scripts')
     <script>
+                Vue.component('v-select', VueSelect.VueSelect)
+        Vue.component('flat-pickr', VueFlatpickr)
         var app = new Vue({
             el: '#app',
             data: {}

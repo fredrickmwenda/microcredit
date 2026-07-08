@@ -5,7 +5,7 @@
  * Date: 7/24/2016
  * Time: 2:52 PM
  */
-return [
+return [ 
     //version 1.0 languages
     //universal words
     'successfully_saved' => 'Successfully Saved',
@@ -806,7 +806,10 @@ return [
     'saturday' => 'Saturday',
     'sunday' => 'Sunday',
     'card'=>'Card|Cards',
-    'expiration'=>'Expiration'
+    'expiration'=>'Expiration',
+    'loan_application' => 'Loan Application',
+    'loan_application_form' => 'Loan Appliccation Form',
+    ''
 
 
 ];

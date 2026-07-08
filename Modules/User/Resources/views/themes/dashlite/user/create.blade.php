@@ -171,6 +171,19 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row gy-4">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="is_active" id="is_active" 
+                                           v-model="is_active" value="1" {{old('is_active') ? 'checked' : 'checked'}}>
+                                    <label class="form-check-label" for="is_active">
+                                        {{trans('user::general.is_active')}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     @foreach($custom_fields as $custom_field)
                         <?php
                         $field = custom_field_build_form_field($custom_field);
@@ -218,23 +231,26 @@
 @endsection
 @section('scripts')
     <script>
-        var app = new Vue({
-            el: "#app",
-            data: {
-                country_id: "{{old('country_id')}}",
-                first_name: "{{old('first_name')}}",
-                last_name: "{{old('last_name')}}",
-                phone: "{{old('phone')}}",
-                email: "{{old('email')}}",
-                gender: "{{old('gender')}}",
-                notes: "{{old('notes')}}",
-                address: "{{old('address')}}",
-                photo: "{{old('photo')}}",
-                selected_roles: [],
-                password: "",
-                password_confirmation: "",
-                roles: {!! json_encode($roles) !!},
-            }
-        })
+        if (document.getElementById('app')) {
+            var app = new Vue({
+                el: "#app",
+                data: {
+                    country_id: "{{old('country_id')}}",
+                    first_name: "{{old('first_name')}}",
+                    last_name: "{{old('last_name')}}",
+                    phone: "{{old('phone')}}",
+                    email: "{{old('email')}}",
+                    gender: "{{old('gender')}}",
+                    notes: "{{old('notes')}}",
+                    address: "{{old('address')}}",
+                    photo: "{{old('photo')}}",
+                    is_active: {{old('is_active') ? 'true' : 'true'}},
+                    selected_roles: [],
+                    password: "",
+                    password_confirmation: "",
+                    roles: {!! json_encode($roles) !!},
+                }
+            })
+        }
     </script>
 @endsection

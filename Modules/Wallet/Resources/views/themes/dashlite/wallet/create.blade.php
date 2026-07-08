@@ -157,6 +157,8 @@
 @endsection
 @section('scripts')
     <script>
+                Vue.component('v-select', VueSelect.VueSelect)
+        Vue.component('flat-pickr', VueFlatpickr)
         var app = new Vue({
             el: '#app',
             data: {

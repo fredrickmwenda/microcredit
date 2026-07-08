@@ -44,7 +44,7 @@
             <div class="row">
                 @can('widget.widget.add_widget_button')
                 <div class="col-md-12">
-                    <button data-bs-toggle="modal" data-target="#add_widget"
+                    <button data-toggle="modal" data-target="#add_widget"
                             class="btn btn-info margin float-right" style="margin-bottom: 20px;">
                         {{trans_choice('core::general.add',1)}}  {{trans_choice('dashboard::general.widget',1)}}
                     </button>
@@ -56,7 +56,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title">{{trans_choice('core::general.add',1)}}  {{trans_choice('dashboard::general.widget',1)}}</h4>
-                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" >
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
                                             <span aria-hidden="true">&times;</span></button>
                                     </div>
                                     <div class="modal-body">
@@ -73,7 +73,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default pull-left"
-                                                data-bs-dismiss="modal">{{trans_choice('core::general.close',1)}} </button>
+                                                data-dismiss="modal">{{trans_choice('core::general.close',1)}} </button>
                                         <button type="submit"
                                                 class="btn btn-primary">{{trans_choice('core::general.save',1)}} </button>
                                     </div>
@@ -124,7 +124,7 @@
                 widgets: data,
                 _token: '{{csrf_token()}}'
             }).then(function (response) {
-                //toastr.success("{{trans_choice("dashboard::general.successfully_rearranged", 1)}}");
+                toastr.success("{{trans_choice("dashboard::general.successfully_rearranged", 1)}}");
             }).catch(function (error) {
                 toastr.warning("{{trans_choice("dashboard::general.failed_rearrange", 1)}}");
             });
